@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "v-2sandbox",
+  "name": "wift-rizard",
   "workspaces": [
     "packages/contracts",
     "packages/client"
