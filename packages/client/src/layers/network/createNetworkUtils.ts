@@ -11,42 +11,49 @@ import {
   getComponentValueStrict,
 } from "@latticexyz/recs";
 import { NetworkLayer } from "./createNetworkLayer";
+import { BigNumber } from "ethers";
 
 export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
   const {
     world,
     actions,
     worldSend,
-    components: { PlayerTable, PositionTable },
+    components: { Player, Position, Stamina },
   } = layer;
 
   /**
    * @param callback Called once a Player and all of their Components are loaded into the game.
    */
   function onPlayerLoaded(
-    callback: (data: { player: EntityIndex; playerId: EntityID; playerNumber: number; } | null) => void
+    callback: (
+      data: {
+        player: EntityIndex;
+        playerId: EntityID;
+        playerNumber: number;
+      } | null
+    ) => void
   ) {
     const {
       world,
-      components: { PlayerTable },
+      components: { Player },
       playerEntity,
-      playerEntityId
+      playerEntityId,
     } = layer;
 
     let playerLoaded = false;
 
-    defineSystem(world, [Has(PlayerTable)], ({ type, entity }) => {
+    defineSystem(world, [Has(Player)], ({ type, entity }) => {
       if (playerLoaded) return;
       if (entity !== playerEntity) return;
-      if(!playerEntity || !playerEntityId) return;
+      if (!playerEntity || !playerEntityId) return;
 
-      if(type === UpdateType.Exit) {
+      if (type === UpdateType.Exit) {
         playerLoaded = false;
-        callback(null)
+        callback(null);
         return;
       }
 
-      const playerNumber = getComponentValue(PlayerTable, playerEntity);
+      const playerNumber = getComponentValue(Player, playerEntity);
       if (!playerNumber) return;
 
       playerLoaded = true;
@@ -76,16 +83,20 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
         x = randomCoord.x;
         y = randomCoord.y;
 
-        blockingEntities = runQuery([HasValue(PositionTable, randomCoord)]);
+        blockingEntities = runQuery([HasValue(Position, randomCoord)]);
       } while (blockingEntities.size > 0);
 
       return { x, y };
     };
 
-    const allPlayers = [...runQuery([Has(PlayerTable)])];
-    const nextPlayerId = Math.max(...(allPlayers.map((player) =>
-      getComponentValueStrict(PlayerTable, player).value
-    )), 0) + 1;
+    const allPlayers = [...runQuery([Has(Player)])];
+    const nextPlayerId =
+      Math.max(
+        ...allPlayers.map(
+          (player) => getComponentValueStrict(Player, player).value
+        ),
+        0
+      ) + 1;
 
     actions.add({
       id: ("spawnPlayer" + Math.random().toPrecision(5)) as EntityID,
@@ -95,9 +106,14 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       execute: async () => {
         const { x, y } = findPosition();
 
-        return worldSend("mud_PlayerSystem_spawn", [nextPlayerId, x, y, {
-          gasLimit: 1_000_000
-        }]);
+        return worldSend("mud_PlayerSystem_spawn", [
+          nextPlayerId,
+          x,
+          y,
+          {
+            gasLimit: 1_000_000,
+          },
+        ]);
       },
     });
   }
@@ -109,9 +125,13 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       components: {},
       requirement: () => true,
       execute: async () => {
-        return worldSend("mud_MoveSystem_move", [coord.x, coord.y, {
-          gasLimit: 1000000,
-        }]);
+        return worldSend("mud_MoveSystem_move", [
+          coord.x,
+          coord.y,
+          {
+            gasLimit: 1000000,
+          },
+        ]);
       },
     });
   }
@@ -125,9 +145,12 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       execute: async () => {
         const monsterId = world.entities[monster];
 
-        return worldSend("mud_CombatSystem_engage", [monsterId, {
-          gasLimit: 1000000,
-        }]);
+        return worldSend("mud_CombatSystem_engage", [
+          monsterId,
+          {
+            gasLimit: 1000000,
+          },
+        ]);
       },
     });
   }
@@ -139,21 +162,35 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       components: {},
       requirement: () => true,
       execute: async () => {
-        return worldSend("mud_CombatSystem_heal", [{
-          gasLimit: 1000000,
-        }]);
+        return worldSend("mud_CombatSystem_heal", [
+          {
+            gasLimit: 1000000,
+          },
+        ]);
       },
     });
   }
 
+  function getCurrentStamina(entity: EntityIndex): number {
+    const stamina = getComponentValue(Stamina, entity);
+    if (!stamina) return 0;
+
+    const currentTime = BigNumber.from(Math.floor(Date.now() / 1000));
+    const secondsSinceLastRefresh = currentTime.sub(stamina.lastRefreshedAt).toNumber();
+
+    const newCurrent = secondsSinceLastRefresh * stamina.regen + stamina.current;
+    return Math.min(newCurrent, stamina.max);
+  }
+
   return {
     onPlayerLoaded,
+    getCurrentStamina,
 
     txApi: {
       spawnPlayer,
       move,
       attack,
-      heal
+      heal,
     },
   };
 }

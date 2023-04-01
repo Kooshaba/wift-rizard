@@ -17,20 +17,14 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16("mud"), bytes16("position"))));
-uint256 constant PositionTableTableId = _tableId;
+uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16("mud"), bytes16("player"))));
+uint256 constant PlayerTableId = _tableId;
 
-struct PositionTableData {
-  int32 x;
-  int32 y;
-}
-
-library PositionTable {
+library Player {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](2);
-    _schema[0] = SchemaType.INT32;
-    _schema[1] = SchemaType.INT32;
+    SchemaType[] memory _schema = new SchemaType[](1);
+    _schema[0] = SchemaType.UINT32;
 
     return SchemaLib.encode(_schema);
   }
@@ -44,15 +38,19 @@ library PositionTable {
 
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
-    string[] memory _fieldNames = new string[](2);
-    _fieldNames[0] = "x";
-    _fieldNames[1] = "y";
-    return ("PositionTable", _fieldNames);
+    string[] memory _fieldNames = new string[](1);
+    _fieldNames[0] = "value";
+    return ("Player", _fieldNames);
   }
 
   /** Register the table's schema */
   function registerSchema() internal {
     StoreSwitch.registerSchema(_tableId, getSchema(), getKeySchema());
+  }
+
+  /** Register the table's schema (using the specified store) */
+  function registerSchema(IStore _store) internal {
+    _store.registerSchema(_tableId, getSchema(), getKeySchema());
   }
 
   /** Set the table's metadata */
@@ -61,74 +59,49 @@ library PositionTable {
     StoreSwitch.setMetadata(_tableId, _tableName, _fieldNames);
   }
 
-  /** Get x */
-  function getX(bytes32 key) internal view returns (int32 x) {
+  /** Set the table's metadata (using the specified store) */
+  function setMetadata(IStore _store) internal {
+    (string memory _tableName, string[] memory _fieldNames) = getMetadata();
+    _store.setMetadata(_tableId, _tableName, _fieldNames);
+  }
+
+  /** Get value */
+  function get(bytes32 key) internal view returns (uint32 value) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 0);
-    return (int32(uint32(Bytes.slice4(_blob, 0))));
+    return (uint32(Bytes.slice4(_blob, 0)));
   }
 
-  /** Set x */
-  function setX(bytes32 key, int32 x) internal {
+  /** Get value (using the specified store) */
+  function get(IStore _store, bytes32 key) internal view returns (uint32 value) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((x)));
+    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 0);
+    return (uint32(Bytes.slice4(_blob, 0)));
   }
 
-  /** Get y */
-  function getY(bytes32 key) internal view returns (int32 y) {
+  /** Set value */
+  function set(bytes32 key, uint32 value) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 1);
-    return (int32(uint32(Bytes.slice4(_blob, 0))));
+    StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((value)));
   }
 
-  /** Set y */
-  function setY(bytes32 key, int32 y) internal {
+  /** Set value (using the specified store) */
+  function set(IStore _store, bytes32 key, uint32 value) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 1, abi.encodePacked((y)));
-  }
-
-  /** Get the full data */
-  function get(bytes32 key) internal view returns (PositionTableData memory _table) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    bytes memory _blob = StoreSwitch.getRecord(_tableId, _primaryKeys, getSchema());
-    return decode(_blob);
-  }
-
-  /** Set the full data using individual values */
-  function set(bytes32 key, int32 x, int32 y) internal {
-    bytes memory _data = encode(x, y);
-
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    StoreSwitch.setRecord(_tableId, _primaryKeys, _data);
-  }
-
-  /** Set the full data using the data struct */
-  function set(bytes32 key, PositionTableData memory _table) internal {
-    set(key, _table.x, _table.y);
-  }
-
-  /** Decode the tightly packed blob using this table's schema */
-  function decode(bytes memory _blob) internal pure returns (PositionTableData memory _table) {
-    _table.x = (int32(uint32(Bytes.slice4(_blob, 0))));
-
-    _table.y = (int32(uint32(Bytes.slice4(_blob, 4))));
+    _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((value)));
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(int32 x, int32 y) internal view returns (bytes memory) {
-    return abi.encodePacked(x, y);
+  function encode(uint32 value) internal view returns (bytes memory) {
+    return abi.encodePacked(value);
   }
 
   /* Delete all data for given keys */
@@ -137,5 +110,13 @@ library PositionTable {
     _primaryKeys[0] = bytes32((key));
 
     StoreSwitch.deleteRecord(_tableId, _primaryKeys);
+  }
+
+  /* Delete all data for given keys (using the specified store) */
+  function deleteRecord(IStore _store, bytes32 key) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    _store.deleteRecord(_tableId, _primaryKeys);
   }
 }

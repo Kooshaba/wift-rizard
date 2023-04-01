@@ -7,14 +7,14 @@ export function createMessagesSystem(layer: PhaserLayer) {
     world,
     playerEntity,
     components: {
-      PlayerTable,
-      HealthTable
+      Player,
+      Health
     }
   } } = layer;
 
-    defineSystem(world, [Has(PlayerTable), Has(HealthTable)], (update) => {
+    defineSystem(world, [Has(Player), Has(Health)], (update) => {
       if(update.type === UpdateType.Exit) return;
-      if(!isComponentUpdate(update, HealthTable)) return;
+      if(!isComponentUpdate(update, Health)) return;
 
       const { entity, value } = update;
       if(entity !== playerEntity) return;

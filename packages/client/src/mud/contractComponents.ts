@@ -5,7 +5,7 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 
 export function defineContractComponents(world: World) {
   return {
-    PlayerTable: (() => {
+    Player: (() => {
       const tableId = new TableId("mud", "player");
       return defineComponent(
         world,
@@ -20,7 +20,7 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    MonsterTable: (() => {
+    Monster: (() => {
       const tableId = new TableId("mud", "monster");
       return defineComponent(
         world,
@@ -35,7 +35,7 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    PositionTable: (() => {
+    Position: (() => {
       const tableId = new TableId("mud", "position");
       return defineComponent(
         world,
@@ -51,7 +51,7 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    HealthTable: (() => {
+    Health: (() => {
       const tableId = new TableId("mud", "health");
       return defineComponent(
         world,
@@ -67,12 +67,30 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    StrengthTable: (() => {
+    Strength: (() => {
       const tableId = new TableId("mud", "strength");
       return defineComponent(
         world,
         {
           value: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Stamina: (() => {
+      const tableId = new TableId("mud", "stamina");
+      return defineComponent(
+        world,
+        {
+          current: RecsType.Number,
+          max: RecsType.Number,
+          regen: RecsType.Number,
+          lastRefreshedAt: RecsType.BigInt,
         },
         {
           metadata: {

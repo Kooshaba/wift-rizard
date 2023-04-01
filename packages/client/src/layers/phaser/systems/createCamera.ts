@@ -15,6 +15,7 @@ export const createCamera = (layer: PhaserLayer) => {
   } = layer;
 
   phaserCamera.centerOn(0, 0);
+  phaserCamera.setZoom(4);
 
   onPlayerLoaded((playerData) => {
     if(!playerData) {

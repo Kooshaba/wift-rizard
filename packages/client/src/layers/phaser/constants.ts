@@ -7,8 +7,9 @@ export enum Maps {
 }
 
 export enum Animations {
-  SwordsmanIdle = "SwordsmanIdle",
-  GolemIdle = "GolemIdle",
+  Hero = "Hero",
+  SkeletonSword = "SkeletonSword",
+  SkeletonBow = "SkeletonBow",
 }
 export enum Sprites {
   Soldier,
@@ -16,8 +17,8 @@ export enum Sprites {
 
 export enum Assets {
   MainAtlas = "MainAtlas",
-  Tileset = "Tileset",
+  TerrainTileset = "TerrainTileset",
 }
 
-export const TILE_HEIGHT = 32;
-export const TILE_WIDTH = 32;
+export const TILE_HEIGHT = 24;
+export const TILE_WIDTH = 16;

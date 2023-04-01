@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { MonsterTable } from "../tables/MonsterTable.sol";
-import { PositionTable, PositionTableData, PositionTableTableId } from "../tables/PositionTable.sol";
-import { StrengthTable } from "../tables/StrengthTable.sol";
-import { HealthTable, HealthTableData } from "../tables/HealthTable.sol";
+import { Monster } from "../tables/Monster.sol";
+import { Position, PositionData, PositionTableId } from "../tables/Position.sol";
+import { Strength } from "../tables/Strength.sol";
+import { Health, HealthData } from "../tables/Health.sol";
 
 import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";
 
@@ -18,10 +18,10 @@ library LibMonster {
       int32 xOffset = int32(uint32(offsetSeed % 6)) - 3;
       int32 yOffset = int32(uint32(offsetSeed2 % 6)) - 3;
 
-      PositionTableData memory spawnCoord = PositionTableData(originX + xOffset, originY + yOffset);
+      PositionData memory spawnCoord = PositionData(originX + xOffset, originY + yOffset);
       bytes32[] memory blockingSpawn = getKeysWithValue(
-        PositionTableTableId,
-        PositionTable.encode(spawnCoord.x, spawnCoord.y)
+        PositionTableId,
+        Position.encode(spawnCoord.x, spawnCoord.y)
       );
 
       bool invalidPosition = (spawnCoord.x == originX && spawnCoord.y == originY) || blockingSpawn.length > 0;
@@ -32,9 +32,9 @@ library LibMonster {
   }
 
   function spawnMonsterAt(bytes32 id, int32 x, int32 y) internal {
-    MonsterTable.set(id, true);
-    PositionTable.set(id, x, y);
-    StrengthTable.set(id, 5);
-    HealthTable.set(id, HealthTableData(30, 30));
+    Monster.set(id, true);
+    Position.set(id, x, y);
+    Strength.set(id, 5);
+    Health.set(id, HealthData(30, 30));
   }
 }

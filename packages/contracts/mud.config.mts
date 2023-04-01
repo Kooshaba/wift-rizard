@@ -6,49 +6,58 @@ export default mudConfig({
   worldContractName: "CustomWorld",
   namespace: "mud",
   tables: {
-    PlayerTable: {
+    Player: {
       fileSelector: "player",
       schema: {
         value: "uint32",
       },
     },
-    MonsterTable: {
+    Monster: {
       fileSelector: "monster",
       schema: {
         value: "bool"
       },
     },
-    PositionTable: {
+    Position: {
       fileSelector: "position",
       schema: {
         x: "int32",
         y: "int32",
       },
     },
-    HealthTable: {
+    Health: {
       fileSelector: "health",
       schema: {
         current: "int32",
         max: "int32",
       },
     },
-    StrengthTable: {
+    Strength: {
       fileSelector: "strength",
       schema: {
         value: "int32",
       },
     },
+    Stamina: {
+      fileSelector: "stamina",
+      schema: {
+        current: "int32",
+        max: "int32",
+        regen: "int32",
+        lastRefreshedAt: "uint256",
+      },
+    }
   },
   modules: [
     {
       name: "KeysWithValueModule",
       root: true,
-      args: [resolveTableId("PlayerTable")],
+      args: [resolveTableId("Player")],
     },
     {
       name: "KeysWithValueModule",
       root: true,
-      args: [resolveTableId("PositionTable")],
+      args: [resolveTableId("Position")],
     },
   ],
 });

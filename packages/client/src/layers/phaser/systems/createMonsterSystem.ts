@@ -7,14 +7,14 @@ export function createMonsterSystem(layer: PhaserLayer) {
   const {
     world,
     networkLayer: {
-      components: { MonsterTable },
+      components: { Monster },
     },
     scenes: {
       Main: { objectPool },
     },
   } = layer;
 
-  defineSystem(world, [Has(MonsterTable)], ({ entity, type }) => {
+  defineSystem(world, [Has(Monster)], ({ entity, type }) => {
     if(type === UpdateType.Exit) {
       objectPool.remove(entity);
       return;
@@ -24,7 +24,7 @@ export function createMonsterSystem(layer: PhaserLayer) {
     obj.setComponent({
       id: 'appearance',
       once: (sprite) => {
-        sprite.play(Animations.GolemIdle);
+        sprite.play(Animations.SkeletonSword);
         sprite.setPipeline(HueTintAndOutlineFXPipeline.KEY);
         sprite.setPipelineData("hueTint", 0xb00b1e);
       }

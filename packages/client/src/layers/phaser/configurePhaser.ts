@@ -5,8 +5,8 @@ import {
   defineMapConfig,
   defineCameraConfig,
 } from "@latticexyz/phaserx";
-import worldTileset from "../../../public/assets/tilesets/world.png";
-import { TileAnimations, Tileset } from "../../artTypes/world";
+import terrainTilesetImage from '../../../public/assets/tilesets/terrain.png';
+import { Tileset as TerrainTileset } from "../../artTypes/terrain";
 import {
   Sprites,
   Assets,
@@ -20,12 +20,12 @@ import {
 const ANIMATION_INTERVAL = 200;
 
 const mainMap = defineMapConfig({
-  chunkSize: TILE_WIDTH * 64, // tile size * tile amount
+  chunkSize: 48 * 48,
   tileWidth: TILE_WIDTH,
   tileHeight: TILE_HEIGHT,
-  backgroundTile: [Tileset.Grass],
+  backgroundTile: [TerrainTileset.Ground1],
   animationInterval: ANIMATION_INTERVAL,
-  tileAnimations: TileAnimations,
+  tileAnimations: {},
   layers: {
     layers: {
       Background: { tilesets: ["Default"] },
@@ -39,10 +39,10 @@ export const phaserConfig = {
   sceneConfig: {
     [Scenes.Main]: defineSceneConfig({
       assets: {
-        [Assets.Tileset]: {
+        [Assets.TerrainTileset]: {
           type: AssetType.Image,
-          key: Assets.Tileset,
-          path: worldTileset,
+          key: Assets.TerrainTileset,
+          path: terrainTilesetImage,
         },
         [Assets.MainAtlas]: {
           type: AssetType.MultiAtlas,
@@ -65,29 +65,39 @@ export const phaserConfig = {
       },
       animations: [
         {
-          key: Animations.SwordsmanIdle,
+          key: Animations.Hero,
           assetKey: Assets.MainAtlas,
           startFrame: 0,
-          endFrame: 3,
-          frameRate: 6,
+          endFrame: 1,
+          frameRate: 2,
           repeat: -1,
-          prefix: "sprites/soldier/idle/",
+          prefix: "sprites/heroes/sword/",
           suffix: ".png",
         },
         {
-          key: Animations.GolemIdle,
+          key: Animations.SkeletonSword,
           assetKey: Assets.MainAtlas,
           startFrame: 0,
-          endFrame: 3,
-          frameRate: 6,
+          endFrame: 1,
+          frameRate: 2,
           repeat: -1,
-          prefix: "sprites/golem/idle/",
+          prefix: "sprites/monsters/skeletons/sword/",
           suffix: ".png",
         },
+        {
+          key: Animations.SkeletonBow,
+          assetKey: Assets.MainAtlas,
+          startFrame: 0,
+          endFrame: 1,
+          frameRate: 2,
+          repeat: -1,
+          prefix: "sprites/monsters/skeletons/bow/",
+          suffix: ".png",
+        }
       ],
       tilesets: {
         Default: {
-          assetKey: Assets.Tileset,
+          assetKey: Assets.TerrainTileset,
           tileWidth: TILE_WIDTH,
           tileHeight: TILE_HEIGHT,
         },

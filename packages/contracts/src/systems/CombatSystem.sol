@@ -3,13 +3,14 @@ pragma solidity >=0.8.0;
 
 import { System } from "@latticexyz/world/src/System.sol";
 
+import { LibStamina } from "../libraries/LibStamina.sol";
 import { LibPosition } from "../libraries/LibPosition.sol";
 
-import { PlayerTable } from "../tables/PlayerTable.sol";
-import { HealthTable, HealthTableData } from "../tables/HealthTable.sol";
-import { StrengthTable } from "../tables/StrengthTable.sol";
-import { PositionTable, PositionTableData } from "../tables/PositionTable.sol";
-import { MonsterTable } from "../tables/MonsterTable.sol";
+import { Player } from "../tables/Player.sol";
+import { Health, HealthData } from "../tables/Health.sol";
+import { Strength } from "../tables/Strength.sol";
+import { Position, PositionData } from "../tables/Position.sol";
+import { Monster } from "../tables/Monster.sol";
 
 import { addressToEntity } from "../Utils.sol";
 
@@ -17,38 +18,40 @@ contract CombatSystem is System {
   function engage(bytes32 defender) public {
     bytes32 attacker = addressToEntity(_msgSender());
 
-    require(PlayerTable.get(attacker) != 0, "Attacker must be a player");
+    LibStamina.spend(attacker, 20_000);
+
+    require(Player.get(attacker) != 0, "Attacker must be a player");
 
     require(attacker != defender, "Attacker and defender must be different entities");
-    require(MonsterTable.get(defender), "Defender must be a monster");
+    require(Monster.get(defender), "Defender must be a monster");
 
-    PositionTableData memory attackerPosition = PositionTable.get(attacker);
-    PositionTableData memory defenderPosition = PositionTable.get(defender);
+    PositionData memory attackerPosition = Position.get(attacker);
+    PositionData memory defenderPosition = Position.get(defender);
     require(LibPosition.manhattan(attackerPosition, defenderPosition) == 1, "Attacker and defender must be adjacent");
 
-    int32 attackerDamage = StrengthTable.get(attacker);
-    int32 defenderDamage = StrengthTable.get(defender);
+    int32 attackerDamage = Strength.get(attacker);
+    int32 defenderDamage = Strength.get(defender);
 
-    HealthTableData memory attackerHealth = HealthTable.get(attacker);
-    HealthTableData memory defenderHealth = HealthTable.get(defender);
+    HealthData memory attackerHealth = Health.get(attacker);
+    HealthData memory defenderHealth = Health.get(defender);
 
     if (attackerDamage >= defenderHealth.current) {
-      HealthTable.set(defender, HealthTableData(0, defenderHealth.max));
-      MonsterTable.deleteRecord(defender);
-      PositionTable.deleteRecord(defender);
+      Health.deleteRecord(defender);
+      Monster.deleteRecord(defender);
+      Position.deleteRecord(defender);
 
       // grow stronger after each kill
-      HealthTable.set(attacker, HealthTableData(attackerHealth.current, attackerHealth.max + 5));
-      StrengthTable.set(attacker, StrengthTable.get(attacker) + 1);
+      Health.setMax(attacker, attackerHealth.max + 10);
+      Strength.set(attacker, Strength.get(attacker) + 2);
     } else {
-      HealthTable.set(defender, HealthTableData(defenderHealth.current - attackerDamage, defenderHealth.max));
+      Health.setCurrent(defender, defenderHealth.current - attackerDamage);
 
       if (defenderDamage >= attackerHealth.current) {
-        HealthTable.set(attacker, HealthTableData(0, attackerHealth.max));
-        PositionTable.deleteRecord(attacker);
-        PlayerTable.deleteRecord(attacker);
+        Health.deleteRecord(attacker);
+        Position.deleteRecord(attacker);
+        Player.deleteRecord(attacker);
       } else {
-        HealthTable.set(attacker, HealthTableData(attackerHealth.current - defenderDamage, attackerHealth.max));
+        Health.setCurrent(attacker, attackerHealth.current - defenderDamage);
       }
     }
   }
@@ -57,15 +60,17 @@ contract CombatSystem is System {
 
   function heal() public {
     bytes32 player = addressToEntity(_msgSender());
-    require(PlayerTable.get(player) != 0, "must be a player");
+    require(Player.get(player) != 0, "must be a player");
 
-    HealthTableData memory playerHealthData = HealthTable.get(player);
+    LibStamina.spend(player, 40_000);
+
+    HealthData memory playerHealthData = Health.get(player);
 
     int32 newHealth = playerHealthData.current + int32(HEAL_AMOUNT);
     if (newHealth > playerHealthData.max) {
       newHealth = playerHealthData.max;
     }
 
-    HealthTable.set(player, HealthTableData(newHealth, playerHealthData.max));
+    Health.set(player, HealthData(newHealth, playerHealthData.max));
   }
 }

@@ -8,27 +8,27 @@ export function Leaderboard() {
     networkLayer: {
       world,
       components: {
-        PlayerTable,
-        PositionTable,
-        HealthTable,
-        StrengthTable
+        Player,
+        Position,
+        Health,
+        Strength
       },
     },
   } = useMUD();
 
   const allPlayers = useEntityQuery([
-    Has(PlayerTable),
-    Has(PositionTable),
-    Has(HealthTable),
-    Has(StrengthTable),
+    Has(Player),
+    Has(Position),
+    Has(Health),
+    Has(Strength),
   ]);
   const playerData = allPlayers
     .map((player) => {
       const playerAddress = world.entities[player];
-      const playerNumber = getComponentValueStrict(PlayerTable, player).value;
-      const position = getComponentValueStrict(PositionTable, player);
-      const health = getComponentValueStrict(HealthTable, player);
-      const strength = getComponentValueStrict(StrengthTable, player).value;
+      const playerNumber = getComponentValueStrict(Player, player).value;
+      const position = getComponentValueStrict(Position, player);
+      const health = getComponentValueStrict(Health, player);
+      const strength = getComponentValueStrict(Strength, player).value;
 
       return {
         player,

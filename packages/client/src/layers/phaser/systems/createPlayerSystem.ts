@@ -8,19 +8,19 @@ export function createPlayerSystem(layer: PhaserLayer) {
   const {
     world,
     networkLayer: {
-      components: { PlayerTable },
+      components: { Player },
     },
     scenes: {
       Main: { objectPool },
     },
   } = layer;
 
-  defineSystem(world, [Has(PlayerTable)], ({ entity }) => {
+  defineSystem(world, [Has(Player)], ({ entity }) => {
     const obj = objectPool.get(entity, "Sprite");
     obj.setComponent({
       id: 'appearance',
       once: (sprite) => {
-        sprite.play(Animations.SwordsmanIdle);
+        sprite.play(Animations.Hero);
         sprite.setPipeline(HueTintAndOutlineFXPipeline.KEY);
         sprite.setPipelineData("hueTint", getStringColor(world.entities[entity]));
       }

@@ -1,5 +1,5 @@
 import { createPhaserEngine } from "@latticexyz/phaserx";
-import { namespaceWorld } from "@latticexyz/recs";
+import { Type, defineComponent, namespaceWorld } from "@latticexyz/recs";
 import { NetworkLayer } from "../network/createNetworkLayer";
 import { registerSystems } from "./systems";
 

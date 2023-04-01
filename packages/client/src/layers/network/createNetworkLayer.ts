@@ -30,7 +30,10 @@ export const createNetworkLayer = async () => {
     worldSend,
     singletonEntity,
     network,
-    components,
+    components: {
+      ...components,
+      OptimisticStamina: actions.withOptimisticUpdates(components.Stamina),
+    },
     actions,
     playerEntity,
     playerEntityId,

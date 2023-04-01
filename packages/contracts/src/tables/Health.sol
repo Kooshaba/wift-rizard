@@ -18,14 +18,14 @@ import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
 uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16("mud"), bytes16("health"))));
-uint256 constant HealthTableTableId = _tableId;
+uint256 constant HealthTableId = _tableId;
 
-struct HealthTableData {
+struct HealthData {
   int32 current;
   int32 max;
 }
 
-library HealthTable {
+library Health {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](2);
@@ -47,7 +47,7 @@ library HealthTable {
     string[] memory _fieldNames = new string[](2);
     _fieldNames[0] = "current";
     _fieldNames[1] = "max";
-    return ("HealthTable", _fieldNames);
+    return ("Health", _fieldNames);
   }
 
   /** Register the table's schema */
@@ -55,10 +55,21 @@ library HealthTable {
     StoreSwitch.registerSchema(_tableId, getSchema(), getKeySchema());
   }
 
+  /** Register the table's schema (using the specified store) */
+  function registerSchema(IStore _store) internal {
+    _store.registerSchema(_tableId, getSchema(), getKeySchema());
+  }
+
   /** Set the table's metadata */
   function setMetadata() internal {
     (string memory _tableName, string[] memory _fieldNames) = getMetadata();
     StoreSwitch.setMetadata(_tableId, _tableName, _fieldNames);
+  }
+
+  /** Set the table's metadata (using the specified store) */
+  function setMetadata(IStore _store) internal {
+    (string memory _tableName, string[] memory _fieldNames) = getMetadata();
+    _store.setMetadata(_tableId, _tableName, _fieldNames);
   }
 
   /** Get current */
@@ -70,12 +81,29 @@ library HealthTable {
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
+  /** Get current (using the specified store) */
+  function getCurrent(IStore _store, bytes32 key) internal view returns (int32 current) {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 0);
+    return (int32(uint32(Bytes.slice4(_blob, 0))));
+  }
+
   /** Set current */
   function setCurrent(bytes32 key, int32 current) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((current)));
+  }
+
+  /** Set current (using the specified store) */
+  function setCurrent(IStore _store, bytes32 key, int32 current) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((current)));
   }
 
   /** Get max */
@@ -87,6 +115,15 @@ library HealthTable {
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
+  /** Get max (using the specified store) */
+  function getMax(IStore _store, bytes32 key) internal view returns (int32 max) {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 1);
+    return (int32(uint32(Bytes.slice4(_blob, 0))));
+  }
+
   /** Set max */
   function setMax(bytes32 key, int32 max) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
@@ -95,12 +132,29 @@ library HealthTable {
     StoreSwitch.setField(_tableId, _primaryKeys, 1, abi.encodePacked((max)));
   }
 
+  /** Set max (using the specified store) */
+  function setMax(IStore _store, bytes32 key, int32 max) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    _store.setField(_tableId, _primaryKeys, 1, abi.encodePacked((max)));
+  }
+
   /** Get the full data */
-  function get(bytes32 key) internal view returns (HealthTableData memory _table) {
+  function get(bytes32 key) internal view returns (HealthData memory _table) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = StoreSwitch.getRecord(_tableId, _primaryKeys, getSchema());
+    return decode(_blob);
+  }
+
+  /** Get the full data (using the specified store) */
+  function get(IStore _store, bytes32 key) internal view returns (HealthData memory _table) {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    bytes memory _blob = _store.getRecord(_tableId, _primaryKeys, getSchema());
     return decode(_blob);
   }
 
@@ -114,13 +168,28 @@ library HealthTable {
     StoreSwitch.setRecord(_tableId, _primaryKeys, _data);
   }
 
+  /** Set the full data using individual values (using the specified store) */
+  function set(IStore _store, bytes32 key, int32 current, int32 max) internal {
+    bytes memory _data = encode(current, max);
+
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    _store.setRecord(_tableId, _primaryKeys, _data);
+  }
+
   /** Set the full data using the data struct */
-  function set(bytes32 key, HealthTableData memory _table) internal {
+  function set(bytes32 key, HealthData memory _table) internal {
     set(key, _table.current, _table.max);
   }
 
+  /** Set the full data using the data struct (using the specified store) */
+  function set(IStore _store, bytes32 key, HealthData memory _table) internal {
+    set(_store, key, _table.current, _table.max);
+  }
+
   /** Decode the tightly packed blob using this table's schema */
-  function decode(bytes memory _blob) internal pure returns (HealthTableData memory _table) {
+  function decode(bytes memory _blob) internal pure returns (HealthData memory _table) {
     _table.current = (int32(uint32(Bytes.slice4(_blob, 0))));
 
     _table.max = (int32(uint32(Bytes.slice4(_blob, 4))));
@@ -137,5 +206,13 @@ library HealthTable {
     _primaryKeys[0] = bytes32((key));
 
     StoreSwitch.deleteRecord(_tableId, _primaryKeys);
+  }
+
+  /* Delete all data for given keys (using the specified store) */
+  function deleteRecord(IStore _store, bytes32 key) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    _store.deleteRecord(_tableId, _primaryKeys);
   }
 }

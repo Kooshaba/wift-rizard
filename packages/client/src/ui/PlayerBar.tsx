@@ -31,7 +31,7 @@ function AttackButton({ monster }: { monster: EntityIndex }) {
 export function PlayerBar() {
   const {
     networkLayer: {
-      components: { PositionTable, HealthTable, StrengthTable, MonsterTable },
+      components: { Position, Health, Strength, Monster, OptimisticStamina },
       utils: {
         txApi: { move, heal },
       },
@@ -40,7 +40,7 @@ export function PlayerBar() {
 
   const currentPlayer = useCurrentPlayer();
   const playerPosition = useComponentValue(
-    PositionTable,
+    Position,
     currentPlayer?.player || (0 as EntityIndex)
   ) || { x: 0, y: 0 };
 
@@ -54,7 +54,7 @@ export function PlayerBar() {
     [playerPosition]
   );
 
-  const allMonsters = useEntityQuery([Has(MonsterTable)]);
+  const allMonsters = useEntityQuery([Has(Monster)]);
   const [adjacentMonster, setAdjacentMonster] = useState<
     EntityIndex | undefined
   >();
@@ -64,8 +64,8 @@ export function PlayerBar() {
     for (const position of adjacentPositions) {
       const entities = [
         ...runQuery([
-          Has(MonsterTable),
-          HasValue(PositionTable, { x: position.x, y: position.y }),
+          Has(Monster),
+          HasValue(Position, { x: position.x, y: position.y }),
         ]),
       ];
       if (entities.length > 0) {
@@ -116,11 +116,15 @@ export function PlayerBar() {
   });
 
   const playerHealth = useComponentValue(
-    HealthTable,
+    Health,
     (currentPlayer?.player || 0) as EntityIndex
   );
   const playerStrength = useComponentValue(
-    StrengthTable,
+    Strength,
+    (currentPlayer?.player || 0) as EntityIndex
+  );
+  const playerStamina = useComponentValue(
+    OptimisticStamina,
     (currentPlayer?.player || 0) as EntityIndex
   );
 
@@ -142,6 +146,14 @@ export function PlayerBar() {
             {playerStrength.value} STR
           </div>
         </div>
+
+        {playerStamina && (
+          <div className="w-40 h-8 bg-blue-600 rounded-lg mb-4 flex flex-row items-center justify-center">
+            <div className="text-center text-white">
+              {playerStamina?.current / 1000} / {playerStamina?.max / 1000} STA
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col items-center ml-8">

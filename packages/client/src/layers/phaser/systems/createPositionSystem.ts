@@ -7,20 +7,20 @@ export function createPositionSystem(layer: PhaserLayer) {
   const {
     world,
     networkLayer: {
-      components: { PositionTable },
+      components: { Position },
     },
     scenes: {
       Main: { objectPool },
     },
   } = layer;
 
-  defineSystem(world, [Has(PositionTable)], ({ entity, type }) => {
+  defineSystem(world, [Has(Position)], ({ entity, type }) => {
     if(type === UpdateType.Exit) {
       objectPool.remove(entity);
       return;
     }
 
-    const position = getComponentValue(PositionTable, entity);
+    const position = getComponentValue(Position, entity);
     if(!position) return;
 
     const pixelCoord = tileCoordToPixelCoord(position, TILE_WIDTH, TILE_HEIGHT);
