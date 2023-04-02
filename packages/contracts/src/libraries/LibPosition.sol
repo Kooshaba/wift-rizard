@@ -3,6 +3,8 @@ pragma solidity >=0.8.0;
 
 import { PositionData } from "../tables/Position.sol";
 
+int32 constant ROOM_SIZE = 9;
+
 enum Direction {
   Up,
   Right,

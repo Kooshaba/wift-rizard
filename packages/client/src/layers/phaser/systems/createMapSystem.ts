@@ -1,27 +1,88 @@
-import { createNoise2D } from "simplex-noise";
+import { sample } from "lodash";
+import { Tileset } from "../../../artTypes/terrain";
+import { ROOM_SIZE } from "../../network/types";
 import { PhaserLayer } from "../createPhaserLayer";
+import {
+  Has,
+  HasValue,
+  UpdateType,
+  defineSystem,
+  getComponentValue,
+} from "@latticexyz/recs";
 
 export function createMapSystem(layer: PhaserLayer) {
-  // const noise2D = createNoise2D();
-  // const {
-  //   scenes: {
-  //     Main: {
-  //       maps: {
-  //         Main: { putTileAt },
-  //       },
-  //     },
-  //   },
-  // } = layer;
+  const {
+    networkLayer: {
+      world,
+      components: { Room, Player },
+      utils: { onPlayerLoaded },
+    },
+    scenes: {
+      Main: {
+        maps: {
+          Main: { putTileAt },
+        },
+      },
+    },
+  } = layer;
 
-  // for (let x = -100; x < 100; x++) {
-  //   for (let y = -100; y < 100; y++) {
-  //     const noise = noise2D(x, y);
+  const groundTiles = [
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground1,
+    Tileset.Ground2,
+    Tileset.Ground3,
+  ]
 
-  //     if (noise > 0.5) {
-  //       putTileAt({ x, y }, Tileset.Mountains, "Foreground");
-  //     } else if (noise < -0.5) {
-  //       putTileAt({ x, y }, Tileset.Forest, "Foreground");
-  //     }
-  //   }
-  // }
+  onPlayerLoaded((playerData) => {
+    if (!playerData) return;
+
+    const { playerNumber } = playerData;
+
+    defineSystem(
+      world,
+      [HasValue(Player, { value: playerNumber }), Has(Room)],
+      ({ entity, type }) => {
+        if (type !== UpdateType.Enter) return;
+
+        const room = getComponentValue(Room, entity);
+        if (!room) return;
+
+        for (let x = -1; x <= ROOM_SIZE; x++) {
+          for (let y = -1; y <= ROOM_SIZE; y++) {
+            const coord = { x, y };
+
+            if ((y === -1 && x !== -1 && x !== ROOM_SIZE) || y === ROOM_SIZE) {
+              putTileAt(coord, Tileset.WallX, "Background");
+            } else if (x === -1 || x === ROOM_SIZE) {
+              putTileAt(coord, Tileset.WallY, "Background");
+            } else {
+              putTileAt(coord, sample(groundTiles)!, "Background");
+            }
+          }
+        }
+      }
+    );
+  });
 }

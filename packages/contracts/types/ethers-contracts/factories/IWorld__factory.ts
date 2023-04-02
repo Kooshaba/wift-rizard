@@ -411,16 +411,6 @@ const _abi = [
         name: "id",
         type: "uint32",
       },
-      {
-        internalType: "int32",
-        name: "x",
-        type: "int32",
-      },
-      {
-        internalType: "int32",
-        name: "y",
-        type: "int32",
-      },
     ],
     name: "mud_PlayerSystem_spawn",
     outputs: [],

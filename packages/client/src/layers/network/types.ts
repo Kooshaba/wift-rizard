@@ -1,3 +1,5 @@
+export const ROOM_SIZE = 9;
+
 export enum ItemTypes {
   Sword,
   Dagger,

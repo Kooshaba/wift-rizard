@@ -36,4 +36,19 @@
    <property name="name" value="Ground7"/>
   </properties>
  </tile>
+ <tile id="7">
+  <properties>
+   <property name="name" value="WallX"/>
+  </properties>
+ </tile>
+ <tile id="8">
+  <properties>
+   <property name="name" value="WallY"/>
+  </properties>
+ </tile>
+ <tile id="174">
+  <properties>
+   <property name="name" value="Blank"/>
+  </properties>
+ </tile>
 </tileset>

@@ -8,6 +8,9 @@ export enum Tileset {
   Ground5 = 4,
   Ground6 = 5,
   Ground7 = 6,
+  WallX = 7,
+  WallY = 8,
+  Blank = 174,
 }
 export enum TileAnimationKey {
 }

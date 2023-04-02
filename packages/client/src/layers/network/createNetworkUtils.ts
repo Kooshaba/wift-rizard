@@ -66,29 +66,6 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
   }
 
   async function spawnPlayer(): Promise<ContractTransaction> {
-    const getRandomCoord = () => {
-      return {
-        x: Math.floor(Math.random() * 20),
-        y: Math.floor(Math.random() * 20),
-      };
-    };
-
-    const findPosition = () => {
-      let x: number;
-      let y: number;
-      let blockingEntities: Set<EntityIndex>;
-
-      do {
-        const randomCoord = getRandomCoord();
-        x = randomCoord.x;
-        y = randomCoord.y;
-
-        blockingEntities = runQuery([HasValue(Position, randomCoord)]);
-      } while (blockingEntities.size > 0);
-
-      return { x, y };
-    };
-
     const allPlayers = [...runQuery([Has(Player)])];
     const nextPlayerId =
       Math.max(
@@ -98,13 +75,9 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
         0
       ) + 1;
 
-
-    const { x, y } = findPosition();
     const tx = await worldSend("mud_PlayerSystem_spawn", [
       nextPlayerId,
-      x,
-      y,
-      { gasLimit: 5_000_000 },
+      { gasLimit: 1_000_000 },
     ]);
 
     await tx.wait();

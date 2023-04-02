@@ -5,7 +5,7 @@ import {
   defineMapConfig,
   defineCameraConfig,
 } from "@latticexyz/phaserx";
-import terrainTilesetImage from '../../../public/assets/tilesets/terrain.png';
+import terrainTilesetImage from "../../../public/assets/tilesets/terrain.png";
 import { Tileset as TerrainTileset } from "../../artTypes/terrain";
 import {
   Sprites,
@@ -23,13 +23,12 @@ const mainMap = defineMapConfig({
   chunkSize: 48 * 48,
   tileWidth: TILE_WIDTH,
   tileHeight: TILE_HEIGHT,
-  backgroundTile: [TerrainTileset.Ground1],
+  backgroundTile: [TerrainTileset.Blank],
   animationInterval: ANIMATION_INTERVAL,
   tileAnimations: {},
   layers: {
     layers: {
       Background: { tilesets: ["Default"] },
-      Foreground: { tilesets: ["Default"] },
     },
     defaultLayer: "Background",
   },
@@ -93,7 +92,7 @@ export const phaserConfig = {
           repeat: -1,
           prefix: "sprites/monsters/skeletons/bow/",
           suffix: ".png",
-        }
+        },
       ],
       tilesets: {
         Default: {

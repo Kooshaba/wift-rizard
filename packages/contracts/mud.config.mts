@@ -15,7 +15,14 @@ export default mudConfig({
     Monster: {
       fileSelector: "monster",
       schema: {
-        value: "bool"
+        value: "bool",
+      },
+    },
+    Room: {
+      fileSelector: "room",
+      schema: {
+        x: "int32",
+        y: "int32",
       },
     },
     Position: {
@@ -39,13 +46,13 @@ export default mudConfig({
         max: "int32",
         regen: "int32",
         lastRefreshedAt: "uint256",
-      }, 
+      },
     },
     ItemType: {
       fileSelector: "itemType",
       schema: {
-        value: "uint32"
-      }
+        value: "uint32",
+      },
     },
     Attack: {
       fileSelector: "attack",
@@ -55,14 +62,14 @@ export default mudConfig({
         minRange: "int32",
         maxRange: "int32",
         patternX: "int32[]",
-        patternY: "int32[]" 
+        patternY: "int32[]",
       },
     },
     EquippedBy: {
       fileSelector: "equippedBy",
       schema: {
-        value: "bytes32"
-      }
+        value: "bytes32",
+      },
     },
   },
   modules: [
@@ -75,6 +82,11 @@ export default mudConfig({
       name: "KeysWithValueModule",
       root: true,
       args: [resolveTableId("Position")],
+    },
+    {
+      name: "KeysWithValueModule",
+      root: true,
+      args: [resolveTableId("Room")],
     },
   ],
 });

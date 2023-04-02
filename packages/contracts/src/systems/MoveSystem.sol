@@ -6,7 +6,7 @@ import { Position, PositionData, PositionTableId } from "../tables/Position.sol"
 import { World } from "@latticexyz/world/src/World.sol";
 
 import { LibMonster } from "../libraries/LibMonster.sol";
-import { LibPosition } from "../libraries/LibPosition.sol";
+import { LibPosition, ROOM_SIZE } from "../libraries/LibPosition.sol";
 import { LibStamina } from "../libraries/LibStamina.sol";
 
 import { addressToEntity } from "../Utils.sol";
@@ -14,6 +14,9 @@ import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/ge
 
 contract MoveSystem is System {
   function move(int32 x, int32 y) public {
+    require(x >= 0 && x < ROOM_SIZE, "Invalid x coordinate");
+    require(y >= 0 && y < ROOM_SIZE, "Invalid y coordinate");
+
     bytes32 player = addressToEntity(_msgSender());
 
     LibStamina.spend(player, 25_000);

@@ -45,7 +45,7 @@ export interface IWorldInterface extends utils.Interface {
     "mud_CombatSystem_attack(bytes32,int32,int32)": FunctionFragment;
     "mud_CombatSystem_heal()": FunctionFragment;
     "mud_MoveSystem_move(int32,int32)": FunctionFragment;
-    "mud_PlayerSystem_spawn(uint32,int32,int32)": FunctionFragment;
+    "mud_PlayerSystem_spawn(uint32)": FunctionFragment;
     "pushToField(uint256,bytes32[],uint8,bytes)": FunctionFragment;
     "pushToField(bytes16,bytes16,bytes32[],uint8,bytes)": FunctionFragment;
     "registerSchema(uint256,bytes32,bytes32)": FunctionFragment;
@@ -176,11 +176,7 @@ export interface IWorldInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "mud_PlayerSystem_spawn",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "pushToField(uint256,bytes32[],uint8,bytes)",
@@ -534,8 +530,6 @@ export interface IWorld extends BaseContract {
 
     mud_PlayerSystem_spawn(
       id: PromiseOrValue<BigNumberish>,
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -712,8 +706,6 @@ export interface IWorld extends BaseContract {
 
   mud_PlayerSystem_spawn(
     id: PromiseOrValue<BigNumberish>,
-    x: PromiseOrValue<BigNumberish>,
-    y: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -888,8 +880,6 @@ export interface IWorld extends BaseContract {
 
     mud_PlayerSystem_spawn(
       id: PromiseOrValue<BigNumberish>,
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1099,8 +1089,6 @@ export interface IWorld extends BaseContract {
 
     mud_PlayerSystem_spawn(
       id: PromiseOrValue<BigNumberish>,
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1278,8 +1266,6 @@ export interface IWorld extends BaseContract {
 
     mud_PlayerSystem_spawn(
       id: PromiseOrValue<BigNumberish>,
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
