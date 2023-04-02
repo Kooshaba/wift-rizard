@@ -1,6 +1,9 @@
+import { Animations } from "../phaser/constants";
+
 export const ROOM_SIZE = 9;
 
 export enum ItemTypes {
+  Unknown,
   Sword,
   Dagger,
   Spear,
@@ -11,7 +14,15 @@ export enum ItemTypes {
   BowLarge,
   Staff,
   DevilHorn,
-  DevilHornLarge,
+  DevilHornLarge
+}
+
+export enum MonsterTypes {
+  Unknown,
+  Spawner,
+  Skeleton,
+  SkeletonArcher,
+  Spider
 }
 
 export const ItemTypeNames = {
@@ -26,4 +37,23 @@ export const ItemTypeNames = {
   [ItemTypes.Staff]:"Staff",
   [ItemTypes.DevilHorn]:"DevilHorn",
   [ItemTypes.DevilHornLarge]:"DevilHornLarge",
+} as Record<number, string>;
+
+export const MonsterTypeNames = {
+  [MonsterTypes.Skeleton]:"Skeleton",
+  [MonsterTypes.SkeletonArcher]:"Skeleton Archer",
+  [MonsterTypes.Spider]:"Spider",
+} as Record<number, string>;
+
+export const MonsterTypeColors = {
+  [MonsterTypes.Skeleton]: 0xb00b1e,
+  [MonsterTypes.SkeletonArcher]:0xb00b1e,
+  [MonsterTypes.Spider]:0xb00b1e,
+  [MonsterTypes.Spawner]: 0x9e9e00,
+} as Record<number, number>;
+
+export const MonsterTypeAnimations = {
+  [MonsterTypes.Skeleton]: Animations.SkeletonSword,
+  [MonsterTypes.SkeletonArcher]: Animations.SkeletonBow,
+  [MonsterTypes.Spawner]: Animations.Spawner,
 } as Record<number, string>;

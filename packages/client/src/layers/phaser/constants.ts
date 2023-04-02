@@ -10,6 +10,7 @@ export enum Animations {
   Hero = "Hero",
   SkeletonSword = "SkeletonSword",
   SkeletonBow = "SkeletonBow",
+  Spawner = "Spawner",
 }
 export enum Sprites {
   Soldier,

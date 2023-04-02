@@ -93,6 +93,16 @@ export const phaserConfig = {
           prefix: "sprites/monsters/skeletons/bow/",
           suffix: ".png",
         },
+        {
+          key: Animations.Spawner,
+          assetKey: Assets.MainAtlas,
+          startFrame: 0,
+          endFrame: 1,
+          frameRate: 2,
+          repeat: -1,
+          prefix: "sprites/monsters/spawner/",
+          suffix: ".png",
+        },
       ],
       tilesets: {
         Default: {

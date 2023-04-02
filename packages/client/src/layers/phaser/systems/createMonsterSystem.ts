@@ -1,32 +1,40 @@
 import { HueTintAndOutlineFXPipeline } from "@latticexyz/phaserx";
-import { defineSystem, Has, UpdateType } from "@latticexyz/recs";
-import { Animations } from "../constants";
+import { defineSystem, getComponentValue, Has, UpdateType } from "@latticexyz/recs";
 import { PhaserLayer } from "../createPhaserLayer";
+import { MonsterTypeAnimations, MonsterTypeColors } from "../../network/types";
 
 export function createMonsterSystem(layer: PhaserLayer) {
   const {
     world,
     networkLayer: {
-      components: { Monster },
+      components: { MonsterType },
     },
     scenes: {
       Main: { objectPool },
     },
   } = layer;
 
-  defineSystem(world, [Has(Monster)], ({ entity, type }) => {
+  defineSystem(world, [Has(MonsterType)], ({ entity, type }) => {
     if(type === UpdateType.Exit) {
       objectPool.remove(entity);
       return;
     }
 
+    const monsterType = getComponentValue(MonsterType, entity);
+    if(!monsterType) return;
+
+    const animation = MonsterTypeAnimations[monsterType.value];
+    if(!animation) return;
+
+    const color = MonsterTypeColors[monsterType.value];
+
     const obj = objectPool.get(entity, "Sprite");
     obj.setComponent({
       id: 'appearance',
       once: (sprite) => {
-        sprite.play(Animations.SkeletonSword);
+        sprite.play(animation);
         sprite.setPipeline(HueTintAndOutlineFXPipeline.KEY);
-        sprite.setPipelineData("hueTint", 0xb00b1e);
+        sprite.setPipelineData("hueTint", color);
       }
     })
   });

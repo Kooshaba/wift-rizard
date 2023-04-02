@@ -50,7 +50,7 @@ library LibFactory {
   }
 
   function createBow() internal returns (bytes32) {
-    return createWeapon("bow", ItemTypes.Bow, 10, 25000, 2, 2, new int32[](1), new int32[](1));
+    return createWeapon("bow", ItemTypes.Bow, 10, 25000, 2, 3, new int32[](1), new int32[](1));
   }
 
   function createBowLarge() internal returns (bytes32) {
@@ -64,7 +64,7 @@ library LibFactory {
     patternY[1] = 0;
     patternY[2] = 0;
 
-    return createWeapon("bowLarge", ItemTypes.BowLarge, 8, 40000, 2, 2, patternX, patternY);
+    return createWeapon("bowLarge", ItemTypes.BowLarge, 8, 40000, 2, 3, patternX, patternY);
   }
 
   function createStaff() internal returns (bytes32) {

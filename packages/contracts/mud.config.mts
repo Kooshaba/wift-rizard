@@ -12,12 +12,6 @@ export default mudConfig({
         value: "uint32",
       },
     },
-    Monster: {
-      fileSelector: "monster",
-      schema: {
-        value: "bool",
-      },
-    },
     Room: {
       fileSelector: "room",
       schema: {
@@ -37,6 +31,12 @@ export default mudConfig({
       schema: {
         current: "int32",
         max: "int32",
+      },
+    },
+    MoveSpeed: {
+      fileSelector: "moveSpeed",
+      schema: {
+        value: "int32",
       },
     },
     Stamina: {
@@ -69,6 +69,31 @@ export default mudConfig({
       fileSelector: "equippedBy",
       schema: {
         value: "bytes32",
+      },
+    },
+
+    MonsterType: {
+      fileSelector: "monster",
+      schema: {
+        value: "uint32",
+      },
+    },
+    Spawner: {
+      fileSelector: "spawner",
+      schema: {
+        value: "bool",
+      },
+    },
+    Nonce: {
+      fileSelector: "nonce",
+      schema: {
+        value: "uint256",
+      },
+    },
+    RngCommit: {
+      fileSelector: "rngCommit",
+      schema: {
+        blockNumber: "uint256",
       },
     },
   },

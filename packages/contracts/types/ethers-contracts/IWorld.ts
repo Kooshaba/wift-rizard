@@ -9,6 +9,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -44,8 +45,11 @@ export interface IWorldInterface extends utils.Interface {
     "isStore()": FunctionFragment;
     "mud_CombatSystem_attack(bytes32,int32,int32)": FunctionFragment;
     "mud_CombatSystem_heal()": FunctionFragment;
+    "mud_MonsterSystem_act(bytes32)": FunctionFragment;
     "mud_MoveSystem_move(int32,int32)": FunctionFragment;
     "mud_PlayerSystem_spawn(uint32)": FunctionFragment;
+    "mud_SpawnerSystem_create(int32,int32,int32,int32)": FunctionFragment;
+    "mud_SpawnerSystem_spawn(bytes32,int32,int32)": FunctionFragment;
     "pushToField(uint256,bytes32[],uint8,bytes)": FunctionFragment;
     "pushToField(bytes16,bytes16,bytes32[],uint8,bytes)": FunctionFragment;
     "registerSchema(uint256,bytes32,bytes32)": FunctionFragment;
@@ -75,8 +79,11 @@ export interface IWorldInterface extends utils.Interface {
       | "isStore"
       | "mud_CombatSystem_attack"
       | "mud_CombatSystem_heal"
+      | "mud_MonsterSystem_act"
       | "mud_MoveSystem_move"
       | "mud_PlayerSystem_spawn"
+      | "mud_SpawnerSystem_create"
+      | "mud_SpawnerSystem_spawn"
       | "pushToField(uint256,bytes32[],uint8,bytes)"
       | "pushToField(bytes16,bytes16,bytes32[],uint8,bytes)"
       | "registerSchema"
@@ -171,12 +178,33 @@ export interface IWorldInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "mud_MonsterSystem_act",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "mud_MoveSystem_move",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "mud_PlayerSystem_spawn",
     values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mud_SpawnerSystem_create",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mud_SpawnerSystem_spawn",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "pushToField(uint256,bytes32[],uint8,bytes)",
@@ -311,11 +339,23 @@ export interface IWorldInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "mud_MonsterSystem_act",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "mud_MoveSystem_move",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "mud_PlayerSystem_spawn",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "mud_SpawnerSystem_create",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "mud_SpawnerSystem_spawn",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -438,7 +478,7 @@ export interface IWorld extends BaseContract {
       namespace: PromiseOrValue<BytesLike>,
       file: PromiseOrValue<BytesLike>,
       funcSelectorAndArgs: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     "deleteRecord(uint256,bytes32[])"(
@@ -522,6 +562,11 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    mud_MonsterSystem_act(
+      monster: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     mud_MoveSystem_move(
       x: PromiseOrValue<BigNumberish>,
       y: PromiseOrValue<BigNumberish>,
@@ -530,6 +575,21 @@ export interface IWorld extends BaseContract {
 
     mud_PlayerSystem_spawn(
       id: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    mud_SpawnerSystem_create(
+      roomX: PromiseOrValue<BigNumberish>,
+      roomY: PromiseOrValue<BigNumberish>,
+      x: PromiseOrValue<BigNumberish>,
+      y: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    mud_SpawnerSystem_spawn(
+      spawnerId: PromiseOrValue<BytesLike>,
+      x: PromiseOrValue<BigNumberish>,
+      y: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -614,7 +674,7 @@ export interface IWorld extends BaseContract {
     namespace: PromiseOrValue<BytesLike>,
     file: PromiseOrValue<BytesLike>,
     funcSelectorAndArgs: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   "deleteRecord(uint256,bytes32[])"(
@@ -698,6 +758,11 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  mud_MonsterSystem_act(
+    monster: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   mud_MoveSystem_move(
     x: PromiseOrValue<BigNumberish>,
     y: PromiseOrValue<BigNumberish>,
@@ -706,6 +771,21 @@ export interface IWorld extends BaseContract {
 
   mud_PlayerSystem_spawn(
     id: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  mud_SpawnerSystem_create(
+    roomX: PromiseOrValue<BigNumberish>,
+    roomY: PromiseOrValue<BigNumberish>,
+    x: PromiseOrValue<BigNumberish>,
+    y: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  mud_SpawnerSystem_spawn(
+    spawnerId: PromiseOrValue<BytesLike>,
+    x: PromiseOrValue<BigNumberish>,
+    y: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -872,6 +952,11 @@ export interface IWorld extends BaseContract {
 
     mud_CombatSystem_heal(overrides?: CallOverrides): Promise<void>;
 
+    mud_MonsterSystem_act(
+      monster: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     mud_MoveSystem_move(
       x: PromiseOrValue<BigNumberish>,
       y: PromiseOrValue<BigNumberish>,
@@ -880,6 +965,21 @@ export interface IWorld extends BaseContract {
 
     mud_PlayerSystem_spawn(
       id: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    mud_SpawnerSystem_create(
+      roomX: PromiseOrValue<BigNumberish>,
+      roomY: PromiseOrValue<BigNumberish>,
+      x: PromiseOrValue<BigNumberish>,
+      y: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    mud_SpawnerSystem_spawn(
+      spawnerId: PromiseOrValue<BytesLike>,
+      x: PromiseOrValue<BigNumberish>,
+      y: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -997,7 +1097,7 @@ export interface IWorld extends BaseContract {
       namespace: PromiseOrValue<BytesLike>,
       file: PromiseOrValue<BytesLike>,
       funcSelectorAndArgs: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     "deleteRecord(uint256,bytes32[])"(
@@ -1081,6 +1181,11 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    mud_MonsterSystem_act(
+      monster: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     mud_MoveSystem_move(
       x: PromiseOrValue<BigNumberish>,
       y: PromiseOrValue<BigNumberish>,
@@ -1089,6 +1194,21 @@ export interface IWorld extends BaseContract {
 
     mud_PlayerSystem_spawn(
       id: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    mud_SpawnerSystem_create(
+      roomX: PromiseOrValue<BigNumberish>,
+      roomY: PromiseOrValue<BigNumberish>,
+      x: PromiseOrValue<BigNumberish>,
+      y: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    mud_SpawnerSystem_spawn(
+      spawnerId: PromiseOrValue<BytesLike>,
+      x: PromiseOrValue<BigNumberish>,
+      y: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1174,7 +1294,7 @@ export interface IWorld extends BaseContract {
       namespace: PromiseOrValue<BytesLike>,
       file: PromiseOrValue<BytesLike>,
       funcSelectorAndArgs: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     "deleteRecord(uint256,bytes32[])"(
@@ -1258,6 +1378,11 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    mud_MonsterSystem_act(
+      monster: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     mud_MoveSystem_move(
       x: PromiseOrValue<BigNumberish>,
       y: PromiseOrValue<BigNumberish>,
@@ -1266,6 +1391,21 @@ export interface IWorld extends BaseContract {
 
     mud_PlayerSystem_spawn(
       id: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    mud_SpawnerSystem_create(
+      roomX: PromiseOrValue<BigNumberish>,
+      roomY: PromiseOrValue<BigNumberish>,
+      x: PromiseOrValue<BigNumberish>,
+      y: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    mud_SpawnerSystem_spawn(
+      spawnerId: PromiseOrValue<BytesLike>,
+      x: PromiseOrValue<BigNumberish>,
+      y: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

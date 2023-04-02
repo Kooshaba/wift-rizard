@@ -8,6 +8,173 @@ import type { IWorld, IWorldInterface } from "../IWorld";
 
 const _abi = [
   {
+    inputs: [
+      {
+        internalType: "string",
+        name: "resource",
+        type: "string",
+      },
+      {
+        internalType: "address",
+        name: "caller",
+        type: "address",
+      },
+    ],
+    name: "AccessDenied",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes4",
+        name: "functionSelector",
+        type: "bytes4",
+      },
+    ],
+    name: "FunctionSelectorExists",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes4",
+        name: "functionSelector",
+        type: "bytes4",
+      },
+    ],
+    name: "FunctionSelectorNotFound",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "resource",
+        type: "string",
+      },
+    ],
+    name: "InvalidSelector",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "module",
+        type: "string",
+      },
+    ],
+    name: "ModuleAlreadyInstalled",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "resource",
+        type: "string",
+      },
+    ],
+    name: "ResourceExists",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "resource",
+        type: "string",
+      },
+    ],
+    name: "ResourceNotFound",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "expected",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "received",
+        type: "uint256",
+      },
+    ],
+    name: "StoreCore_InvalidDataLength",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "expected",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "received",
+        type: "uint256",
+      },
+    ],
+    name: "StoreCore_InvalidFieldNamesLength",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "StoreCore_NotDynamicField",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "StoreCore_NotImplemented",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tableId",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "tableIdString",
+        type: "string",
+      },
+    ],
+    name: "StoreCore_TableAlreadyExists",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tableId",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "tableIdString",
+        type: "string",
+      },
+    ],
+    name: "StoreCore_TableNotFound",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "system",
+        type: "address",
+      },
+    ],
+    name: "SystemExists",
+    type: "error",
+  },
+  {
     anonymous: false,
     inputs: [
       {
@@ -108,7 +275,7 @@ const _abi = [
         type: "bytes",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -389,6 +556,19 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "bytes32",
+        name: "monster",
+        type: "bytes32",
+      },
+    ],
+    name: "mud_MonsterSystem_act",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "int32",
         name: "x",
         type: "int32",
@@ -413,6 +593,57 @@ const _abi = [
       },
     ],
     name: "mud_PlayerSystem_spawn",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "int32",
+        name: "roomX",
+        type: "int32",
+      },
+      {
+        internalType: "int32",
+        name: "roomY",
+        type: "int32",
+      },
+      {
+        internalType: "int32",
+        name: "x",
+        type: "int32",
+      },
+      {
+        internalType: "int32",
+        name: "y",
+        type: "int32",
+      },
+    ],
+    name: "mud_SpawnerSystem_create",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "spawnerId",
+        type: "bytes32",
+      },
+      {
+        internalType: "int32",
+        name: "x",
+        type: "int32",
+      },
+      {
+        internalType: "int32",
+        name: "y",
+        type: "int32",
+      },
+    ],
+    name: "mud_SpawnerSystem_spawn",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

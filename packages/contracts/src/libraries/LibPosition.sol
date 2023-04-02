@@ -21,6 +21,10 @@ library LibPosition {
     return x >= 0 ? x : -x;
   }
 
+  function withinRoomBounds(PositionData memory position) internal pure returns (bool) {
+    return position.x >= 0 && position.x < ROOM_SIZE && position.y >= 0 && position.y < ROOM_SIZE;
+  }
+
   function getDirection(PositionData memory coord1, PositionData memory coord2) internal pure returns (Direction) {
     int256 deltaX = coord2.x - coord1.x;
     int256 deltaY = coord2.y - coord1.y;

@@ -5,7 +5,7 @@
     },
     "textures": [
         {
-            "image": "atlas.png?timestamp=1680443192195",
+            "image": "atlas.png?timestamp=1680448772153",
             "format": "RGBA8888",
             "size": {
                 "w": 2048,
@@ -134,6 +134,48 @@
                     },
                     "frame": {
                         "x": 32,
+                        "y": 24,
+                        "w": 16,
+                        "h": 24
+                    }
+                },
+                {
+                    "filename": "sprites/monsters/spawner/0.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 16,
+                        "h": 24
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 16,
+                        "h": 24
+                    },
+                    "frame": {
+                        "x": 48,
+                        "y": 0,
+                        "w": 16,
+                        "h": 24
+                    }
+                },
+                {
+                    "filename": "sprites/monsters/spawner/1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 16,
+                        "h": 24
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 16,
+                        "h": 24
+                    },
+                    "frame": {
+                        "x": 48,
                         "y": 24,
                         "w": 16,
                         "h": 24

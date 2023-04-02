@@ -20,21 +20,6 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    Monster: (() => {
-      const tableId = new TableId("mud", "monster");
-      return defineComponent(
-        world,
-        {
-          value: RecsType.Boolean,
-        },
-        {
-          metadata: {
-            contractId: tableId.toHexString(),
-            tableId: tableId.toString(),
-          },
-        }
-      );
-    })(),
     Room: (() => {
       const tableId = new TableId("mud", "room");
       return defineComponent(
@@ -74,6 +59,21 @@ export function defineContractComponents(world: World) {
         {
           current: RecsType.Number,
           max: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    MoveSpeed: (() => {
+      const tableId = new TableId("mud", "moveSpeed");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Number,
         },
         {
           metadata: {
@@ -142,6 +142,66 @@ export function defineContractComponents(world: World) {
         world,
         {
           value: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    MonsterType: (() => {
+      const tableId = new TableId("mud", "monster");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Spawner: (() => {
+      const tableId = new TableId("mud", "spawner");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Boolean,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Nonce: (() => {
+      const tableId = new TableId("mud", "nonce");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    RngCommit: (() => {
+      const tableId = new TableId("mud", "rngCommit");
+      return defineComponent(
+        world,
+        {
+          blockNumber: RecsType.BigInt,
         },
         {
           metadata: {

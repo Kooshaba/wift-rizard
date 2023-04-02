@@ -10,7 +10,7 @@ import { LibCombat } from "../libraries/LibCombat.sol";
 import { Player } from "../tables/Player.sol";
 import { Health, HealthData } from "../tables/Health.sol";
 import { Position, PositionData, PositionTableId } from "../tables/Position.sol";
-import { Monster } from "../tables/Monster.sol";
+import { MonsterType } from "../tables/MonsterType.sol";
 import { Attack, AttackData } from "../tables/Attack.sol";
 import { EquippedBy } from "../tables/EquippedBy.sol";
 
@@ -55,14 +55,14 @@ contract CombatSystem is System {
       bytes32[] memory enemyIds = getKeysWithValue(PositionTableId, Position.encode(pattern[i].x, pattern[i].y));
       for (uint256 j = 0; j < enemyIds.length; j++) {
         bytes32 enemy = enemyIds[j];
-        if (!Monster.get(enemy)) continue;
+        if (MonsterType.get(enemy) == 0) continue;
 
         int32 damage = attackData.strength;
         HealthData memory defenderHealth = Health.get(enemy);
 
         if (damage >= defenderHealth.current) {
           Health.deleteRecord(enemy);
-          Monster.deleteRecord(enemy);
+          MonsterType.deleteRecord(enemy);
           Position.deleteRecord(enemy);
         } else {
           Health.setCurrent(enemy, defenderHealth.current - damage);

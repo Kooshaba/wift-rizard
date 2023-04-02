@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 enum ItemTypes {
+  Unknown,
   Sword,
   Dagger,
   Spear,
@@ -12,4 +13,12 @@ enum ItemTypes {
   Staff,
   DevilHorn,
   DevilHornLarge
+}
+
+enum MonsterTypes {
+  Unknown,
+  Spawner,
+  Skeleton,
+  SkeletonArcher,
+  Spider
 }

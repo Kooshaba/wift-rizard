@@ -5,20 +5,31 @@ import {
   defineSystem,
   runQuery,
   Has,
-  HasValue,
   getComponentValue,
   UpdateType,
   getComponentValueStrict,
+  HasValue,
+  Not,
 } from "@latticexyz/recs";
 import { NetworkLayer } from "./createNetworkLayer";
 import { BigNumber, ContractTransaction } from "ethers";
+import { ROOM_SIZE } from "./types";
+import { shuffle } from "lodash";
 
 export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
   const {
     world,
     actions,
     worldSend,
-    components: { Player, Position, Stamina },
+    components: {
+      Player,
+      Position,
+      Stamina,
+      Room,
+      Spawner,
+      MonsterType,
+      OptimisticStamina,
+    },
   } = layer;
 
   /**
@@ -77,7 +88,7 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
 
     const tx = await worldSend("mud_PlayerSystem_spawn", [
       nextPlayerId,
-      { gasLimit: 1_000_000 },
+      { gasLimit: 2_000_000 },
     ]);
 
     await tx.wait();
@@ -144,6 +155,114 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     });
   }
 
+  function createSpawner() {
+    const roomWithPlayer = [...runQuery([Has(Player), Has(Room)])][0];
+    if (!roomWithPlayer) return;
+
+    const room = getComponentValueStrict(Room, roomWithPlayer);
+    const x = Phaser.Math.RND.integerInRange(0, ROOM_SIZE - 1);
+    const y = Phaser.Math.RND.integerInRange(0, ROOM_SIZE - 1);
+
+    actions.add({
+      id: ("createSpawner" + Math.random().toPrecision(5)) as EntityID,
+      updates: () => [],
+      components: {},
+      requirement: () => true,
+      execute: async () => {
+        return await worldSend("mud_SpawnerSystem_create", [
+          room.x,
+          room.y,
+          x,
+          y,
+          {
+            gasLimit: 1_000_000,
+          },
+        ]);
+      },
+    });
+  }
+
+  function spawnMonster() {
+    const spawners = [...runQuery([Has(Spawner), Has(Position)])];
+    if (spawners.length === 0) return;
+
+    const spawner = spawners.find((spawner) => {
+      const stamina = getComponentValue(OptimisticStamina, spawner);
+      if (!stamina) return false;
+
+      return stamina.current >= stamina.max;
+    });
+    if (!spawner) return;
+
+    const spawnerPosition = getComponentValueStrict(Position, spawner);
+    const freePositionAroundSpawner = shuffle([
+      { x: spawnerPosition.x - 1, y: spawnerPosition.y },
+      { x: spawnerPosition.x + 1, y: spawnerPosition.y },
+      { x: spawnerPosition.x, y: spawnerPosition.y - 1 },
+      { x: spawnerPosition.x, y: spawnerPosition.y + 1 },
+    ]).find((position) => {
+      if (position.x < 0 || position.y < 0) return false;
+      if (position.x >= ROOM_SIZE || position.y >= ROOM_SIZE) return false;
+
+      const entitiesAtPosition = [...runQuery([HasValue(Position, position)])];
+      return entitiesAtPosition.length === 0;
+    });
+
+    if (!freePositionAroundSpawner) return;
+
+    actions.add({
+      id: ("spawnMonster" + Math.random().toPrecision(5)) as EntityID,
+      updates: () => [],
+      components: {},
+      requirement: () => true,
+      execute: async () => {
+        return await worldSend("mud_SpawnerSystem_spawn", [
+          world.entities[spawner],
+          freePositionAroundSpawner.x,
+          freePositionAroundSpawner.y,
+          {
+            gasLimit: 5_000_000,
+          },
+        ]);
+      },
+    });
+  }
+
+  function tickMonster(roomCoord: Coord) {
+    const monsters = [
+      ...runQuery([
+        Has(MonsterType),
+        Has(Position),
+        HasValue(Room, { x: roomCoord.x, y: roomCoord.y }),
+        Not(Spawner),
+      ]),
+    ];
+    if (monsters.length === 0) return;
+
+    const monster = shuffle(monsters).find((m) => {
+      const stamina = getComponentValue(OptimisticStamina, m);
+      if (!stamina) return false;
+
+      return stamina.current >= stamina.max;
+    });
+    if (!monster) return;
+
+    actions.add({
+      id: ("tickMonster" + Math.random().toPrecision(5)) as EntityID,
+      updates: () => [],
+      components: {},
+      requirement: () => true,
+      execute: async () => {
+        return await worldSend("mud_MonsterSystem_act", [
+          world.entities[monster],
+          {
+            gasLimit: 5_000_000,
+          },
+        ]);
+      },
+    });
+  }
+
   function getCurrentStamina(entity: EntityIndex): number {
     const stamina = getComponentValue(Stamina, entity);
     if (!stamina) return 0;
@@ -167,6 +286,10 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       move,
       attack,
       heal,
+
+      createSpawner,
+      spawnMonster,
+      tickMonster,
     },
   };
 }

@@ -7,7 +7,7 @@ library LibStamina {
   function spend(bytes32 id, int32 amount) internal {
     StaminaData memory stamina = getCurrent(id);
 
-    require(stamina.current > amount, "Not enough stamina");
+    require(stamina.current >= amount, "Not enough stamina");
 
     stamina.current -= amount;
     Stamina.set(id, stamina);

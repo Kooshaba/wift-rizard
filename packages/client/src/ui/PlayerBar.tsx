@@ -1,5 +1,11 @@
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
-import { EntityIndex, Has, HasValue, getComponentValueStrict, setComponent } from "@latticexyz/recs";
+import {
+  EntityIndex,
+  Has,
+  HasValue,
+  getComponentValueStrict,
+  setComponent,
+} from "@latticexyz/recs";
 import { useMUD } from "../store";
 import { GameMessages } from "./GameMessages";
 import { useActionButton } from "./hooks/useActionButton";
@@ -20,21 +26,21 @@ function Inventory({
       singletonEntity,
     },
     phaserLayer: {
-      components: {Targeting}
-    }
+      components: { Targeting },
+    },
   } = useMUD();
-  
-  const ugh = '0x' + playerData.playerId.replace('0x', '').padStart(64, '0')
-  const equippedItems = useEntityQuery([
-    HasValue(EquippedBy, { value: ugh }),
-  ]);
+
+  const ugh = "0x" + playerData.playerId.replace("0x", "").padStart(64, "0");
+  const equippedItems = useEntityQuery([HasValue(EquippedBy, { value: ugh })]);
 
   const playerPosition = useComponentValue(Position, playerData.player);
   if (!playerPosition) return <></>;
 
   return (
     <div>
-      <div className="flex flex-row items-center justify-center">
+      <div style={{
+        maxWidth: "125px",
+      }} className="flex flex-row items-center justify-center flex-wrap">
         {equippedItems.map((item) => {
           const itemType = getComponentValueStrict(ItemType, item).value;
           const name = ItemTypeNames[itemType];
@@ -43,7 +49,9 @@ function Inventory({
             <div key={item}>
               <Button
                 onClick={() => {
-                  setComponent(Targeting, playerData.player, { item: world.entities[item] });
+                  setComponent(Targeting, playerData.player, {
+                    item: world.entities[item],
+                  });
                 }}
               >
                 {name}
@@ -59,9 +67,9 @@ function Inventory({
 export function PlayerBar() {
   const {
     networkLayer: {
-      components: { Position, Health, OptimisticStamina },
+      components: { Position, Health, OptimisticStamina, Room },
       utils: {
-        txApi: { move, heal },
+        txApi: { move, heal, spawnMonster, createSpawner, tickMonster },
       },
     },
   } = useMUD();
@@ -71,6 +79,34 @@ export function PlayerBar() {
     Position,
     currentPlayer?.player || (0 as EntityIndex)
   ) || { x: 0, y: 0 };
+  const playerRoom = useComponentValue(
+    Room,
+    currentPlayer?.player || (0 as EntityIndex)
+  ) || { x: 0, y: 0 };
+
+  const { button: spawnMonsterButton } = useActionButton({
+    label: "Spawn Monster",
+    actionName: "spawnMonster",
+    actionFunction: () => {
+      spawnMonster();
+    },
+  });
+
+  const { button: createSpawnerButton } = useActionButton({
+    label: "Create Spawner",
+    actionName: "createSpawner",
+    actionFunction: () => {
+      createSpawner();
+    },
+  });
+
+  const { button: tickMonsterButton } = useActionButton({
+    label: "Tick Monster",
+    actionName: "tickMonster",
+    actionFunction: () => {
+      tickMonster(playerRoom);
+    },
+  });
 
   const { button: moveUpButton } = useActionButton({
     label: "Up",
@@ -131,6 +167,7 @@ export function PlayerBar() {
           <div className="text-center text-white">
             {playerHealth.current} / {playerHealth.max} HP
           </div>
+          {healButton}
         </div>
 
         {playerStamina && (
@@ -151,8 +188,10 @@ export function PlayerBar() {
         <div>{moveDownButton}</div>
       </div>
 
-      <div className="ml-4">
-        {healButton}
+      <div className="ml-4 flex flex-col">
+        {spawnMonsterButton}
+        {createSpawnerButton}
+        {tickMonsterButton}
       </div>
 
       <div className="flex flex-col items-center ml-8">

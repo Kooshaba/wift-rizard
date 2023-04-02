@@ -9,6 +9,7 @@ import { Player, PlayerTableId } from "../tables/Player.sol";
 import { Health, HealthData } from "../tables/Health.sol";
 import { Stamina, StaminaData } from "../tables/Stamina.sol";
 import { EquippedBy } from "../tables/EquippedBy.sol";
+import { MoveSpeed } from "../tables/MoveSpeed.sol";
 
 import { Position } from "../tables/Position.sol";
 import { Room } from "../tables/Room.sol";
@@ -30,14 +31,24 @@ contract PlayerSystem is System {
 
     Player.set(player, id);
     Position.set(player, 4, 4);
-    Room.set(player, 0, 0);
+    Room.set(player, 1, 1);
     Health.set(player, HealthData(100, 100));
+    MoveSpeed.set(player, 2);
     Stamina.set(
       player,
-      StaminaData({ current: 100_000, max: 100_000, regen: 100_000, lastRefreshedAt: block.timestamp })
+      StaminaData({ current: 100_000, max: 100_000, regen: 2_000, lastRefreshedAt: block.timestamp })
     );
 
     bytes32 item = LibFactory.createSword();
+    EquippedBy.set(item, player);
+
+    item = LibFactory.createBow();
+    EquippedBy.set(item, player);
+
+    item = LibFactory.createSpear();
+    EquippedBy.set(item, player);
+
+    item = LibFactory.createDevilHornLarge();
     EquippedBy.set(item, player);
   }
 }

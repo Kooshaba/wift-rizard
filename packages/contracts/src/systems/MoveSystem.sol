@@ -14,11 +14,9 @@ import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/ge
 
 contract MoveSystem is System {
   function move(int32 x, int32 y) public {
-    require(x >= 0 && x < ROOM_SIZE, "Invalid x coordinate");
-    require(y >= 0 && y < ROOM_SIZE, "Invalid y coordinate");
+    require(LibPosition.withinRoomBounds(PositionData(x, y)), "Invalid position");
 
     bytes32 player = addressToEntity(_msgSender());
-
     LibStamina.spend(player, 25_000);
 
     uint32 existingId = Player.get(player);
@@ -29,8 +27,6 @@ contract MoveSystem is System {
 
     PositionData memory oldCoord = Position.get(player);
     require(LibPosition.manhattan(oldCoord, PositionData(x, y)) == 1, "Must move one tile");
-
-    LibMonster.randomlySpawnMonster(player, x, y);
 
     Position.set(player, x, y);
   }

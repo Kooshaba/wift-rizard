@@ -9,6 +9,7 @@ import { createMessagesSystem } from "./createMessagesSystem";
 import { createClientStaminaSystem } from "./createClientStaminaSystem";
 import { createTargetingSystem } from "./createTargetingSystem";
 import { createDamageSystem } from "./createDamageSystem";
+import { drawMonsterBars } from "./drawMonsterBars";
 
 export const registerSystems = (layer: PhaserLayer) => {
   createCamera(layer);
@@ -20,4 +21,5 @@ export const registerSystems = (layer: PhaserLayer) => {
   createClientStaminaSystem(layer);
   createTargetingSystem(layer);
   createDamageSystem(layer);
+  drawMonsterBars(layer);
 };
