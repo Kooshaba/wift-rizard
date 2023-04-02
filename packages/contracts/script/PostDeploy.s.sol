@@ -10,9 +10,3 @@ contract PostDeploy is Script {
   function run(address worldAddress) external {
   }
 }
-
-contract TestContract {
-  function test() public view {
-    console.log(msg.sender);
-  }
-}

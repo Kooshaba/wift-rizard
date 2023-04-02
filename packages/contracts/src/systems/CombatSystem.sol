@@ -4,54 +4,69 @@ pragma solidity >=0.8.0;
 import { System } from "@latticexyz/world/src/System.sol";
 
 import { LibStamina } from "../libraries/LibStamina.sol";
-import { LibPosition } from "../libraries/LibPosition.sol";
+import { LibPosition, Direction } from "../libraries/LibPosition.sol";
+import { LibCombat } from "../libraries/LibCombat.sol";
 
 import { Player } from "../tables/Player.sol";
 import { Health, HealthData } from "../tables/Health.sol";
-import { Strength } from "../tables/Strength.sol";
-import { Position, PositionData } from "../tables/Position.sol";
+import { Position, PositionData, PositionTableId } from "../tables/Position.sol";
 import { Monster } from "../tables/Monster.sol";
+import { Attack, AttackData } from "../tables/Attack.sol";
+import { EquippedBy } from "../tables/EquippedBy.sol";
 
+import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";
 import { addressToEntity } from "../Utils.sol";
 
 contract CombatSystem is System {
-  function engage(bytes32 defender) public {
+  function attack(bytes32 item, int32 targetX, int32 targetY) public {
     bytes32 attacker = addressToEntity(_msgSender());
+    AttackData memory attackData = Attack.get(item);
 
-    LibStamina.spend(attacker, 20_000);
+    LibStamina.spend(attacker, attackData.staminaCost);
 
     require(Player.get(attacker) != 0, "Attacker must be a player");
-
-    require(attacker != defender, "Attacker and defender must be different entities");
-    require(Monster.get(defender), "Defender must be a monster");
+    require(EquippedBy.get(item) == attacker, "Item must be equipped by attacker");
 
     PositionData memory attackerPosition = Position.get(attacker);
-    PositionData memory defenderPosition = Position.get(defender);
-    require(LibPosition.manhattan(attackerPosition, defenderPosition) == 1, "Attacker and defender must be adjacent");
+    PositionData memory targetPosition = PositionData(targetX, targetY);
+    int32 distance = LibPosition.manhattan(attackerPosition, targetPosition);
 
-    int32 attackerDamage = Strength.get(attacker);
-    int32 defenderDamage = Strength.get(defender);
+    require(
+      distance <= attackData.maxRange && distance >= attackData.minRange,
+      "Attacker and defender must be adjacent"
+    );
 
-    HealthData memory attackerHealth = Health.get(attacker);
-    HealthData memory defenderHealth = Health.get(defender);
+    Direction direction = LibPosition.getDirection(attackerPosition, targetPosition);
 
-    if (attackerDamage >= defenderHealth.current) {
-      Health.deleteRecord(defender);
-      Monster.deleteRecord(defender);
-      Position.deleteRecord(defender);
+    PositionData[] memory pattern = new PositionData[](attackData.patternX.length);
+    for (uint256 i = 0; i < attackData.patternX.length; i++) {
+      pattern[i] = PositionData(attackData.patternX[i], attackData.patternY[i]);
+    }
 
-      // grow stronger after each kill
-      Health.setMax(attacker, attackerHealth.max + 10);
-      Strength.set(attacker, Strength.get(attacker) + 2);
-    } else {
-      Health.setCurrent(defender, defenderHealth.current - attackerDamage);
+    pattern = LibCombat.rotateAttackPattern(pattern, direction);
 
-      if (defenderDamage >= attackerHealth.current) {
-        Health.deleteRecord(attacker);
-        Position.deleteRecord(attacker);
-        Player.deleteRecord(attacker);
-      } else {
-        Health.setCurrent(attacker, attackerHealth.current - defenderDamage);
+    for (uint256 i = 0; i < pattern.length; i++) {
+      pattern[i].x += targetX;
+      pattern[i].y += targetY;
+    }
+
+    // find enemies in pattern
+    for (uint256 i = 0; i < pattern.length; i++) {
+      bytes32[] memory enemyIds = getKeysWithValue(PositionTableId, Position.encode(pattern[i].x, pattern[i].y));
+      for (uint256 j = 0; j < enemyIds.length; j++) {
+        bytes32 enemy = enemyIds[j];
+        if (!Monster.get(enemy)) continue;
+
+        int32 damage = attackData.strength;
+        HealthData memory defenderHealth = Health.get(enemy);
+
+        if (damage >= defenderHealth.current) {
+          Health.deleteRecord(enemy);
+          Monster.deleteRecord(enemy);
+          Position.deleteRecord(enemy);
+        } else {
+          Health.setCurrent(enemy, defenderHealth.current - damage);
+        }
       }
     }
   }

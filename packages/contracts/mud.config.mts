@@ -32,12 +32,6 @@ export default mudConfig({
         max: "int32",
       },
     },
-    Strength: {
-      fileSelector: "strength",
-      schema: {
-        value: "int32",
-      },
-    },
     Stamina: {
       fileSelector: "stamina",
       schema: {
@@ -45,8 +39,31 @@ export default mudConfig({
         max: "int32",
         regen: "int32",
         lastRefreshedAt: "uint256",
+      }, 
+    },
+    ItemType: {
+      fileSelector: "itemType",
+      schema: {
+        value: "uint32"
+      }
+    },
+    Attack: {
+      fileSelector: "attack",
+      schema: {
+        strength: "int32",
+        staminaCost: "int32",
+        minRange: "int32",
+        maxRange: "int32",
+        patternX: "int32[]",
+        patternY: "int32[]" 
       },
-    }
+    },
+    EquippedBy: {
+      fileSelector: "equippedBy",
+      schema: {
+        value: "bytes32"
+      }
+    },
   },
   modules: [
     {

@@ -11,7 +11,6 @@ export function Leaderboard() {
         Player,
         Position,
         Health,
-        Strength
       },
     },
   } = useMUD();
@@ -20,7 +19,6 @@ export function Leaderboard() {
     Has(Player),
     Has(Position),
     Has(Health),
-    Has(Strength),
   ]);
   const playerData = allPlayers
     .map((player) => {
@@ -28,19 +26,14 @@ export function Leaderboard() {
       const playerNumber = getComponentValueStrict(Player, player).value;
       const position = getComponentValueStrict(Position, player);
       const health = getComponentValueStrict(Health, player);
-      const strength = getComponentValueStrict(Strength, player).value;
 
       return {
         player,
         playerAddress,
         position,
         health,
-        strength,
         playerNumber,
       };
-    })
-    .sort((a, b) => {
-      return b.strength - a.strength;
     });
 
   return (
@@ -59,8 +52,6 @@ export function Leaderboard() {
               Player {player.playerNumber}: ({player.position.x},{" "}
               {player.position.y})<br />
               Health: {player.health.current} / {player.health.max}
-              <br />
-              Strength: {player.strength}
             </div>
           );
         })}

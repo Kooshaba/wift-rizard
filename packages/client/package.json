@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "initialize": "yarn build",
-    "dev": "vite",
+    "dev": "vite --force",
     "build": "yarn build:vite",
     "build:vite": "vite build",
     "preview": "vite preview"

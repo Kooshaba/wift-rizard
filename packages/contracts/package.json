@@ -9,7 +9,7 @@
     "prepare": "yarn tablegen && yarn worldgen && yarn worldtypes && yarn tsgen",
     "devnode": "mud devnode",
     "build": "forge clean && forge build",
-    "test": "echo todo",
+    "test": "mud test-v2",
     "dev": "yarn deploy && node ./openDevUrl.js",
     "deploy": "yarn prepare && mud deploy-v2",
     "deploy:testnet": "yarn prepare && mud deploy-v2 --profile=lattice-testnet",

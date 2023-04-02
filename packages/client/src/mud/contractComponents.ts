@@ -67,8 +67,26 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    Strength: (() => {
-      const tableId = new TableId("mud", "strength");
+    Stamina: (() => {
+      const tableId = new TableId("mud", "stamina");
+      return defineComponent(
+        world,
+        {
+          current: RecsType.Number,
+          max: RecsType.Number,
+          regen: RecsType.Number,
+          lastRefreshedAt: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    ItemType: (() => {
+      const tableId = new TableId("mud", "itemType");
       return defineComponent(
         world,
         {
@@ -82,15 +100,32 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    Stamina: (() => {
-      const tableId = new TableId("mud", "stamina");
+    Attack: (() => {
+      const tableId = new TableId("mud", "attack");
       return defineComponent(
         world,
         {
-          current: RecsType.Number,
-          max: RecsType.Number,
-          regen: RecsType.Number,
-          lastRefreshedAt: RecsType.BigInt,
+          strength: RecsType.Number,
+          staminaCost: RecsType.Number,
+          minRange: RecsType.Number,
+          maxRange: RecsType.Number,
+          patternX: RecsType.NumberArray,
+          patternY: RecsType.NumberArray,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    EquippedBy: (() => {
+      const tableId = new TableId("mud", "equippedBy");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.String,
         },
         {
           metadata: {

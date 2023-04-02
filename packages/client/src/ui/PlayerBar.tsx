@@ -1,37 +1,65 @@
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
-import { EntityIndex, Has, HasValue, runQuery } from "@latticexyz/recs";
-import { useEffect, useMemo, useState } from "react";
+import { EntityIndex, Has, HasValue, getComponentValueStrict, setComponent } from "@latticexyz/recs";
 import { useMUD } from "../store";
 import { GameMessages } from "./GameMessages";
 import { useActionButton } from "./hooks/useActionButton";
 import { useCurrentPlayer } from "./hooks/useCurrentPlayer";
 import { Button } from "./theme/Button";
 import { ClickWrapper } from "./theme/ClickWrapper";
+import { ItemTypeNames } from "../layers/network/types";
 
-function AttackButton({ monster }: { monster: EntityIndex }) {
+function Inventory({
+  playerData,
+}: {
+  playerData: NonNullable<ReturnType<typeof useCurrentPlayer>>;
+}) {
   const {
     networkLayer: {
-      utils: {
-        txApi: { attack },
-      },
+      world,
+      components: { EquippedBy, Position, ItemType },
+      singletonEntity,
     },
+    phaserLayer: {
+      components: {Targeting}
+    }
   } = useMUD();
+  
+  const ugh = '0x' + playerData.playerId.replace('0x', '').padStart(64, '0')
+  const equippedItems = useEntityQuery([
+    HasValue(EquippedBy, { value: ugh }),
+  ]);
 
-  const { button: attackButton } = useActionButton({
-    label: "Attack",
-    actionName: "attack",
-    actionFunction: () => {
-      attack(monster);
-    },
-  });
+  const playerPosition = useComponentValue(Position, playerData.player);
+  if (!playerPosition) return <></>;
 
-  return attackButton;
+  return (
+    <div>
+      <div className="flex flex-row items-center justify-center">
+        {equippedItems.map((item) => {
+          const itemType = getComponentValueStrict(ItemType, item).value;
+          const name = ItemTypeNames[itemType];
+
+          return (
+            <div key={item}>
+              <Button
+                onClick={() => {
+                  setComponent(Targeting, playerData.player, { item: world.entities[item] });
+                }}
+              >
+                {name}
+              </Button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 export function PlayerBar() {
   const {
     networkLayer: {
-      components: { Position, Health, Strength, Monster, OptimisticStamina },
+      components: { Position, Health, OptimisticStamina },
       utils: {
         txApi: { move, heal },
       },
@@ -43,37 +71,6 @@ export function PlayerBar() {
     Position,
     currentPlayer?.player || (0 as EntityIndex)
   ) || { x: 0, y: 0 };
-
-  const adjacentPositions = useMemo(
-    () => [
-      { ...playerPosition, y: playerPosition.y - 1 },
-      { ...playerPosition, y: playerPosition.y + 1 },
-      { ...playerPosition, x: playerPosition.x - 1 },
-      { ...playerPosition, x: playerPosition.x + 1 },
-    ],
-    [playerPosition]
-  );
-
-  const allMonsters = useEntityQuery([Has(Monster)]);
-  const [adjacentMonster, setAdjacentMonster] = useState<
-    EntityIndex | undefined
-  >();
-
-  useEffect(() => {
-    setAdjacentMonster(undefined);
-    for (const position of adjacentPositions) {
-      const entities = [
-        ...runQuery([
-          Has(Monster),
-          HasValue(Position, { x: position.x, y: position.y }),
-        ]),
-      ];
-      if (entities.length > 0) {
-        setAdjacentMonster(entities[0]);
-        break;
-      }
-    }
-  }, [playerPosition, setAdjacentMonster, adjacentPositions, allMonsters]);
 
   const { button: moveUpButton } = useActionButton({
     label: "Up",
@@ -119,10 +116,6 @@ export function PlayerBar() {
     Health,
     (currentPlayer?.player || 0) as EntityIndex
   );
-  const playerStrength = useComponentValue(
-    Strength,
-    (currentPlayer?.player || 0) as EntityIndex
-  );
   const playerStamina = useComponentValue(
     OptimisticStamina,
     (currentPlayer?.player || 0) as EntityIndex
@@ -130,7 +123,6 @@ export function PlayerBar() {
 
   if (!currentPlayer) return <></>;
   if (!playerHealth) return <></>;
-  if (!playerStrength) return <></>;
 
   return (
     <ClickWrapper className="absolute bottom-0 left-0 h-[150px] w-screen bg-slate-400/40 flex flex-row items-center justify-center p-8 rounded-lg">
@@ -138,12 +130,6 @@ export function PlayerBar() {
         <div className="w-40 px-4 h-8 bg-red-600 rounded-lg mb-4 flex flex-row items-center justify-center">
           <div className="text-center text-white">
             {playerHealth.current} / {playerHealth.max} HP
-          </div>
-        </div>
-
-        <div className="w-40 h-8 bg-green-600 rounded-lg mb-4 flex flex-row items-center justify-center">
-          <div className="text-center text-white">
-            {playerStrength.value} STR
           </div>
         </div>
 
@@ -165,16 +151,12 @@ export function PlayerBar() {
         <div>{moveDownButton}</div>
       </div>
 
-      <div className="flex flex-col items-center ml-8">
-        <div className="mb-2">
-          {adjacentMonster ? (
-            <AttackButton monster={adjacentMonster} />
-          ) : (
-            <Button disabled={true}>Nothing to Attack</Button>
-          )}
-        </div>
+      <div className="ml-4">
+        {healButton}
+      </div>
 
-        <div>{healButton}</div>
+      <div className="flex flex-col items-center ml-8">
+        <Inventory playerData={currentPlayer} />
       </div>
 
       <div className="h-full w-[300px] ml-4 -mt-16">

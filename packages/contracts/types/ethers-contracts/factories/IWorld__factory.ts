@@ -360,11 +360,21 @@ const _abi = [
     inputs: [
       {
         internalType: "bytes32",
-        name: "defender",
+        name: "item",
         type: "bytes32",
       },
+      {
+        internalType: "int32",
+        name: "targetX",
+        type: "int32",
+      },
+      {
+        internalType: "int32",
+        name: "targetY",
+        type: "int32",
+      },
     ],
-    name: "mud_CombatSystem_engage",
+    name: "mud_CombatSystem_attack",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

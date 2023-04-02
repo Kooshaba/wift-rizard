@@ -19,7 +19,11 @@ export const createPhaserLayer = async (
   } = await createPhaserEngine(phaserConfig);
   world.registerDisposer(disposePhaser);
 
-  const components = {};
+  const components = {
+    Targeting: defineComponent(world, {
+      item: Type.Entity
+    }, { id: "Targeting" })
+  };
 
   const layer = {
     networkLayer,

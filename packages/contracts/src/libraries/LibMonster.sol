@@ -3,7 +3,6 @@ pragma solidity >=0.8.0;
 
 import { Monster } from "../tables/Monster.sol";
 import { Position, PositionData, PositionTableId } from "../tables/Position.sol";
-import { Strength } from "../tables/Strength.sol";
 import { Health, HealthData } from "../tables/Health.sol";
 
 import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";
@@ -34,7 +33,6 @@ library LibMonster {
   function spawnMonsterAt(bytes32 id, int32 x, int32 y) internal {
     Monster.set(id, true);
     Position.set(id, x, y);
-    Strength.set(id, 5);
     Health.set(id, HealthData(30, 30));
   }
 }

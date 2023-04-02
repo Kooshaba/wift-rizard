@@ -7,6 +7,8 @@ import { createMapSystem } from "./createMapSystem";
 import { createMonsterSystem } from "./createMonsterSystem";
 import { createMessagesSystem } from "./createMessagesSystem";
 import { createClientStaminaSystem } from "./createClientStaminaSystem";
+import { createTargetingSystem } from "./createTargetingSystem";
+import { createDamageSystem } from "./createDamageSystem";
 
 export const registerSystems = (layer: PhaserLayer) => {
   createCamera(layer);
@@ -16,4 +18,6 @@ export const registerSystems = (layer: PhaserLayer) => {
   createMapSystem(layer);
   createMessagesSystem(layer);
   createClientStaminaSystem(layer);
+  createTargetingSystem(layer);
+  createDamageSystem(layer);
 };

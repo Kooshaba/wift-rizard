@@ -11,7 +11,7 @@ import {
   getComponentValueStrict,
 } from "@latticexyz/recs";
 import { NetworkLayer } from "./createNetworkLayer";
-import { BigNumber } from "ethers";
+import { BigNumber, ContractTransaction } from "ethers";
 
 export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
   const {
@@ -65,7 +65,7 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     });
   }
 
-  function spawnPlayer() {
+  async function spawnPlayer(): Promise<ContractTransaction> {
     const getRandomCoord = () => {
       return {
         x: Math.floor(Math.random() * 20),
@@ -98,24 +98,18 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
         0
       ) + 1;
 
-    actions.add({
-      id: ("spawnPlayer" + Math.random().toPrecision(5)) as EntityID,
-      updates: () => [],
-      components: {},
-      requirement: () => true,
-      execute: async () => {
-        const { x, y } = findPosition();
 
-        return worldSend("mud_PlayerSystem_spawn", [
-          nextPlayerId,
-          x,
-          y,
-          {
-            gasLimit: 1_000_000,
-          },
-        ]);
-      },
-    });
+    const { x, y } = findPosition();
+    const tx = await worldSend("mud_PlayerSystem_spawn", [
+      nextPlayerId,
+      x,
+      y,
+      { gasLimit: 5_000_000 },
+    ]);
+
+    await tx.wait();
+
+    return tx;
   }
 
   function move(coord: Coord) {
@@ -125,7 +119,7 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       components: {},
       requirement: () => true,
       execute: async () => {
-        return worldSend("mud_MoveSystem_move", [
+        return await worldSend("mud_MoveSystem_move", [
           coord.x,
           coord.y,
           {
@@ -136,21 +130,27 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     });
   }
 
-  function attack(monster: EntityIndex) {
+  function attack(item: EntityIndex, target: Coord) {
+    const itemId = world.entities[item];
+
     actions.add({
       id: ("attack" + Math.random().toPrecision(5)) as EntityID,
       updates: () => [],
       components: {},
       requirement: () => true,
       execute: async () => {
-        const monsterId = world.entities[monster];
-
-        return worldSend("mud_CombatSystem_engage", [
-          monsterId,
+        const tx = await worldSend("mud_CombatSystem_attack", [
+          itemId,
+          target.x,
+          target.y,
           {
-            gasLimit: 1000000,
+            gasLimit: 1_000_000,
           },
         ]);
+
+        await tx.wait();
+
+        return tx;
       },
     });
   }
@@ -176,9 +176,12 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     if (!stamina) return 0;
 
     const currentTime = BigNumber.from(Math.floor(Date.now() / 1000));
-    const secondsSinceLastRefresh = currentTime.sub(stamina.lastRefreshedAt).toNumber();
+    const secondsSinceLastRefresh = currentTime
+      .sub(stamina.lastRefreshedAt)
+      .toNumber();
 
-    const newCurrent = secondsSinceLastRefresh * stamina.regen + stamina.current;
+    const newCurrent =
+      secondsSinceLastRefresh * stamina.regen + stamina.current;
     return Math.min(newCurrent, stamina.max);
   }
 
