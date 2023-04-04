@@ -8,6 +8,7 @@ import { LoadingScreen } from "./LoadingScreen";
 import { PlayerBar } from "./PlayerBar";
 import { Spawn } from "./Spawn";
 import { Wrapper } from "./Wrapper";
+import { ActionQueue } from "./ActionQueue";
 
 export const UIRoot = () => {
   const layers = useStore((state) => {
@@ -27,6 +28,7 @@ export const UIRoot = () => {
       <Header />
 
       <Leaderboard />
+      <ActionQueue />
 
       <PlayerBar />
       <Spawn />

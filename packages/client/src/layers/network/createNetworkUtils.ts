@@ -90,9 +90,7 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       nextPlayerId,
       { gasLimit: 2_000_000 },
     ]);
-
-    await tx.wait();
-
+    
     return tx;
   }
 
@@ -131,8 +129,6 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
             gasLimit: 1_000_000,
           },
         ]);
-
-        await tx.wait();
 
         return tx;
       },
@@ -216,12 +212,12 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       components: {},
       requirement: () => true,
       execute: async () => {
-        return await worldSend("mud_SpawnerSystem_spawn", [
+        return worldSend("mud_SpawnerSystem_spawn", [
           world.entities[spawner],
           freePositionAroundSpawner.x,
           freePositionAroundSpawner.y,
           {
-            gasLimit: 5_000_000,
+            gasLimit: 2_000_000,
           },
         ]);
       },

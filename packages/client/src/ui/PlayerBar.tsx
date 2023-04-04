@@ -13,6 +13,7 @@ import { useCurrentPlayer } from "./hooks/useCurrentPlayer";
 import { Button } from "./theme/Button";
 import { ClickWrapper } from "./theme/ClickWrapper";
 import { ItemTypeNames } from "../layers/network/types";
+import { twMerge } from "tailwind-merge";
 
 function Inventory({
   playerData,
@@ -22,7 +23,7 @@ function Inventory({
   const {
     networkLayer: {
       world,
-      components: { EquippedBy, Position, ItemType },
+      components: { EquippedBy, Position, ItemType, OptimisticStamina, Attack },
       singletonEntity,
     },
     phaserLayer: {
@@ -33,21 +34,29 @@ function Inventory({
   const ugh = "0x" + playerData.playerId.replace("0x", "").padStart(64, "0");
   const equippedItems = useEntityQuery([HasValue(EquippedBy, { value: ugh })]);
 
+  const playerStamina = useComponentValue(OptimisticStamina, playerData.player);
+
   const playerPosition = useComponentValue(Position, playerData.player);
   if (!playerPosition) return <></>;
+  if (!playerStamina) return <></>;
 
   return (
     <div>
-      <div style={{
-        maxWidth: "125px",
-      }} className="flex flex-row items-center justify-center flex-wrap">
+      <div
+        style={{
+          maxWidth: "125px",
+        }}
+        className="flex flex-row items-center justify-center flex-wrap"
+      >
         {equippedItems.map((item) => {
           const itemType = getComponentValueStrict(ItemType, item).value;
+          const attackCost = getComponentValueStrict(Attack, item).staminaCost;
           const name = ItemTypeNames[itemType];
 
           return (
             <div key={item}>
               <Button
+                className={twMerge(playerStamina.current < attackCost && "bg-red-600 disabled")}
                 onClick={() => {
                   setComponent(Targeting, playerData.player, {
                     item: world.entities[item],
