@@ -270,6 +270,22 @@ library Attack {
     _store.pushToField(_tableId, _primaryKeys, 4, abi.encodePacked((_element)));
   }
 
+  /** Update an element of patternX at `_index` */
+  function updatePatternX(bytes32 key, uint256 _index, int32 _element) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    StoreSwitch.updateInField(_tableId, _primaryKeys, 4, _index * 4, abi.encodePacked((_element)));
+  }
+
+  /** Update an element of patternX (using the specified store) at `_index` */
+  function updatePatternX(IStore _store, bytes32 key, uint256 _index, int32 _element) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    _store.updateInField(_tableId, _primaryKeys, 4, _index * 4, abi.encodePacked((_element)));
+  }
+
   /** Get patternY */
   function getPatternY(bytes32 key) internal view returns (int32[] memory patternY) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
@@ -318,6 +334,22 @@ library Attack {
     _primaryKeys[0] = bytes32((key));
 
     _store.pushToField(_tableId, _primaryKeys, 5, abi.encodePacked((_element)));
+  }
+
+  /** Update an element of patternY at `_index` */
+  function updatePatternY(bytes32 key, uint256 _index, int32 _element) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    StoreSwitch.updateInField(_tableId, _primaryKeys, 5, _index * 4, abi.encodePacked((_element)));
+  }
+
+  /** Update an element of patternY (using the specified store) at `_index` */
+  function updatePatternY(IStore _store, bytes32 key, uint256 _index, int32 _element) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    _store.updateInField(_tableId, _primaryKeys, 5, _index * 4, abi.encodePacked((_element)));
   }
 
   /** Get the full data */
@@ -407,16 +439,20 @@ library Attack {
 
     _table.maxRange = (int32(uint32(Bytes.slice4(_blob, 12))));
 
-    uint256 _start;
-    uint256 _end = 48;
+    // Store trims the blob if dynamic fields are all empty
+    if (_blob.length > 16) {
+      uint256 _start;
+      // skip static data length + dynamic lengths word
+      uint256 _end = 48;
 
-    _start = _end;
-    _end += _encodedLengths.atIndex(0);
-    _table.patternX = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_int32());
+      _start = _end;
+      _end += _encodedLengths.atIndex(0);
+      _table.patternX = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_int32());
 
-    _start = _end;
-    _end += _encodedLengths.atIndex(1);
-    _table.patternY = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_int32());
+      _start = _end;
+      _end += _encodedLengths.atIndex(1);
+      _table.patternY = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_int32());
+    }
   }
 
   /** Tightly pack full data using this table's schema */

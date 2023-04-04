@@ -5,14 +5,20 @@ import { Position, PositionData } from "../tables/Position.sol";
 import { ROOM_SIZE } from "./LibPosition.sol";
 
 library PositionQueue {
+  struct Element {
+    PositionData position;
+    int32 distanceToTarget;
+    int32 distanceFromStart;
+  }
+
   struct Queue {
-    PositionData[] elements;
+    Element[] elements;
     uint256 front;
     uint256 back;
   }
 
   function create() internal pure returns (Queue memory) {
-    PositionData[] memory elements = new PositionData[](81);
+    Element[] memory elements = new Element[](81);
     return Queue(elements, 0, 0);
   }
 
@@ -24,17 +30,17 @@ library PositionQueue {
     return (self.back + 1) % 81 == self.front;
   }
 
-  function enqueue(Queue memory self, PositionData memory element) internal pure {
+  function enqueue(Queue memory self, Element memory element) internal pure {
     require(!isFull(self), "Queue is full");
 
     self.elements[self.back] = element;
     self.back = (self.back + 1) % 81;
   }
 
-  function dequeue(Queue memory self) internal pure returns (PositionData memory) {
+  function dequeue(Queue memory self) internal pure returns (Element memory) {
     require(!isEmpty(self), "Queue is empty");
 
-    PositionData memory element = self.elements[self.front];
+    Element memory element = self.elements[self.front];
     self.front = (self.front + 1) % 81;
 
     return element;

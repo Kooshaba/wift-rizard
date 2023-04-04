@@ -93,6 +93,22 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
+        name: "length",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "received",
+        type: "uint256",
+      },
+    ],
+    name: "StoreCore_DataIndexOverflow",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
         name: "expected",
         type: "uint256",
       },
@@ -904,6 +920,77 @@ const _abi = [
       },
     ],
     name: "setRecord",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "table",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32[]",
+        name: "key",
+        type: "bytes32[]",
+      },
+      {
+        internalType: "uint8",
+        name: "schemaIndex",
+        type: "uint8",
+      },
+      {
+        internalType: "uint256",
+        name: "startByteIndex",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes",
+        name: "dataToSet",
+        type: "bytes",
+      },
+    ],
+    name: "updateInField",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes16",
+        name: "namespace",
+        type: "bytes16",
+      },
+      {
+        internalType: "bytes16",
+        name: "file",
+        type: "bytes16",
+      },
+      {
+        internalType: "bytes32[]",
+        name: "key",
+        type: "bytes32[]",
+      },
+      {
+        internalType: "uint8",
+        name: "schemaIndex",
+        type: "uint8",
+      },
+      {
+        internalType: "uint256",
+        name: "startByteIndex",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes",
+        name: "dataToSet",
+        type: "bytes",
+      },
+    ],
+    name: "updateInField",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
