@@ -1,4 +1,5 @@
-import { Chain } from "@wagmi/chains";
+import { MudChain } from "./types";
+
 
 const localhost = {
   id: 31337,
@@ -19,6 +20,8 @@ const localhost = {
       webSocket: ["ws://127.0.0.1:8545"],
     },
   },
-} as const satisfies Chain;
+  modeUrl: undefined,
+  faucetUrl: undefined,
+} as const satisfies MudChain;
 
 export default localhost;
