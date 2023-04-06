@@ -12,10 +12,14 @@ export function createDamageSystem(layer: PhaserLayer) {
   const {
     world,
     scenes: {
-      Main: { objectPool, phaserScene },
+      Main: {
+        objectPool,
+        camera: { phaserCamera },
+      },
     },
     networkLayer: {
       components: { Health, Position },
+      playerEntity,
     },
   } = layer;
 
@@ -23,7 +27,11 @@ export function createDamageSystem(layer: PhaserLayer) {
     if (!isComponentUpdate(update, Health)) return;
     if (update.type === UpdateType.Enter) return;
 
-    const { entity } = update;
+    const { entity, value } = update;
+    const [current, previous] = value.map((v) => (v?.value ?? 0) as number);
+    if (current > previous) return;
+
+    if (entity === playerEntity) phaserCamera.shake(100, 0.0005);
 
     const obj = objectPool.get(entity, "Sprite");
     obj.setComponent({
