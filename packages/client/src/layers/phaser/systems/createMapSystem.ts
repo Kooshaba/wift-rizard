@@ -1,6 +1,6 @@
 import { sample } from "lodash";
 import { Tileset } from "../../../artTypes/terrain";
-import { ROOM_SIZE } from "../../network/types";
+import { ROOM_WIDTH, ROOM_HEIGHT } from "../../network/types";
 import { PhaserLayer } from "../createPhaserLayer";
 import {
   Has,
@@ -69,13 +69,13 @@ export function createMapSystem(layer: PhaserLayer) {
         const room = getComponentValue(Room, entity);
         if (!room) return;
 
-        for (let x = -1; x <= ROOM_SIZE; x++) {
-          for (let y = -1; y <= ROOM_SIZE; y++) {
+        for (let x = -1; x <= ROOM_WIDTH; x++) {
+          for (let y = -1; y <= ROOM_HEIGHT; y++) {
             const coord = { x, y };
 
-            if ((y === -1 && x !== -1 && x !== ROOM_SIZE) || y === ROOM_SIZE) {
+            if ((y === -1 && x !== -1 && x !== ROOM_WIDTH) || y === ROOM_HEIGHT) {
               putTileAt(coord, Tileset.WallX, "Background");
-            } else if (x === -1 || x === ROOM_SIZE) {
+            } else if (x === -1 || x === ROOM_WIDTH) {
               putTileAt(coord, Tileset.WallY, "Background");
             } else {
               putTileAt(coord, sample(groundTiles)!, "Background");

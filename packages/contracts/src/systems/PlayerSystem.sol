@@ -36,7 +36,7 @@ contract PlayerSystem is System {
     MoveSpeed.set(player, 2);
     Stamina.set(
       player,
-      StaminaData({ current: 100_000, max: 100_000, regen: 10_000, lastRefreshedAt: block.timestamp })
+      StaminaData({ current: 100_000, max: 100_000, regen: 7_500, lastRefreshedAt: block.timestamp })
     );
 
     bytes32 item = LibFactory.createSword();
@@ -48,7 +48,7 @@ contract PlayerSystem is System {
     item = LibFactory.createSpear();
     EquippedBy.set(item, player);
 
-    item = LibFactory.createDevilHornLarge();
+    item = LibFactory.createAxe();
     EquippedBy.set(item, player);
   }
 }

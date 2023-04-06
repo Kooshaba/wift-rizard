@@ -3,7 +3,8 @@ pragma solidity >=0.8.0;
 
 import { PositionData } from "../tables/Position.sol";
 
-int32 constant ROOM_SIZE = 9;
+int32 constant ROOM_WIDTH = 12;
+int32 constant ROOM_HEIGHT = 6;
 
 enum Direction {
   Up,
@@ -30,7 +31,7 @@ library LibPosition {
   }
 
   function withinRoomBounds(PositionData memory position) internal pure returns (bool) {
-    return position.x >= 0 && position.x < ROOM_SIZE && position.y >= 0 && position.y < ROOM_SIZE;
+    return position.x >= 0 && position.x < ROOM_WIDTH && position.y >= 0 && position.y < ROOM_HEIGHT;
   }
 
   function getDirection(PositionData memory coord1, PositionData memory coord2) internal pure returns (Direction) {

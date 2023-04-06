@@ -4,6 +4,7 @@ import {
   Has,
   HasValue,
   getComponentValueStrict,
+  removeComponent,
   setComponent,
 } from "@latticexyz/recs";
 import { useMUD } from "../store";
@@ -12,8 +13,11 @@ import { useActionButton } from "./hooks/useActionButton";
 import { useCurrentPlayer } from "./hooks/useCurrentPlayer";
 import { Button } from "./theme/Button";
 import { ClickWrapper } from "./theme/ClickWrapper";
-import { ItemTypeNames } from "../layers/network/types";
+import { ItemTypeNames, ItemTypeSprites } from "../layers/network/types";
 import { twMerge } from "tailwind-merge";
+import { SpriteImage } from "./theme/SpriteImage";
+import { Sprites } from "../layers/phaser/constants";
+import { useEffect } from "react";
 
 function Inventory({
   playerData,
@@ -42,29 +46,29 @@ function Inventory({
 
   return (
     <div>
-      <div
-        style={{
-          maxWidth: "125px",
-        }}
-        className="flex flex-row items-center justify-center flex-wrap"
-      >
+      <div className="flex flex-row items-center justify-center flex-wrap">
         {equippedItems.map((item) => {
           const itemType = getComponentValueStrict(ItemType, item).value;
           const attackCost = getComponentValueStrict(Attack, item).staminaCost;
           const name = ItemTypeNames[itemType];
 
           return (
-            <div key={item}>
-              <Button
-                className={twMerge(playerStamina.current < attackCost && "bg-red-600 disabled")}
-                onClick={() => {
-                  setComponent(Targeting, playerData.player, {
-                    item: world.entities[item],
-                  });
-                }}
-              >
-                {name}
-              </Button>
+            <div
+              key={item}
+              style={{
+                border: "1px #5D6065 solid",
+              }}
+              className={twMerge(
+                "rounded-lg ml-4 cursor-pointer bg-gray-900 hover:bg-gray-700 hover:shadow-lg hover:border-gray-600 px-4",
+                playerStamina.current < attackCost && "bg-red-600 disabled hover:bg-red-600"
+              )}
+              onClick={() => {
+                setComponent(Targeting, playerData.player, {
+                  item: world.entities[item],
+                });
+              }}
+            >
+              <SpriteImage spriteKey={ItemTypeSprites[itemType]} scale={5} />
             </div>
           );
         })}
@@ -78,7 +82,7 @@ export function PlayerBar() {
     networkLayer: {
       components: { Position, Health, OptimisticStamina, Room },
       utils: {
-        txApi: { move, heal, spawnMonster, createSpawner, tickMonster },
+        txApi: { move },
       },
     },
   } = useMUD();
@@ -93,69 +97,32 @@ export function PlayerBar() {
     currentPlayer?.player || (0 as EntityIndex)
   ) || { x: 0, y: 0 };
 
-  const { button: spawnMonsterButton } = useActionButton({
-    label: "Spawn Monster",
-    actionName: "spawnMonster",
-    actionFunction: () => {
-      spawnMonster();
-    },
-  });
+  useEffect(() => {
+    if (!currentPlayer) return;
+    if (!playerPosition) return;
+    if (!playerRoom) return;
 
-  const { button: createSpawnerButton } = useActionButton({
-    label: "Create Spawner",
-    actionName: "createSpawner",
-    actionFunction: () => {
-      createSpawner();
-    },
-  });
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "w") {
+        move({ ...playerPosition, y: playerPosition.y - 1 });
+      }
+      if (e.key === "s") {
+        move({ ...playerPosition, y: playerPosition.y + 1 });
+      }
+      if (e.key === "a") {
+        move({ ...playerPosition, x: playerPosition.x - 1 });
+      }
+      if (e.key === "d") {
+        move({ ...playerPosition, x: playerPosition.x + 1 });
+      }
+    };
 
-  const { button: tickMonsterButton } = useActionButton({
-    label: "Tick Monster",
-    actionName: "tickMonster",
-    actionFunction: () => {
-      tickMonster(playerRoom);
-    },
-  });
+    window.addEventListener("keydown", onKeyDown);
 
-  const { button: moveUpButton } = useActionButton({
-    label: "Up",
-    actionName: "move",
-    actionFunction: () => {
-      move({ ...playerPosition, y: playerPosition.y - 1 });
-    },
-  });
-
-  const { button: moveDownButton } = useActionButton({
-    label: "Down",
-    actionName: "move",
-    actionFunction: () => {
-      move({ ...playerPosition, y: playerPosition.y + 1 });
-    },
-  });
-
-  const { button: moveLeftButton } = useActionButton({
-    label: "Left",
-    actionName: "move",
-    actionFunction: () => {
-      move({ ...playerPosition, x: playerPosition.x - 1 });
-    },
-  });
-
-  const { button: moveRightButton } = useActionButton({
-    label: "Right",
-    actionName: "move",
-    actionFunction: () => {
-      move({ ...playerPosition, x: playerPosition.x + 1 });
-    },
-  });
-
-  const { button: healButton } = useActionButton({
-    label: "Heal",
-    actionName: "heal",
-    actionFunction: () => {
-      heal();
-    },
-  });
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [currentPlayer, playerPosition, playerRoom]);
 
   const playerHealth = useComponentValue(
     Health,
@@ -168,48 +135,75 @@ export function PlayerBar() {
 
   if (!currentPlayer) return <></>;
   if (!playerHealth) return <></>;
+  if (!playerStamina) return <></>;
+
+  const currentHealthPercent = Math.floor(
+    (playerHealth.current / playerHealth.max) * 100
+  );
+  const healthMissingPercent = 100 - currentHealthPercent;
+  const currentStaminaPercent = Math.floor(
+    (playerStamina.current / playerStamina.max) * 100
+  );
+  const staminaMissingPercent = 100 - currentStaminaPercent;
 
   return (
-    <ClickWrapper className="absolute bottom-0 left-0 h-[150px] w-screen bg-slate-400/40 flex flex-row items-center justify-center p-8 rounded-lg">
+    <ClickWrapper className="absolute bottom-0 left-0 h-[175px] w-screen flex flex-row items-center justify-center">
       <div>
-        <div className="w-40 px-4 h-8 bg-red-600 rounded-lg mb-4 flex flex-row items-center justify-center">
-          <div className="text-center text-white">
-            {playerHealth.current} / {playerHealth.max} HP
+        <SpriteImage spriteKey={Sprites.Avatar} scale={3.5} />
+      </div>
+
+      <div className="h-[125px]">
+        <div className="mb-10">
+          <div className="mb-2 flex flex-flow justify-between">
+            <SpriteImage spriteKey={Sprites.Heart} />
+            <span className="text-white">
+              {playerHealth.current} / {playerHealth.max}
+            </span>
           </div>
-          {healButton}
+          <div className="relative w-[400px]">
+            <span
+              style={{
+                transform: `translateX(-${
+                  healthMissingPercent / 2
+                }%) scaleX(${currentHealthPercent}%)`,
+              }}
+              className="absolute top-0 left-0 overflow-hidden"
+            >
+              <SpriteImage spriteKey={Sprites.HealthBarFill} />
+            </span>
+            <span className="absolute top-0 left-0">
+              <SpriteImage spriteKey={Sprites.BarFrame} />
+            </span>
+          </div>
         </div>
 
-        {playerStamina && (
-          <div className="w-40 h-8 bg-blue-600 rounded-lg mb-4 flex flex-row items-center justify-center">
-            <div className="text-center text-white">
-              {playerStamina?.current / 1000} / {playerStamina?.max / 1000} STA
-            </div>
+        <div>
+          <div className="mb-2 flex flex-flow justify-between">
+            <SpriteImage spriteKey={Sprites.StaminaDot} />
+            <span className="text-white">
+              {playerStamina.current / 1000} / {playerStamina.max / 1000}
+            </span>
           </div>
-        )}
-      </div>
+          <div className="relative w-[400px]">
+            <span
+              style={{
+                transform: `translateX(-${
+                  staminaMissingPercent / 2
+                }%) scaleX(${currentStaminaPercent}%)`,
+              }}
+              className="absolute top-0 left-0 overflow-hidden transition-all ease-linear"
+            >
+              <SpriteImage spriteKey={Sprites.StaminaBarFill} />
+            </span>
 
-      <div className="flex flex-col items-center ml-8">
-        <div className="mb-2">{moveUpButton}</div>
-        <div className="mb-2">
-          <span className="mr-2">{moveLeftButton}</span>
-          {moveRightButton}
+            <span className="absolute top-0 left-0">
+              <SpriteImage spriteKey={Sprites.BarFrame} />
+            </span>
+          </div>
         </div>
-        <div>{moveDownButton}</div>
       </div>
 
-      <div className="ml-4 flex flex-col">
-        {spawnMonsterButton}
-        {createSpawnerButton}
-        {tickMonsterButton}
-      </div>
-
-      <div className="flex flex-col items-center ml-8">
-        <Inventory playerData={currentPlayer} />
-      </div>
-
-      <div className="h-full w-[300px] ml-4 -mt-16">
-        <GameMessages height={150} />
-      </div>
+      <Inventory playerData={currentPlayer} />
     </ClickWrapper>
   );
 }

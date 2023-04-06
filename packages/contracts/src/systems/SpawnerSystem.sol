@@ -12,7 +12,7 @@ import { Room, RoomData } from "../tables/Room.sol";
 import { MonsterTypes } from "../Types.sol";
 
 import { LibMonster } from "../libraries/LibMonster.sol";
-import { LibPosition, ROOM_SIZE } from "../libraries/LibPosition.sol";
+import { LibPosition } from "../libraries/LibPosition.sol";
 import { LibStamina } from "../libraries/LibStamina.sol";
 
 import { addressToEntity, getUniqueEntityId } from "../Utils.sol";

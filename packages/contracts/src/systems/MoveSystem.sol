@@ -6,7 +6,7 @@ import { Position, PositionData, PositionTableId } from "../tables/Position.sol"
 import { World } from "@latticexyz/world/src/World.sol";
 
 import { LibMonster } from "../libraries/LibMonster.sol";
-import { LibPosition, ROOM_SIZE } from "../libraries/LibPosition.sol";
+import { LibPosition } from "../libraries/LibPosition.sol";
 import { LibStamina } from "../libraries/LibStamina.sol";
 
 import { addressToEntity } from "../Utils.sol";

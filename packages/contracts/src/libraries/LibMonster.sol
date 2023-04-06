@@ -43,8 +43,8 @@ library LibMonster {
     Spawner.set(id, true);
     Room.set(id, room);
     Position.set(id, position);
-    Health.set(id, 100, 100);
-    Stamina.set(id, StaminaData({ current: 100_000, max: 100_000, regen: 10_000, lastRefreshedAt: block.timestamp }));
+    Health.set(id, 50, 50);
+    Stamina.set(id, StaminaData({ current: 100_000, max: 100_000, regen: 5_000, lastRefreshedAt: block.timestamp }));
 
     return id;
   }

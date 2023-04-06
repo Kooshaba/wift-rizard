@@ -57,10 +57,77 @@ export const phaserConfig = {
         [Maps.Main]: mainMap,
       },
       sprites: {
-        [Sprites.Soldier]: {
+        [Sprites.Avatar]: {
           assetKey: Assets.MainAtlas,
-          frame: "sprites/soldier/idle/0.png",
+          frame: "sprites/avatars/0.png",
         },
+
+        [Sprites.Heart]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/ui/heart/0.png",
+        },
+        [Sprites.StaminaDot]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/ui/stamina-dot/0.png",
+        },
+        [Sprites.BarFrame]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/ui/bar/frame/0.png",
+        },
+        [Sprites.HealthBarFill]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/ui/bar/health-fill/0.png",
+        },
+        [Sprites.StaminaBarFill]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/ui/bar/stamina-fill/0.png",
+        },
+
+        // Weapons
+        [Sprites.Sword]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/items/0.png",
+        },
+        [Sprites.Dagger]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/items/4.png",
+        },
+        [Sprites.Spear]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/items/26.png",
+        },
+        [Sprites.Hammer]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/items/14.png",
+        },
+        [Sprites.Axe]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/items/9.png",
+        },
+        [Sprites.Shield]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/items/43.png",
+        },
+        [Sprites.Bow]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/items/17.png",
+        },
+        [Sprites.BowLarge]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/items/18.png",
+        },
+        [Sprites.Staff]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/items/3.png",
+        },
+        [Sprites.DevilHorn]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/items/234.png",
+        },
+        [Sprites.DevilHornLarge]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/items/234.png",
+        }
       },
       animations: [
         {

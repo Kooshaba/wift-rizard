@@ -14,7 +14,7 @@ import { MoveSpeed } from "../tables/MoveSpeed.sol";
 import { MonsterTypes } from "../Types.sol";
 
 import { LibMonster } from "../libraries/LibMonster.sol";
-import { LibPosition, ROOM_SIZE } from "../libraries/LibPosition.sol";
+import { LibPosition, ROOM_WIDTH, ROOM_HEIGHT } from "../libraries/LibPosition.sol";
 import { LibStamina } from "../libraries/LibStamina.sol";
 import { PositionQueue } from "../libraries/PositionQueue.sol";
 
@@ -97,9 +97,9 @@ contract MonsterSystem is System {
     PositionData memory target,
     int32 movementLimit
   ) private view returns (PositionData memory closestPosition, int32 closestDistanceToTarget) {
-    int32[ROOM_SIZE][ROOM_SIZE] memory visited;
-    for (int32 i = 0; i < ROOM_SIZE; i++) {
-      for (int32 j = 0; j < ROOM_SIZE; j++) {
+    int32[ROOM_WIDTH][ROOM_HEIGHT] memory visited;
+    for (int32 i = 0; i < ROOM_WIDTH; i++) {
+      for (int32 j = 0; j < ROOM_HEIGHT; j++) {
         visited[toUint256(i)][toUint256(j)] = -1;
       }
     }
@@ -157,7 +157,7 @@ contract MonsterSystem is System {
   }
 
   function isValidPosition(PositionData memory position) private view returns (bool) {
-    if (position.x < 0 || position.x >= ROOM_SIZE || position.y < 0 || position.y >= ROOM_SIZE) {
+    if (position.x < 0 || position.x >= ROOM_WIDTH || position.y < 0 || position.y >= ROOM_HEIGHT) {
       return false;
     }
 

@@ -2,13 +2,13 @@ import React from "react";
 import { useStore } from "../store";
 import { AdminControls } from "./AdminControls";
 import { ECSBrowser } from "./ECSBrowser";
-import { Header } from "./Header";
 import { Leaderboard } from "./Leaderboard";
 import { LoadingScreen } from "./LoadingScreen";
 import { PlayerBar } from "./PlayerBar";
 import { Spawn } from "./Spawn";
 import { Wrapper } from "./Wrapper";
 import { ActionQueue } from "./ActionQueue";
+import { DMTools } from "./DMTools";
 
 export const UIRoot = () => {
   const layers = useStore((state) => {
@@ -25,7 +25,7 @@ export const UIRoot = () => {
       <LoadingScreen />
       <AdminControls />
 
-      <Header />
+      <DMTools />
 
       <Leaderboard />
       <ActionQueue />

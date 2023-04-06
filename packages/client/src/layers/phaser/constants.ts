@@ -13,7 +13,26 @@ export enum Animations {
   Spawner = "Spawner",
 }
 export enum Sprites {
-  Soldier,
+  Avatar,
+
+  BarFrame,
+  HealthBarFill,
+  StaminaBarFill,
+  Heart,
+  StaminaDot,
+
+  // Weapons
+  Sword,
+  Dagger,
+  Spear,
+  Hammer,
+  Axe,
+  Shield,
+  Bow,
+  BowLarge,
+  Staff,
+  DevilHorn,
+  DevilHornLarge,
 }
 
 export enum Assets {

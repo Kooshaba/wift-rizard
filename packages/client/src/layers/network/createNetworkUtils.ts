@@ -13,7 +13,7 @@ import {
 } from "@latticexyz/recs";
 import { NetworkLayer } from "./createNetworkLayer";
 import { BigNumber, ContractTransaction } from "ethers";
-import { ROOM_SIZE } from "./types";
+import { ROOM_HEIGHT, ROOM_WIDTH } from "./types";
 import { shuffle } from "lodash";
 
 export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
@@ -156,8 +156,8 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     if (!roomWithPlayer) return;
 
     const room = getComponentValueStrict(Room, roomWithPlayer);
-    const x = Phaser.Math.RND.integerInRange(0, ROOM_SIZE - 1);
-    const y = Phaser.Math.RND.integerInRange(0, ROOM_SIZE - 1);
+    const x = Phaser.Math.RND.integerInRange(0, ROOM_WIDTH - 1);
+    const y = Phaser.Math.RND.integerInRange(0, ROOM_HEIGHT - 1);
 
     actions.add({
       id: ("createSpawner" + Math.random().toPrecision(5)) as EntityID,
@@ -198,7 +198,7 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       { x: spawnerPosition.x, y: spawnerPosition.y + 1 },
     ]).find((position) => {
       if (position.x < 0 || position.y < 0) return false;
-      if (position.x >= ROOM_SIZE || position.y >= ROOM_SIZE) return false;
+      if (position.x >= ROOM_WIDTH || position.y >= ROOM_HEIGHT) return false;
 
       const entitiesAtPosition = [...runQuery([HasValue(Position, position)])];
       return entitiesAtPosition.length === 0;
