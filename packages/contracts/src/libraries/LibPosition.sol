@@ -17,6 +17,14 @@ library LibPosition {
     return abs(a.x - b.x) + abs(a.y - b.y);
   }
 
+  function chebyshev(PositionData memory a, PositionData memory b) internal pure returns (int32) {
+    return max(abs(a.x - b.x), abs(a.y - b.y));
+  }
+
+  function max(int32 a, int32 b) internal pure returns (int32) {
+    return a >= b ? a : b;
+  }
+
   function abs(int32 x) internal pure returns (int32) {
     return x >= 0 ? x : -x;
   }
