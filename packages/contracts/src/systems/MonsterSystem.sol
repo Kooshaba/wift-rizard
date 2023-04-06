@@ -48,7 +48,7 @@ contract MonsterSystem is System {
     }
 
     bytes32 closestPlayer = 0;
-    PositionData memory closesPlayerPosition;
+    PositionData memory closestPlayerPosition;
     int32 closestPlayerDistance = 200;
 
     for (uint256 i = 0; i < playerCount; i++) {
@@ -56,7 +56,7 @@ contract MonsterSystem is System {
       int32 distance = LibPosition.manhattan(playerPosition, position);
       if (closestPlayer == 0 || distance < closestPlayerDistance) {
         closestPlayer = playersInRoom[i];
-        closesPlayerPosition = playerPosition;
+        closestPlayerPosition = playerPosition;
         closestPlayerDistance = distance;
       }
     }
@@ -66,7 +66,7 @@ contract MonsterSystem is System {
 
       (PositionData memory closestPosition, int32 closestDistance) = findClosestPosition(
         position,
-        closesPlayerPosition,
+        closestPlayerPosition,
         monsterMoveSpeed
       );
 
@@ -97,14 +97,9 @@ contract MonsterSystem is System {
     PositionData memory target,
     int32 movementLimit
   ) private view returns (PositionData memory closestPosition, int32 closestDistanceToTarget) {
-    int32[ROOM_WIDTH][ROOM_HEIGHT] memory visited;
-    for (int32 i = 0; i < ROOM_WIDTH; i++) {
-      for (int32 j = 0; j < ROOM_HEIGHT; j++) {
-        visited[toUint256(i)][toUint256(j)] = -1;
-      }
-    }
+    bool[ROOM_WIDTH][ROOM_HEIGHT] memory visited;
 
-    visited[toUint256(start.x)][toUint256(start.y)] = 1;
+    visited[toUint256(start.x)][toUint256(start.y)] = true;
     PositionQueue.Queue memory queue = PositionQueue.create();
     PositionQueue.Element memory startElement = PositionQueue.Element({
       position: start,
@@ -142,8 +137,8 @@ contract MonsterSystem is System {
           currentElement.position.y + moves[i][1]
         );
 
-        if (isValidPosition(newPosition) && visited[toUint256(newPosition.x)][toUint256(newPosition.y)] == -1) {
-          visited[toUint256(newPosition.x)][toUint256(newPosition.y)] = 1;
+        if (isValidPosition(newPosition) && !visited[toUint256(newPosition.x)][toUint256(newPosition.y)]) {
+          visited[toUint256(newPosition.x)][toUint256(newPosition.y)] = true;
 
           PositionQueue.Element memory newElement = PositionQueue.Element({
             position: newPosition,
