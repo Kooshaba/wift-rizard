@@ -19,16 +19,17 @@ import { addressToEntity, getUniqueEntityId } from "../Utils.sol";
 import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";
 
 contract SpawnerSystem is System {
-  function create(int32 roomX, int32 roomY, int32 x, int32 y) public {
+  function create(int32 roomX, int32 roomY, int32 x, int32 y) public returns (bytes32) {
     require(LibPosition.withinRoomBounds(PositionData(x, y)), "Invalid position");
 
     bytes32[] memory conflictingPositions = getKeysWithValue(PositionTableId, Position.encode(x, y));
     require(conflictingPositions.length == 0, "Position already occupied");
 
-    LibMonster.spawnSpawner(RoomData(roomX, roomY), PositionData(x, y));
+    bytes32 spawner = LibMonster.spawnSpawner(RoomData(roomX, roomY), PositionData(x, y));
+    return spawner;
   }
 
-  function spawn(bytes32 spawnerId, int32 x, int32 y) public {
+  function spawn(bytes32 spawnerId, int32 x, int32 y) public returns (bytes32) {
     require(Spawner.get(spawnerId), "Not a spawner");
 
     LibStamina.spend(spawnerId, 100_000);
@@ -41,6 +42,7 @@ contract SpawnerSystem is System {
     PositionData memory spawnerPosition = Position.get(spawnerId);
     require(LibPosition.manhattan(spawnerPosition, targetPosition) == 1, "Invalid position");
 
-    LibMonster.spawnSkeleton(Room.get(spawnerId), targetPosition);
+    bytes32 monster = LibMonster.spawnSkeleton(Room.get(spawnerId), targetPosition);
+    return monster;
   }
 }

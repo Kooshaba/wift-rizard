@@ -10,7 +10,7 @@ export function DMTools() {
     networkLayer: {
       components: { Room },
       utils: {
-        txApi: { createSpawner, spawnMonster, tickMonster },
+        txApi: { createSpawner, spawnMonster, tickRoom },
       },
     },
   } = useMUD();
@@ -41,7 +41,7 @@ export function DMTools() {
     label: "Tick Monster",
     actionName: "tickMonster",
     actionFunction: () => {
-      tickMonster(playerRoom);
+      tickRoom(playerRoom);
     },
   });
 

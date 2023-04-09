@@ -637,7 +637,13 @@ const _abi = [
       },
     ],
     name: "mud_SpawnerSystem_create",
-    outputs: [],
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -660,7 +666,13 @@ const _abi = [
       },
     ],
     name: "mud_SpawnerSystem_spawn",
-    outputs: [],
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "function",
   },

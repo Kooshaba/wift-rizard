@@ -1045,14 +1045,14 @@ export interface IWorld extends BaseContract {
       x: PromiseOrValue<BigNumberish>,
       y: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<string>;
 
     mud_SpawnerSystem_spawn(
       spawnerId: PromiseOrValue<BytesLike>,
       x: PromiseOrValue<BigNumberish>,
       y: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<string>;
 
     "pushToField(uint256,bytes32[],uint8,bytes)"(
       table: PromiseOrValue<BigNumberish>,

@@ -224,7 +224,7 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     });
   }
 
-  function tickMonster(roomCoord: Coord) {
+  function tickRoom(roomCoord: Coord) {
     const monsters = [
       ...runQuery([
         Has(MonsterType),
@@ -243,6 +243,10 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     });
     if (!monster) return;
 
+    tickMonster(monster);
+  }
+
+  function tickMonster(monster: EntityIndex) {
     actions.add({
       id: ("tickMonster" + Math.random().toPrecision(5)) as EntityID,
       updates: () => [],
@@ -285,6 +289,7 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
 
       createSpawner,
       spawnMonster,
+      tickRoom,
       tickMonster,
     },
   };

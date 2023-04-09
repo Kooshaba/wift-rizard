@@ -125,11 +125,6 @@ contract MonsterSystem is System {
         break;
       }
 
-      // out of movement
-      if (currentElement.distanceFromStart >= movementLimit) {
-        continue;
-      }
-
       int32[2][4] memory moves = cardinalMoves();
       for (uint256 i = 0; i < moves.length; i++) {
         PositionData memory newPosition = PositionData(
@@ -137,9 +132,11 @@ contract MonsterSystem is System {
           currentElement.position.y + moves[i][1]
         );
 
+
         if (isValidPosition(newPosition) && !visited[toUint256(newPosition.x)][toUint256(newPosition.y)]) {
           visited[toUint256(newPosition.x)][toUint256(newPosition.y)] = true;
 
+          
           PositionQueue.Element memory newElement = PositionQueue.Element({
             position: newPosition,
             distanceFromStart: currentElement.distanceFromStart + 1,

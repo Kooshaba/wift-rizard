@@ -9,8 +9,7 @@ import { LibMonster } from "../src/libraries/LibMonster.sol";
 
 import { RoomData } from "../src/tables/Room.sol";
 import { Position, PositionData } from "../src/tables/Position.sol";
-
-import { Position } from "../src/tables/Position.sol";
+import { Stamina, StaminaData } from "../src/tables/Stamina.sol";
 
 import { IWorld } from "../src/world/IWorld.sol";
 
@@ -25,8 +24,14 @@ contract MonsterTest is MudV2Test {
   function testMonsterTickMove() public {
     uint32 playerNumber = 1;
     world.mud_PlayerSystem_spawn(playerNumber);
+    bytes32 spawner = world.mud_SpawnerSystem_create(1, 1, 1, 1);
+    bytes32 monster = world.mud_SpawnerSystem_spawn(spawner, 2, 1);
 
-    bytes32 skeleton = LibMonster.spawnSkeleton(RoomData(0, 0), PositionData(3, 3));
+    Stamina.setCurrent(world, monster, 100_000);
+
+    world.mud_MonsterSystem_act(monster);
+
+    // bytes32 skeleton = LibMonster.spawnSkeleton(RoomData(1, 1), PositionData(3, 3));
     // world.mud_MonsterSystem_act(skeleton);
 
     // PositionData memory position = Position.get(skeleton);
