@@ -47,6 +47,8 @@ contract MonsterSystem is System {
       }
     }
 
+    require(playerCount > 0, "no players in room");
+
     bytes32 closestPlayer = 0;
     PositionData memory closestPlayerPosition;
     int32 closestPlayerDistance = 200;
@@ -97,9 +99,9 @@ contract MonsterSystem is System {
     PositionData memory target,
     int32 movementLimit
   ) private view returns (PositionData memory closestPosition, int32 closestDistanceToTarget) {
-    bool[ROOM_WIDTH][ROOM_HEIGHT] memory visited;
+    int32[ROOM_HEIGHT][ROOM_WIDTH] memory visited;
 
-    visited[toUint256(start.x)][toUint256(start.y)] = true;
+    visited[toUint256(start.x)][toUint256(start.y)] = 1;
     PositionQueue.Queue memory queue = PositionQueue.create();
     PositionQueue.Element memory startElement = PositionQueue.Element({
       position: start,
@@ -115,7 +117,7 @@ contract MonsterSystem is System {
       PositionQueue.Element memory currentElement = PositionQueue.dequeue(queue);
 
       // found new closest position
-      if (currentElement.distanceToTarget < closestDistanceToTarget) {
+      if (currentElement.distanceToTarget <= closestDistanceToTarget) {
         closestDistanceToTarget = currentElement.distanceToTarget;
         closestPosition = currentElement.position;
       }
@@ -123,6 +125,10 @@ contract MonsterSystem is System {
       // adjacent
       if (currentElement.distanceToTarget == 1) {
         break;
+      }
+
+      if (currentElement.distanceFromStart >= movementLimit) {
+        continue;
       }
 
       int32[2][4] memory moves = cardinalMoves();
@@ -133,10 +139,9 @@ contract MonsterSystem is System {
         );
 
 
-        if (isValidPosition(newPosition) && !visited[toUint256(newPosition.x)][toUint256(newPosition.y)]) {
-          visited[toUint256(newPosition.x)][toUint256(newPosition.y)] = true;
+        if (isValidPosition(newPosition) && visited[toUint256(newPosition.x)][toUint256(newPosition.y)] != 1) {
+          visited[toUint256(newPosition.x)][toUint256(newPosition.y)] = 1;
 
-          
           PositionQueue.Element memory newElement = PositionQueue.Element({
             position: newPosition,
             distanceFromStart: currentElement.distanceFromStart + 1,

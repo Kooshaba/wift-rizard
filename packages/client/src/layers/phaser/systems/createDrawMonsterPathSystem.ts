@@ -205,25 +205,22 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
   defineSystem(
     world,
     [Has(MonsterType), Has(Position), Has(MoveSpeed)],
-    ({ entity }) => {
-      const monsterObj = objectPool.get(entity, "Sprite");
-      if (!monsterObj) return;
-
-      monsterObj.setComponent({
-        id: "path",
-        once: (sprite) => {
-          sprite.setInteractive();
-
-          sprite.on("pointerover", () => {
-            drawMonsterTarget(entity);
-          });
-          sprite.on("pointerout", () => {
-            if (monsterGraphics[entity]) {
-              monsterGraphics[entity].clear(true, true);
-            }
-          });
-        },
-      });
+    () => {
+      const allMonsters = [
+        ...runQuery([Has(MonsterType), Has(Position), Has(MoveSpeed)]),
+      ];
+      for (const monster of allMonsters) {
+        drawMonsterTarget(monster);
+      }
     }
   );
+
+  defineSystem(world, [Has(Player), Has(Position)], () => {
+    const allMonsters = [
+      ...runQuery([Has(MonsterType), Has(Position), Has(MoveSpeed)]),
+    ];
+    for (const monster of allMonsters) {
+      drawMonsterTarget(monster);
+    }
+  });
 }

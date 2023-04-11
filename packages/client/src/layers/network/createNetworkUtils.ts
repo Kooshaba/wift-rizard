@@ -90,7 +90,7 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       nextPlayerId,
       { gasLimit: 2_000_000 },
     ]);
-    
+
     return tx;
   }
 

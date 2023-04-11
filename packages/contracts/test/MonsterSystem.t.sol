@@ -24,14 +24,10 @@ contract MonsterTest is MudV2Test {
   function testMonsterTickMove() public {
     uint32 playerNumber = 1;
     world.mud_PlayerSystem_spawn(playerNumber);
-    bytes32 spawner = world.mud_SpawnerSystem_create(1, 1, 1, 1);
-    bytes32 monster = world.mud_SpawnerSystem_spawn(spawner, 2, 1);
 
-    Stamina.setCurrent(world, monster, 100_000);
+    bytes32 skeleton = LibMonster.spawnSkeleton(RoomData(1, 1), PositionData(3, 3));
+    // Stamina.setCurrent(skeleton, 25_000);
 
-    world.mud_MonsterSystem_act(monster);
-
-    // bytes32 skeleton = LibMonster.spawnSkeleton(RoomData(1, 1), PositionData(3, 3));
     // world.mud_MonsterSystem_act(skeleton);
 
     // PositionData memory position = Position.get(skeleton);
