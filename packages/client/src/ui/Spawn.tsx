@@ -10,7 +10,7 @@ export function Spawn() {
     networkLayer: {
       components: { Room, Player },
       utils: {
-        txApi: { spawnPlayer, spawnMonster, tickMonster },
+        txApi: { spawnPlayer, spawnMonster, tickRoom },
       },
     },
   } = useMUD();
@@ -28,7 +28,7 @@ export function Spawn() {
       const room = getComponentValue(Room, player);
       if (!room) continue;
 
-      tickMonster(room);
+      tickRoom(room);
       spawnMonster();
     }
   };

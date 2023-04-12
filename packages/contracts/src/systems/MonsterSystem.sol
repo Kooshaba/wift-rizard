@@ -26,7 +26,7 @@ contract MonsterSystem is System {
     require(MonsterType.get(monster) != 0, "Not a monster");
 
     uint256 commitBlock = RngCommit.get(monster);
-    uint256 randomSeed = uint256(blockhash(commitBlock));
+    uint256 randomSeed = uint256(blockhash(commitBlock)) % 10;
     RngCommit.set(monster, block.number);
 
     RoomData memory room = Room.get(monster);

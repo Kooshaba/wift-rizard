@@ -170,6 +170,18 @@ export const phaserConfig = {
           prefix: "sprites/monsters/spawner/",
           suffix: ".png",
         },
+
+        // UI
+        {
+          key: Animations.TileHighlight,
+          assetKey: Assets.MainAtlas,
+          startFrame: 0,
+          endFrame: 2,
+          frameRate: 3,
+          repeat: -1,
+          prefix: "sprites/ui/tile-highlight/",
+          suffix: ".png",
+        },
       ],
       tilesets: {
         Default: {

@@ -57,7 +57,7 @@ library LibMonster {
     Position.set(id, position);
     Health.set(id, 20, 20);
     MoveSpeed.set(id, 2);
-    Stamina.set(id, StaminaData({ current: 0, max: 25_000, regen: 10_000, lastRefreshedAt: block.timestamp }));
+    Stamina.set(id, StaminaData({ current: 0, max: 25_000, regen: 2500, lastRefreshedAt: block.timestamp }));
     RngCommit.set(id, block.number - 1);
 
     Attack.set(

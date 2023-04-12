@@ -1,6 +1,7 @@
 import {
   EntityIndex,
   Has,
+  UpdateType,
   defineSystem,
   getComponentValue,
   getEntitiesWithValue,
@@ -20,7 +21,7 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
       components: { Player, Position, MonsterType, MoveSpeed },
     },
     scenes: {
-      Main: { phaserScene, objectPool },
+      Main: { phaserScene },
     },
   } = layer;
 
@@ -146,12 +147,13 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
 
   const monsterGraphics: Record<EntityIndex, Phaser.GameObjects.Group> = {};
 
-  function drawMonsterTarget(monster: EntityIndex) {
+  function drawMonsterTarget(monster: EntityIndex, clearOnly = false) {
     if (!monsterGraphics[monster]) {
       monsterGraphics[monster] = phaserScene.add.group();
     }
 
     monsterGraphics[monster].clear(true, true);
+    if(clearOnly) return;
 
     const monsterPosition = getComponentValue(Position, monster);
     if (!monsterPosition) return;
@@ -202,18 +204,18 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
     graphicsGroup.add(rect2);
   }
 
-  defineSystem(
-    world,
-    [Has(MonsterType), Has(Position), Has(MoveSpeed)],
-    () => {
-      const allMonsters = [
-        ...runQuery([Has(MonsterType), Has(Position), Has(MoveSpeed)]),
-      ];
-      for (const monster of allMonsters) {
-        drawMonsterTarget(monster);
-      }
+  defineSystem(world, [Has(MonsterType), Has(Position), Has(MoveSpeed)], ({ type, entity }) => {
+    if(type === UpdateType.Exit) {
+      drawMonsterTarget(entity, true);
     }
-  );
+
+    const allMonsters = [
+      ...runQuery([Has(MonsterType), Has(Position), Has(MoveSpeed)]),
+    ];
+    for (const monster of allMonsters) {
+      drawMonsterTarget(monster);
+    }
+  });
 
   defineSystem(world, [Has(Player), Has(Position)], () => {
     const allMonsters = [

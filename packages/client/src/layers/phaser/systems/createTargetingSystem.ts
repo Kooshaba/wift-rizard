@@ -5,6 +5,7 @@ import {
   defineSystem,
   getComponentValue,
   removeComponent,
+  setComponent,
 } from "@latticexyz/recs";
 import { PhaserLayer } from "../createPhaserLayer";
 import { Coord } from "@latticexyz/utils";
@@ -12,7 +13,7 @@ import {
   pixelCoordToTileCoord,
   tileCoordToPixelCoord,
 } from "@latticexyz/phaserx";
-import { TILE_HEIGHT, TILE_WIDTH } from "../constants";
+import { Animations, TILE_HEIGHT, TILE_WIDTH } from "../constants";
 
 function generateAttackableCoords(
   coord: Coord,
@@ -87,10 +88,11 @@ function rotateAttackPattern(pattern: Coord[], direction: Direction): Coord[] {
 export function createTargetingSystem(layer: PhaserLayer) {
   const {
     world,
-    components: { Targeting },
+    components: { Targeting, PendingAttack },
     scenes: {
       Main: { phaserScene },
     },
+    utils: { tintObject },
     networkLayer: {
       components: { Attack, Position },
       utils: {
@@ -104,15 +106,28 @@ export function createTargetingSystem(layer: PhaserLayer) {
     {
       group: Phaser.GameObjects.Group;
       patternGroup: Phaser.GameObjects.Group;
+      pendingAttackGroup: Phaser.GameObjects.Group;
       listeners: (() => void)[];
     }
   >();
+
+  function highlightTile(coord: Coord, color: number) {
+    const pixelCoord = tileCoordToPixelCoord(coord, TILE_WIDTH, TILE_HEIGHT);
+    const rect = phaserScene.add.sprite(pixelCoord.x, pixelCoord.y, "");
+    rect.play(Animations.TileHighlight);
+    tintObject(rect, color);
+    rect.setOrigin(0, 0);
+    rect.setAlpha(0.75);
+
+    return rect;
+  }
 
   defineSystem(world, [Has(Position), Has(Targeting)], ({ entity, type }) => {
     if (!objectPool.has(entity)) {
       objectPool.set(entity, {
         group: phaserScene.add.group(),
         patternGroup: phaserScene.add.group(),
+        pendingAttackGroup: phaserScene.add.group(),
         listeners: [],
       });
     }
@@ -144,23 +159,29 @@ export function createTargetingSystem(layer: PhaserLayer) {
       attack.maxRange
     );
     for (const attackOrigin of attackableCoords) {
+      const rect = highlightTile(attackOrigin, 0x00ff00);
+
       const pixelCoord = tileCoordToPixelCoord(
         attackOrigin,
         TILE_WIDTH,
         TILE_HEIGHT
       );
-      const rect = phaserScene.add.rectangle(
+      const interactiveRect = phaserScene.add.rectangle(
         pixelCoord.x,
         pixelCoord.y,
         TILE_WIDTH,
         TILE_HEIGHT,
-        0x00ff00,
-        0.5
+        undefined,
+        0
       );
-      rect.setOrigin(0, 0);
-      rect.setInteractive();
+      interactiveRect.setOrigin(0, 0);
+      interactiveRect.setInteractive();
 
-      rect.on("pointerover", () => {
+      let renderedAttackPattern: Coord[] | undefined;
+
+      interactiveRect.on("pointerover", () => {
+        renderedAttackPattern = [];
+
         const direction = getDirection(position, attackOrigin);
         const rotatedAttackPattern = rotateAttackPattern(
           attackPattern,
@@ -168,32 +189,26 @@ export function createTargetingSystem(layer: PhaserLayer) {
         );
 
         for (const coord of rotatedAttackPattern) {
-          const pixelCoord = tileCoordToPixelCoord(
-            { x: coord.x + attackOrigin.x, y: coord.y + attackOrigin.y },
-            TILE_WIDTH,
-            TILE_HEIGHT
-          );
-          const rect = phaserScene.add.rectangle(
-            pixelCoord.x,
-            pixelCoord.y,
-            TILE_WIDTH,
-            TILE_HEIGHT,
-            0xffa500,
-            0.8
-          );
-          rect.setOrigin(0, 0);
-          objectPool.get(entity)?.patternGroup.add(rect);
+          const attackCoord = {
+            x: coord.x + attackOrigin.x,
+            y: coord.y + attackOrigin.y,
+          };
+          const patternHighlight = highlightTile(attackCoord, 0xffa500);
+          objectPool.get(entity)?.patternGroup.add(patternHighlight);
+          renderedAttackPattern.push(attackCoord);
         }
 
-        rect.setFillStyle(0x00ff00, 0);
+        rect.setAlpha(0);
       });
 
-      rect.on("pointerout", () => {
-        rect.setFillStyle(0x00ff00, 0.5);
+      interactiveRect.on("pointerout", () => {
+        rect.setAlpha(0.75);
+        renderedAttackPattern = undefined;
+
         objectPool.get(entity)?.patternGroup.clear(true, true);
       });
 
-      rect.on("pointerdown", () => {
+      interactiveRect.on("pointerdown", () => {
         const tileCoord = pixelCoordToTileCoord(
           pixelCoord,
           TILE_WIDTH,
@@ -201,9 +216,42 @@ export function createTargetingSystem(layer: PhaserLayer) {
         );
         txAttack(item, tileCoord);
         removeComponent(Targeting, entity);
+
+        if (!renderedAttackPattern) return;
+
+        setComponent(PendingAttack, entity, {
+          patternXs: renderedAttackPattern.map((c) => c.x),
+          patternYs: renderedAttackPattern.map((c) => c.y),
+        });
+        setTimeout(() => {
+          removeComponent(PendingAttack, entity);
+        }, 500);
       });
 
       objectPool.get(entity)?.group.add(rect);
+      objectPool.get(entity)?.group.add(interactiveRect);
+    }
+  });
+
+  defineSystem(world, [Has(PendingAttack)], ({ entity }) => {
+    const group = objectPool.get(entity)?.pendingAttackGroup;
+
+    const pattern = getComponentValue(PendingAttack, entity);
+    if (!pattern) {
+      group?.clear(true);
+      return;
+    }
+
+    const coords = pattern.patternXs.map((x, i) => {
+      return {
+        x,
+        y: pattern.patternYs[i],
+      } as Coord;
+    });
+
+    for (const coord of coords) {
+      const h = highlightTile(coord, 0xb00b1e);
+      group?.add(h);
     }
   });
 }

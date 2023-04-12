@@ -1,4 +1,7 @@
-import { createPhaserEngine } from "@latticexyz/phaserx";
+import {
+  HueTintAndOutlineFXPipeline,
+  createPhaserEngine,
+} from "@latticexyz/phaserx";
 import { Type, defineComponent, namespaceWorld } from "@latticexyz/recs";
 import { NetworkLayer } from "../network/createNetworkLayer";
 import { registerSystems } from "./systems";
@@ -20,10 +23,30 @@ export const createPhaserLayer = async (
   world.registerDisposer(disposePhaser);
 
   const components = {
-    Targeting: defineComponent(world, {
-      item: Type.Entity
-    }, { id: "Targeting" })
+    Targeting: defineComponent(
+      world,
+      {
+        item: Type.Entity,
+      },
+      { id: "Targeting" }
+    ),
+    PendingAttack: defineComponent(
+      world,
+      {
+        patternXs: Type.NumberArray,
+        patternYs: Type.NumberArray,
+      },
+      { id: "PendingAttack" }
+    ),
   };
+
+  function tintObject(
+    gameObject: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image,
+    color: number
+  ) {
+    gameObject.setPipeline(HueTintAndOutlineFXPipeline.KEY);
+    gameObject.setPipelineData("hueTint", color);
+  }
 
   const layer = {
     networkLayer,
@@ -31,6 +54,9 @@ export const createPhaserLayer = async (
     game,
     scenes,
     components,
+    utils: {
+      tintObject,
+    },
   };
 
   registerSystems(layer);

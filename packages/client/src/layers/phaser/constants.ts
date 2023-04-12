@@ -11,6 +11,9 @@ export enum Animations {
   SkeletonSword = "SkeletonSword",
   SkeletonBow = "SkeletonBow",
   Spawner = "Spawner",
+
+  // UI
+  TileHighlight = "TileHighlight",
 }
 export enum Sprites {
   Avatar,

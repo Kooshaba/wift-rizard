@@ -5,7 +5,7 @@
     },
     "textures": [
         {
-            "image": "atlas.png?timestamp=1680788837913",
+            "image": "atlas.png?timestamp=1681257429529",
             "format": "RGBA8888",
             "size": {
                 "w": 2048,
@@ -5764,6 +5764,69 @@
                         "x": 16,
                         "y": 420,
                         "w": 23,
+                        "h": 24
+                    }
+                },
+                {
+                    "filename": "sprites/ui/tile-highlight/0.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 16,
+                        "h": 24
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 16,
+                        "h": 24
+                    },
+                    "frame": {
+                        "x": 39,
+                        "y": 420,
+                        "w": 16,
+                        "h": 24
+                    }
+                },
+                {
+                    "filename": "sprites/ui/tile-highlight/1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 16,
+                        "h": 24
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 16,
+                        "h": 24
+                    },
+                    "frame": {
+                        "x": 55,
+                        "y": 420,
+                        "w": 16,
+                        "h": 24
+                    }
+                },
+                {
+                    "filename": "sprites/ui/tile-highlight/2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 16,
+                        "h": 24
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 16,
+                        "h": 24
+                    },
+                    "frame": {
+                        "x": 71,
+                        "y": 420,
+                        "w": 16,
                         "h": 24
                     }
                 },
