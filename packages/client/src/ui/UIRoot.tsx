@@ -2,7 +2,6 @@ import React from "react";
 import { useStore } from "../store";
 import { AdminControls } from "./AdminControls";
 import { ECSBrowser } from "./ECSBrowser";
-import { Leaderboard } from "./Leaderboard";
 import { LoadingScreen } from "./LoadingScreen";
 import { PlayerBar } from "./PlayerBar";
 import { Spawn } from "./Spawn";
@@ -28,7 +27,6 @@ export const UIRoot = () => {
 
       <DMTools />
 
-      <Leaderboard />
       <ActionQueue />
 
       <PlayerBar />

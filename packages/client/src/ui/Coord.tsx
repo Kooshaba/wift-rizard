@@ -35,7 +35,7 @@ export function Coord() {
     };
   }, []);
 
-  return <div className="absolute top-0 right-0 text-white">
-    {coord?.x} {coord?.y}
+  return <div className="absolute top-0 right-0 text-white p-4">
+    ({coord?.x}, {coord?.y})
   </div>;
 }

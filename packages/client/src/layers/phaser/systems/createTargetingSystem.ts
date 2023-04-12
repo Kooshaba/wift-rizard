@@ -1,7 +1,6 @@
 import {
   EntityIndex,
   Has,
-  defineComponentSystem,
   defineSystem,
   getComponentValue,
   removeComponent,
@@ -14,6 +13,16 @@ import {
   tileCoordToPixelCoord,
 } from "@latticexyz/phaserx";
 import { Animations, TILE_HEIGHT, TILE_WIDTH } from "../constants";
+import { ROOM_HEIGHT, ROOM_WIDTH } from "../../network/types";
+
+function isValidPosition(coord: Coord) {
+  return (
+    coord.x >= 0 &&
+    coord.x < ROOM_WIDTH &&
+    coord.y >= 0 &&
+    coord.y < ROOM_HEIGHT
+  );
+}
 
 function generateAttackableCoords(
   coord: Coord,
@@ -32,7 +41,7 @@ function generateAttackableCoords(
     }
   }
 
-  return coordinates;
+  return coordinates.filter((coord) => isValidPosition(coord));
 }
 
 enum Direction {
@@ -107,7 +116,6 @@ export function createTargetingSystem(layer: PhaserLayer) {
       group: Phaser.GameObjects.Group;
       patternGroup: Phaser.GameObjects.Group;
       pendingAttackGroup: Phaser.GameObjects.Group;
-      listeners: (() => void)[];
     }
   >();
 
@@ -128,7 +136,6 @@ export function createTargetingSystem(layer: PhaserLayer) {
         group: phaserScene.add.group(),
         patternGroup: phaserScene.add.group(),
         pendingAttackGroup: phaserScene.add.group(),
-        listeners: [],
       });
     }
 
@@ -193,6 +200,7 @@ export function createTargetingSystem(layer: PhaserLayer) {
             x: coord.x + attackOrigin.x,
             y: coord.y + attackOrigin.y,
           };
+          if (!isValidPosition(attackCoord)) continue;
           const patternHighlight = highlightTile(attackCoord, 0xffa500);
           objectPool.get(entity)?.patternGroup.add(patternHighlight);
           renderedAttackPattern.push(attackCoord);

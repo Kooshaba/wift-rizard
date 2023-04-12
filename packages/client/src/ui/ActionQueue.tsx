@@ -56,6 +56,7 @@ export function ActionQueue() {
               className={`flex flex-row p-2 rounded-lg ${getStateColor(
                 actionItem.state
               )}`}
+              key={`actionItem${actionItem}`}
             >
               Action {actionItem.action}:{" "}
               {ActionStateString[actionItem.state as 0]}

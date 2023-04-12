@@ -21,6 +21,7 @@ export enum Sprites {
   BarFrame,
   HealthBarFill,
   StaminaBarFill,
+  PendingStaminaBarFill,
   Heart,
   StaminaDot,
 

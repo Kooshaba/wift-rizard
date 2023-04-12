@@ -1,19 +1,17 @@
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 import {
+  EntityID,
   EntityIndex,
-  Has,
   HasValue,
+  getComponentValue,
   getComponentValueStrict,
   removeComponent,
   setComponent,
 } from "@latticexyz/recs";
 import { useMUD } from "../store";
-import { GameMessages } from "./GameMessages";
-import { useActionButton } from "./hooks/useActionButton";
 import { useCurrentPlayer } from "./hooks/useCurrentPlayer";
-import { Button } from "./theme/Button";
 import { ClickWrapper } from "./theme/ClickWrapper";
-import { ItemTypeNames, ItemTypeSprites } from "../layers/network/types";
+import { ItemTypeSprites } from "../layers/network/types";
 import { twMerge } from "tailwind-merge";
 import { SpriteImage } from "./theme/SpriteImage";
 import { Sprites } from "../layers/phaser/constants";
@@ -28,7 +26,6 @@ function Inventory({
     networkLayer: {
       world,
       components: { EquippedBy, Position, ItemType, OptimisticStamina, Attack },
-      singletonEntity,
     },
     phaserLayer: {
       components: { Targeting },
@@ -39,28 +36,62 @@ function Inventory({
   const equippedItems = useEntityQuery([HasValue(EquippedBy, { value: ugh })]);
 
   const playerStamina = useComponentValue(OptimisticStamina, playerData.player);
-
   const playerPosition = useComponentValue(Position, playerData.player);
+  const currentTarget = useComponentValue(Targeting, playerData.player);
+
+  useEffect(() => {
+    if (equippedItems.length === 0) return;
+
+    function onKeyDown(e: KeyboardEvent) {
+      const numMatch = e.code.match(new RegExp("Digit(\\d)"));
+      if (!numMatch) return;
+
+      const num = parseInt(numMatch[1]) - 1;
+      if (num == undefined) return;
+
+      const item = equippedItems[num];
+      if (!item) return;
+
+      const itemId = world.entities[item];
+      if (currentTarget?.item === itemId) {
+        removeComponent(Targeting, playerData.player);
+      } else {
+        setComponent(Targeting, playerData.player, {
+          item: itemId,
+        });
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [equippedItems, currentTarget]);
+
   if (!playerPosition) return <></>;
   if (!playerStamina) return <></>;
 
   return (
     <div>
       <div className="flex flex-row items-center justify-center flex-wrap">
-        {equippedItems.map((item) => {
+        {equippedItems.map((item, index) => {
           const itemType = getComponentValueStrict(ItemType, item).value;
           const attackCost = getComponentValueStrict(Attack, item).staminaCost;
-          const name = ItemTypeNames[itemType];
+          const itemId = world.entities[item];
+          const currentlyTargeting = itemId === currentTarget?.item;
 
           return (
             <div
               key={item}
               style={{
                 border: "1px #5D6065 solid",
+                backgroundColor: `${currentlyTargeting ? "green" : ""}`,
               }}
               className={twMerge(
+                "flex flex-col items-center justify-around",
                 "rounded-lg ml-4 cursor-pointer bg-gray-900 hover:bg-gray-700 hover:shadow-lg hover:border-gray-600 px-4",
-                playerStamina.current < attackCost && "bg-red-600 disabled hover:bg-red-600"
+                playerStamina.current < attackCost &&
+                  "bg-red-600 disabled hover:bg-red-600"
               )}
               onClick={() => {
                 setComponent(Targeting, playerData.player, {
@@ -68,6 +99,7 @@ function Inventory({
                 });
               }}
             >
+              <span className="text-white w-fit -mb-4 mt-2">{index + 1}</span>
               <SpriteImage spriteKey={ItemTypeSprites[itemType]} scale={5} />
             </div>
           );
@@ -80,10 +112,14 @@ function Inventory({
 export function PlayerBar() {
   const {
     networkLayer: {
-      components: { Position, Health, OptimisticStamina, Room },
+      world,
+      components: { Position, Health, OptimisticStamina, Room, Attack },
       utils: {
         txApi: { move },
       },
+    },
+    phaserLayer: {
+      components: { Targeting },
     },
   } = useMUD();
 
@@ -124,14 +160,16 @@ export function PlayerBar() {
     };
   }, [currentPlayer, playerPosition, playerRoom]);
 
-  const playerHealth = useComponentValue(
-    Health,
-    (currentPlayer?.player || 0) as EntityIndex
+  const player = (currentPlayer?.player || 0) as EntityIndex;
+  const playerHealth = useComponentValue(Health, player);
+  const playerStamina = useComponentValue(OptimisticStamina, player);
+
+  const currentlyTargeting = useComponentValue(Targeting, player);
+  const currentAttack = useComponentValue(
+    Attack,
+    world.entityToIndex.get(currentlyTargeting?.item || ("" as EntityID))
   );
-  const playerStamina = useComponentValue(
-    OptimisticStamina,
-    (currentPlayer?.player || 0) as EntityIndex
-  );
+  const pendingStaminaSpend = currentAttack?.staminaCost;
 
   if (!currentPlayer) return <></>;
   if (!playerHealth) return <></>;
@@ -145,6 +183,13 @@ export function PlayerBar() {
     (playerStamina.current / playerStamina.max) * 100
   );
   const staminaMissingPercent = 100 - currentStaminaPercent;
+  const pendingStaminaSpendPercent = Math.floor(
+    ((pendingStaminaSpend || 0) / playerStamina.max) * 100
+  );
+
+  const currentStaminaNumber = pendingStaminaSpend
+    ? playerStamina.current - pendingStaminaSpend
+    : playerStamina.current;
 
   return (
     <ClickWrapper className="absolute bottom-0 left-0 h-[175px] w-screen flex flex-row items-center justify-center">
@@ -181,7 +226,14 @@ export function PlayerBar() {
           <div className="mb-2 flex flex-flow justify-between">
             <SpriteImage spriteKey={Sprites.StaminaDot} />
             <span className="text-white">
-              {playerStamina.current / 1000} / {playerStamina.max / 1000}
+              <span
+                style={{
+                  color: pendingStaminaSpend ? "#ff7f00" : "",
+                }}
+              >
+                {currentStaminaNumber / 1000}
+              </span>{" "}
+              / {playerStamina.max / 1000}
             </span>
           </div>
           <div className="relative w-[400px]">
@@ -194,6 +246,17 @@ export function PlayerBar() {
               className="absolute top-0 left-0 overflow-hidden transition-all ease-linear"
             >
               <SpriteImage spriteKey={Sprites.StaminaBarFill} />
+            </span>
+
+            <span
+              style={{
+                transform: `translateX(${
+                  (100 - pendingStaminaSpendPercent) / 2 - staminaMissingPercent
+                }%) scaleX(${pendingStaminaSpendPercent}%)`,
+              }}
+              className="absolute top-0 left-0 overflow-hidden transition-all ease-linear"
+            >
+              <SpriteImage spriteKey={Sprites.PendingStaminaBarFill} />
             </span>
 
             <span className="absolute top-0 left-0">

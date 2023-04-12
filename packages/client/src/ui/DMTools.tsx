@@ -45,7 +45,7 @@ export function DMTools() {
     },
   });
 
-  return <ClickWrapper>
+  return <ClickWrapper className="flex flex-col w-fit">
     {spawnMonsterButton}
     {createSpawnerButton}
     {tickMonsterButton}

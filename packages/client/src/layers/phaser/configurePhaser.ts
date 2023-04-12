@@ -82,6 +82,10 @@ export const phaserConfig = {
           assetKey: Assets.MainAtlas,
           frame: "sprites/ui/bar/stamina-fill/0.png",
         },
+        [Sprites.PendingStaminaBarFill]: {
+          assetKey: Assets.MainAtlas,
+          frame: "sprites/ui/bar/pending-stamina-fill/0.png",
+        },
 
         // Weapons
         [Sprites.Sword]: {
