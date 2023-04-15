@@ -3,7 +3,7 @@
  <image source="images/terrain.png" width="256" height="264"/>
  <tile id="0">
   <properties>
-   <property name="name" value="Ground1"/>
+   <property name="name" value="Blank"/>
   </properties>
  </tile>
  <tile id="1">
@@ -44,6 +44,11 @@
  <tile id="8">
   <properties>
    <property name="name" value="WallY"/>
+  </properties>
+ </tile>
+ <tile id="22">
+  <properties>
+   <property name="name" value="Ground1"/>
   </properties>
  </tile>
  <tile id="174">

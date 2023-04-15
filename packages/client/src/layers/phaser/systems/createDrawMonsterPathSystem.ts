@@ -24,7 +24,7 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
       Main: { phaserScene },
     },
     components: {
-      InActiveRoom
+      InActiveRoom, ActiveRoom,
     },
   } = layer;
 
@@ -226,6 +226,17 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
     ];
     for (const monster of allMonsters) {
       drawMonsterTarget(monster);
+    }
+  });
+
+  defineSystem(world, [Has(ActiveRoom)], ({ type }) => {
+    if (type === UpdateType.Exit) {
+      const allMonsters = [
+        ...runQuery([Has(MonsterType), Has(Position), Has(MoveSpeed)]),
+      ];
+      for (const monster of allMonsters) {
+        drawMonsterTarget(monster, true);
+      }
     }
   });
 }

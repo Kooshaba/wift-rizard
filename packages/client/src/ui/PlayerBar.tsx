@@ -3,7 +3,6 @@ import {
   EntityID,
   EntityIndex,
   HasValue,
-  getComponentValue,
   getComponentValueStrict,
   removeComponent,
   setComponent,
@@ -16,6 +15,7 @@ import { twMerge } from "tailwind-merge";
 import { SpriteImage } from "./theme/SpriteImage";
 import { Sprites } from "../layers/phaser/constants";
 import { useEffect } from "react";
+import { Button } from "./theme/Button";
 
 function Inventory({
   playerData,
@@ -35,9 +35,10 @@ function Inventory({
   const ugh = "0x" + playerData.playerId.replace("0x", "").padStart(64, "0");
   const equippedItems = useEntityQuery([HasValue(EquippedBy, { value: ugh })]);
 
-  const playerStamina = useComponentValue(OptimisticStamina, playerData.player);
-  const playerPosition = useComponentValue(Position, playerData.player);
-  const currentTarget = useComponentValue(Targeting, playerData.player);
+  const { player } = playerData;
+  const playerStamina = useComponentValue(OptimisticStamina, player);
+  const playerPosition = useComponentValue(Position, player);
+  const currentTarget = useComponentValue(Targeting, player);
 
   useEffect(() => {
     if (equippedItems.length === 0) return;
@@ -89,7 +90,7 @@ function Inventory({
               }}
               className={twMerge(
                 "flex flex-col items-center justify-around",
-                "rounded-lg ml-4 cursor-pointer bg-gray-900 hover:bg-gray-700 hover:shadow-lg hover:border-gray-600 px-4",
+                "rounded-lg ml-4 bg-gray-900 hover:bg-gray-700 hover:shadow-lg hover:border-gray-600 px-4",
                 playerStamina.current < attackCost &&
                   "bg-red-600 disabled hover:bg-red-600"
               )}
@@ -119,6 +120,9 @@ export function PlayerBar() {
       },
     },
     phaserLayer: {
+      utils: {
+        map: { viewWorldMap, viewRoomMap },
+      },
       components: { Targeting },
     },
   } = useMUD();
@@ -193,6 +197,11 @@ export function PlayerBar() {
 
   return (
     <ClickWrapper className="absolute bottom-0 left-0 h-[175px] w-screen flex flex-row items-center justify-center">
+      <div className="flex flex-col">
+        <Button onClick={() => viewWorldMap()}>World Map</Button>
+        <Button onClick={() => viewRoomMap({ x: 1, y: 1 })}>Room Map</Button>
+      </div>
+
       <div>
         <SpriteImage spriteKey={Sprites.Avatar} scale={3.5} />
       </div>

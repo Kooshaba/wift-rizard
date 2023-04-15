@@ -34,6 +34,21 @@ const mainMap = defineMapConfig({
   },
 });
 
+const worldMap = defineMapConfig({
+  chunkSize: 48 * 48,
+  tileWidth: TILE_WIDTH,
+  tileHeight: TILE_HEIGHT,
+  backgroundTile: [TerrainTileset.Ground1],
+  animationInterval: ANIMATION_INTERVAL,
+  tileAnimations: {},
+  layers: {
+    layers: {
+      Background: { tilesets: ["Default"] },
+    },
+    defaultLayer: "Background",
+  },
+});
+
 export const phaserConfig = {
   sceneConfig: {
     [Scenes.Main]: defineSceneConfig({
@@ -54,7 +69,8 @@ export const phaserConfig = {
         },
       },
       maps: {
-        [Maps.Main]: mainMap,
+        [Maps.Room]: mainMap,
+        [Maps.World]: worldMap,
       },
       sprites: {
         [Sprites.Avatar]: {
@@ -131,7 +147,7 @@ export const phaserConfig = {
         [Sprites.DevilHornLarge]: {
           assetKey: Assets.MainAtlas,
           frame: "sprites/items/234.png",
-        }
+        },
       },
       animations: [
         {

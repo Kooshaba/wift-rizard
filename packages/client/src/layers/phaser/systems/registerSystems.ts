@@ -12,6 +12,7 @@ import { createDamageSystem } from "./createDamageSystem";
 import { drawMonsterBars } from "./drawMonsterBars";
 import { createDrawMonsterPathSystem } from "./createDrawMonsterPathSystem";
 import { setActiveRoom } from "./setActiveRoom";
+import { createWorldMapSystem } from "./createWorldMapSystem";
 
 export const registerSystems = (layer: PhaserLayer) => {
   createCamera(layer);
@@ -25,6 +26,6 @@ export const registerSystems = (layer: PhaserLayer) => {
   createDamageSystem(layer);
   drawMonsterBars(layer);
   setActiveRoom(layer);
-
+  createWorldMapSystem(layer);
   createDrawMonsterPathSystem(layer);
 };

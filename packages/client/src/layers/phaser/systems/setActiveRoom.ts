@@ -1,7 +1,9 @@
 import {
   Has,
+  HasValue,
   defineSystem,
   getComponentValue,
+  removeComponent,
   runQuery,
   setComponent,
 } from "@latticexyz/recs";
@@ -18,6 +20,22 @@ export function setActiveRoom(layer: PhaserLayer) {
     components: { ActiveRoom, InActiveRoom },
   } = layer;
 
+  function refreshActiveRoom() {
+    // remove the in-active room flag from all entities
+    const activeEntities = runQuery([Has(InActiveRoom)]);
+    activeEntities.forEach((entity) => {
+      removeComponent(InActiveRoom, entity);
+    });
+
+    const activeRoom = getComponentValue(ActiveRoom, singletonEntity);
+    if (!activeRoom) return;
+    
+    const existingEntitiesInRoom = runQuery([Has(Position), HasValue(Room, activeRoom)]);
+    existingEntitiesInRoom.forEach((entity) => {
+      setComponent(InActiveRoom, entity, { value: true });
+    });
+  }
+
   // set the active room to the player's room
   defineSystem(world, [Has(Player), Has(Room)], ({ entity: player }) => {
     if (player !== playerEntity) return;
@@ -27,10 +45,7 @@ export function setActiveRoom(layer: PhaserLayer) {
 
     setComponent(ActiveRoom, singletonEntity, room);
 
-    const existingEntitiesInRoom = runQuery([Has(Position), Has(Room)]);
-    existingEntitiesInRoom.forEach((entity) => {
-      setComponent(InActiveRoom, entity, { value: true });
-    });
+    refreshActiveRoom();
   });
 
   defineSystem(world, [Has(Position), Has(Room)], ({ entity }) => {
@@ -40,5 +55,9 @@ export function setActiveRoom(layer: PhaserLayer) {
     if (room?.x !== activeRoom?.x && room?.y !== activeRoom?.y) return;
 
     setComponent(InActiveRoom, entity, { value: true });
+  });
+
+  defineSystem(world, [Has(ActiveRoom)], () => {
+    refreshActiveRoom();
   });
 }

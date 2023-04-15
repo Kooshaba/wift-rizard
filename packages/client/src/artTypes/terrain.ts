@@ -1,7 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 export enum Tileset {
-  Ground1 = 0,
+  Blank = 0,
   Ground2 = 1,
   Ground3 = 2,
   Ground4 = 3,
@@ -10,7 +10,7 @@ export enum Tileset {
   Ground7 = 6,
   WallX = 7,
   WallY = 8,
-  Blank = 174,
+  Ground1 = 22,
 }
 export enum TileAnimationKey {
 }

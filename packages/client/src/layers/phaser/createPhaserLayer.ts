@@ -1,8 +1,15 @@
 import {
+  Coord,
   HueTintAndOutlineFXPipeline,
   createPhaserEngine,
 } from "@latticexyz/phaserx";
-import { Type, defineComponent, namespaceWorld } from "@latticexyz/recs";
+import {
+  Type,
+  defineComponent,
+  namespaceWorld,
+  removeComponent,
+  setComponent,
+} from "@latticexyz/recs";
 import { NetworkLayer } from "../network/createNetworkLayer";
 import { registerSystems } from "./systems";
 
@@ -63,6 +70,29 @@ export const createPhaserLayer = async (
     gameObject.setPipelineData("hueTint", color);
   }
 
+  const { Main } = scenes;
+  const {
+    maps: { World, Room },
+  } = Main;
+
+  World.setVisible(false);
+
+  function viewWorldMap() {
+    World.setVisible(true);
+    Room.setVisible(false);
+
+    Main.camera.phaserCamera.centerOn(0, 0);
+
+    removeComponent(components.ActiveRoom, networkLayer.singletonEntity);
+  }
+
+  function viewRoomMap(room: Coord) {
+    World.setVisible(false);
+    Room.setVisible(true);
+
+    setComponent(components.ActiveRoom, networkLayer.singletonEntity, room);
+  }
+
   const layer = {
     networkLayer,
     world,
@@ -71,6 +101,10 @@ export const createPhaserLayer = async (
     components,
     utils: {
       tintObject,
+      map: {
+        viewWorldMap,
+        viewRoomMap,
+      },
     },
   };
 

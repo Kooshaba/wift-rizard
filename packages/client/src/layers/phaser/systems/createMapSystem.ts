@@ -20,7 +20,7 @@ export function createMapSystem(layer: PhaserLayer) {
     scenes: {
       Main: {
         maps: {
-          Main: { putTileAt },
+          Room: { putTileAt },
         },
       },
     },

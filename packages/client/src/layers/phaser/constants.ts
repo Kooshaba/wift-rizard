@@ -1,9 +1,11 @@
 export enum Scenes {
   Main = "Main",
+  WorldMap = "WorldMap",
 }
 
 export enum Maps {
-  Main = "Main",
+  Room = "Room",
+  World = "World",
 }
 
 export enum Animations {

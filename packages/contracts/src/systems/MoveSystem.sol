@@ -2,6 +2,7 @@
 pragma solidity >=0.8.0;
 import { System } from "@latticexyz/world/src/System.sol";
 import { Player, PlayerTableId } from "../tables/Player.sol";
+import { Room, RoomData } from "../tables/Room.sol";
 import { Position, PositionData, PositionTableId } from "../tables/Position.sol";
 import { World } from "@latticexyz/world/src/World.sol";
 
@@ -29,5 +30,23 @@ contract MoveSystem is System {
     require(LibPosition.manhattan(oldCoord, PositionData(x, y)) == 1, "Must move one tile");
 
     Position.set(player, x, y);
+  }
+
+  function moveRoom(int32 x, int32 y) public {
+    require(LibPosition.withinRoomBounds(PositionData(x, y)), "Invalid position");
+
+    bytes32 player = addressToEntity(_msgSender());
+    LibStamina.spend(player, 100_000);
+
+    uint32 existingId = Player.get(player);
+    require(existingId != 0, "Must spawn first");
+
+    RoomData memory oldRoom = Room.get(player);
+    require(
+      LibPosition.manhattan(PositionData(oldRoom.x, oldRoom.y), PositionData(x, y)) == 0,
+      "Must move one tile"
+    );
+
+    Room.set(player, x, y);
   }
 }
