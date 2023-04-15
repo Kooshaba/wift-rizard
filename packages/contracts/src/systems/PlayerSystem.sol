@@ -41,14 +41,5 @@ contract PlayerSystem is System {
 
     bytes32 item = LibFactory.createSword();
     EquippedBy.set(item, player);
-
-    item = LibFactory.createBow();
-    EquippedBy.set(item, player);
-
-    item = LibFactory.createSpear();
-    EquippedBy.set(item, player);
-
-    item = LibFactory.createAxe();
-    EquippedBy.set(item, player);
   }
 }

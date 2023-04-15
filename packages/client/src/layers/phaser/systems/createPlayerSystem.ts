@@ -8,14 +8,17 @@ export function createPlayerSystem(layer: PhaserLayer) {
   const {
     world,
     networkLayer: {
-      components: { Player },
+      components: { Player, Position },
     },
     scenes: {
       Main: { objectPool },
     },
+    components: {
+      InActiveRoom
+    },
   } = layer;
 
-  defineSystem(world, [Has(Player)], ({ entity }) => {
+  defineSystem(world, [Has(Player), Has(Position), Has(InActiveRoom)], ({ entity }) => {
     const obj = objectPool.get(entity, "Sprite");
     obj.setComponent({
       id: 'appearance',
@@ -24,6 +27,6 @@ export function createPlayerSystem(layer: PhaserLayer) {
         sprite.setPipeline(HueTintAndOutlineFXPipeline.KEY);
         sprite.setPipelineData("hueTint", getStringColor(world.entities[entity]));
       }
-    })
+    });
   });
 }

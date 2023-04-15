@@ -12,9 +12,12 @@ export function createPositionSystem(layer: PhaserLayer) {
     scenes: {
       Main: { objectPool },
     },
+    components: {
+      InActiveRoom,
+    },
   } = layer;
 
-  defineSystem(world, [Has(Position)], ({ entity, type }) => {
+  defineSystem(world, [Has(Position), Has(InActiveRoom)], ({ entity, type }) => {
     if(type === UpdateType.Exit) {
       objectPool.remove(entity);
       return;

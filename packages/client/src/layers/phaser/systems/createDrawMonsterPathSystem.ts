@@ -23,6 +23,9 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
     scenes: {
       Main: { phaserScene },
     },
+    components: {
+      InActiveRoom
+    },
   } = layer;
 
   type Move = [number, number];
@@ -204,7 +207,7 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
     graphicsGroup.add(rect2);
   }
 
-  defineSystem(world, [Has(MonsterType), Has(Position), Has(MoveSpeed)], ({ type, entity }) => {
+  defineSystem(world, [Has(MonsterType), Has(Position), Has(MoveSpeed), Has(InActiveRoom)], ({ type, entity }) => {
     if(type === UpdateType.Exit) {
       drawMonsterTarget(entity, true);
     }
@@ -217,7 +220,7 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
     }
   });
 
-  defineSystem(world, [Has(Player), Has(Position)], () => {
+  defineSystem(world, [Has(Player), Has(Position), Has(InActiveRoom)], () => {
     const allMonsters = [
       ...runQuery([Has(MonsterType), Has(Position), Has(MoveSpeed)]),
     ];

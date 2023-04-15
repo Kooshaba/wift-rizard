@@ -38,6 +38,21 @@ export const createPhaserLayer = async (
       },
       { id: "PendingAttack" }
     ),
+    ActiveRoom: defineComponent(
+      world,
+      {
+        x: Type.Number,
+        y: Type.Number,
+      },
+      { id: "ActiveRoom" }
+    ),
+    InActiveRoom: defineComponent(
+      world,
+      {
+        value: Type.Boolean,
+      },
+      { id: "InActiveRoom" }
+    ),
   };
 
   function tintObject(
