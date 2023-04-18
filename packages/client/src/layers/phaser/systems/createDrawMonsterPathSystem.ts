@@ -1,6 +1,7 @@
 import {
   EntityIndex,
   Has,
+  HasValue,
   UpdateType,
   defineSystem,
   getComponentValue,
@@ -18,7 +19,7 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
   const {
     world,
     networkLayer: {
-      components: { Player, Position, MonsterType, MoveSpeed },
+      components: { Player, Position, MonsterType, MoveSpeed, Room },
     },
     scenes: {
       Main: { phaserScene },
@@ -127,8 +128,8 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
     return { closestPosition, closestDistanceToTarget };
   }
 
-  function findClosestPlayer(position: Coord) {
-    const players = runQuery([Has(Player)]);
+  function findClosestPlayer(room: Coord, position: Coord) {
+    const players = runQuery([HasValue(Room, room), Has(Player)]);
     let closestPlayer: EntityIndex | undefined;
     let closestDistance = Infinity;
 
@@ -159,7 +160,10 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
     const monsterPosition = getComponentValue(Position, monster);
     if (!monsterPosition) return;
 
-    const closestPlayer = findClosestPlayer(monsterPosition);
+    const monsterRoom = getComponentValue(Room, monster);
+    if (!monsterRoom) return;
+
+    const closestPlayer = findClosestPlayer(monsterRoom, monsterPosition);
     if (!closestPlayer) return;
 
     const playerPosition = getComponentValue(Position, closestPlayer);
@@ -214,7 +218,12 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
       }
 
       const allMonsters = [
-        ...runQuery([Has(MonsterType), Has(Position), Has(MoveSpeed), Has(InActiveRoom)]),
+        ...runQuery([
+          Has(MonsterType),
+          Has(Position),
+          Has(MoveSpeed),
+          Has(InActiveRoom),
+        ]),
       ];
       for (const monster of allMonsters) {
         drawMonsterTarget(monster);
@@ -224,7 +233,12 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
 
   defineSystem(world, [Has(Player), Has(Position), Has(InActiveRoom)], () => {
     const allMonsters = [
-      ...runQuery([Has(MonsterType), Has(Position), Has(MoveSpeed), Has(InActiveRoom)]),
+      ...runQuery([
+        Has(MonsterType),
+        Has(Position),
+        Has(MoveSpeed),
+        Has(InActiveRoom),
+      ]),
     ];
     for (const monster of allMonsters) {
       drawMonsterTarget(monster);
@@ -233,7 +247,12 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
 
   defineSystem(world, [Has(ActiveRoom)], ({ type }) => {
     const allMonsters = [
-      ...runQuery([Has(MonsterType), Has(Position), Has(MoveSpeed), Has(InActiveRoom)]),
+      ...runQuery([
+        Has(MonsterType),
+        Has(Position),
+        Has(MoveSpeed),
+        Has(InActiveRoom),
+      ]),
     ];
     for (const monster of allMonsters) {
       drawMonsterTarget(monster, type === UpdateType.Exit);
