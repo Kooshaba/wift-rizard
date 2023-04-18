@@ -9,6 +9,9 @@ module.exports = {
       aria: {
         busy: 'busy="true"',
       },
+      cursor: {
+        hover: `url("assets/cursor-outline.png"), pointer`
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],

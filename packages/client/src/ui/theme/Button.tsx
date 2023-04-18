@@ -16,7 +16,7 @@ export const Button = React.forwardRef<HTMLButtonElement, Props>(
       disabled={pending || disabled}
       aria-busy={pending}
       className={twMerge(
-        "group transition bg-lime-600 disabled:bg-lime-600/60 disabled:grayscale-[60%] enabled:hover:bg-green-600 enabled:active:translate-y-0.5 shadow px-4 py-1 rounded",
+        "group transition bg-lime-600 disabled:bg-lime-600/60 disabled:grayscale-[60%] enabled:hover:bg-green-600 enabled:active:translate-y-0.5 shadow px-4 py-1 rounded cursor-hover",
         className
       )}
       {...props}

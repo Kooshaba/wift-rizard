@@ -91,6 +91,7 @@ function Inventory({
               className={twMerge(
                 "flex flex-col items-center justify-around",
                 "rounded-lg ml-4 bg-gray-900 hover:bg-gray-700 hover:shadow-lg hover:border-gray-600 px-4",
+                "cursor-hover",
                 playerStamina.current < attackCost &&
                   "bg-red-600 disabled hover:bg-red-600"
               )}
