@@ -1,58 +1,101 @@
-import { Has, defineSystem, getComponentValue, runQuery, setComponent } from "@latticexyz/recs";
+import {
+  Has,
+  UpdateType,
+  defineSystem,
+  getComponentValue,
+  runQuery,
+} from "@latticexyz/recs";
 import { PhaserLayer } from "../createPhaserLayer";
-import { uniq } from "lodash";
 import { Coord } from "@latticexyz/utils";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import {
+  pixelCoordToTileCoord,
+  tileCoordToPixelCoord,
+} from "@latticexyz/phaserx";
 import { TILE_HEIGHT, TILE_WIDTH } from "../constants";
+import { Subscription } from "rxjs";
 
 export function createWorldMapSystem(layer: PhaserLayer) {
   const {
     components: { ActiveRoom },
     networkLayer: {
       world,
-      components: { Room, Player },
+      components: { Room, Player, MonsterType },
       singletonEntity,
+      playerEntity,
     },
     scenes: {
-      Main: {
-        phaserScene,
-      },
+      Main: { phaserScene, input },
     },
     utils: {
-      map: {
-        viewRoomMap,
-      }
-    }
+      map: { viewRoomMap },
+    },
   } = layer;
+
+  function coordEquals(a: Coord | undefined, b: Coord | undefined) {
+    return a?.x === b?.x && a?.y === b?.y;
+  }
 
   const spriteGroup = phaserScene.add.group();
 
-  defineSystem(world, [Has(ActiveRoom)], ({ type }) => {
+  function drawWorldMap() {
     spriteGroup.clear(true, true);
 
     const activeRoom = getComponentValue(ActiveRoom, singletonEntity);
     if (activeRoom) return;
 
-    const uniqueRooms = new Set<Coord>();
+    const playerRoom = playerEntity
+      ? getComponentValue(Room, playerEntity)
+      : undefined;
+
+    const uniqueRooms = new Set<string>();
+    function addRoom(coord: Coord) {
+      const room = `${coord.x},${coord.y}`;
+      uniqueRooms.add(room);
+    }
+    function decodeRoom(roomString: string): Coord {
+      const [x, y] = roomString.split(",");
+      return {
+        x: parseInt(x),
+        y: parseInt(y),
+      };
+    }
 
     const playersInRooms = runQuery([Has(Room), Has(Player)]);
     playersInRooms.forEach((entity) => {
       const room = getComponentValue(Room, entity);
       if (!room) return;
 
-      uniqueRooms.add(room);
+      addRoom(room);
+    });
+
+    const monstersInRooms = runQuery([Has(Room), Has(MonsterType)]);
+    monstersInRooms.forEach((entity) => {
+      const room = getComponentValue(Room, entity);
+      if (!room) return;
+
+      addRoom(room);
     });
 
     const rooms = Array.from(uniqueRooms);
     rooms.forEach((room) => {
-      const pixelCoord = tileCoordToPixelCoord(room, TILE_WIDTH, TILE_HEIGHT);
-      const rect = phaserScene.add.rectangle(pixelCoord.x, pixelCoord.y, TILE_WIDTH, TILE_HEIGHT, 0x881188, 0.5);
+      const roomCoord = decodeRoom(room);
+
+      const pixelCoord = tileCoordToPixelCoord(
+        roomCoord,
+        TILE_WIDTH,
+        TILE_HEIGHT
+      );
+      const color = coordEquals(roomCoord, playerRoom) ? 0x00ff00 : 0xff0000;
+      const rect = phaserScene.add.rectangle(
+        pixelCoord.x,
+        pixelCoord.y,
+        TILE_WIDTH,
+        TILE_HEIGHT,
+        color,
+        0.5
+      );
       spriteGroup.add(rect);
       rect.setOrigin(0);
-      rect.setInteractive();
-      rect.on("pointerdown", () => {
-        viewRoomMap(room);
-      });
 
       // blink
       phaserScene.tweens.add({
@@ -64,5 +107,34 @@ export function createWorldMapSystem(layer: PhaserLayer) {
         repeat: -1,
       });
     });
+  }
+
+  defineSystem(world, [Has(Player), Has(Room)], () => {
+    drawWorldMap();
+  });
+
+  defineSystem(world, [Has(ActiveRoom)], () => {
+    drawWorldMap();
+  });
+
+  let worldMapClickSub: Subscription | undefined;
+  defineSystem(world, [Has(ActiveRoom)], ({ type }) => {
+    if (type === UpdateType.Exit) {
+      worldMapClickSub = input.click$.subscribe((e) => {
+        const tileCoord = pixelCoordToTileCoord(
+          {
+            x: e.worldX,
+            y: e.worldY,
+          },
+          TILE_WIDTH,
+          TILE_HEIGHT
+        );
+
+        viewRoomMap(tileCoord);
+      });
+    } else if (type === UpdateType.Enter) {
+      worldMapClickSub?.unsubscribe();
+      worldMapClickSub = undefined;
+    }
   });
 }

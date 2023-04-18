@@ -112,6 +112,24 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     });
   }
 
+  function moveRoom(coord: Coord) {
+    actions.add({
+      id: ("moveRoom" + Math.random().toPrecision(5)) as EntityID,
+      updates: () => [],
+      components: {},
+      requirement: () => true,
+      execute: async () => {
+      return await worldSend("mud_MoveSystem_moveRoom", [
+          coord.x,
+          coord.y,
+          {
+            gasLimit: 1000000,
+          },
+        ]);
+      },
+    });
+  }
+
   function attack(item: EntityIndex, target: Coord) {
     const itemId = world.entities[item];
 
@@ -284,6 +302,7 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     txApi: {
       spawnPlayer,
       move,
+      moveRoom,
       attack,
       heal,
 

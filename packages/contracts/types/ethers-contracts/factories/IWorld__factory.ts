@@ -603,6 +603,24 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "int32",
+        name: "x",
+        type: "int32",
+      },
+      {
+        internalType: "int32",
+        name: "y",
+        type: "int32",
+      },
+    ],
+    name: "mud_MoveSystem_moveRoom",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint32",
         name: "id",
         type: "uint32",

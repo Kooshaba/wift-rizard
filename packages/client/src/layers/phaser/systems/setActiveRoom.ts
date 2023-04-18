@@ -1,6 +1,7 @@
 import {
   Has,
   HasValue,
+  UpdateType,
   defineSystem,
   getComponentValue,
   removeComponent,
@@ -37,7 +38,9 @@ export function setActiveRoom(layer: PhaserLayer) {
   }
 
   // set the active room to the player's room
-  defineSystem(world, [Has(Player), Has(Room)], ({ entity: player }) => {
+  defineSystem(world, [Has(Player), Has(Room)], ({ entity: player, type }) => {
+    if(type !== UpdateType.Enter) return;
+
     if (player !== playerEntity) return;
 
     const room = getComponentValue(Room, player);
@@ -52,7 +55,7 @@ export function setActiveRoom(layer: PhaserLayer) {
     const room = getComponentValue(Room, entity);
     const activeRoom = getComponentValue(ActiveRoom, singletonEntity);
 
-    if (room?.x !== activeRoom?.x && room?.y !== activeRoom?.y) return;
+    if (room?.x !== activeRoom?.x || room?.y !== activeRoom?.y) return;
 
     setComponent(InActiveRoom, entity, { value: true });
   });

@@ -9,6 +9,7 @@ import { Wrapper } from "./Wrapper";
 import { ActionQueue } from "./ActionQueue";
 import { DMTools } from "./DMTools";
 import { Coord } from "./Coord";
+import { PlayerControls } from "./PlayerControls";
 
 export const UIRoot = () => {
   const layers = useStore((state) => {
@@ -30,6 +31,7 @@ export const UIRoot = () => {
       <ActionQueue />
 
       <PlayerBar />
+      <PlayerControls />
       <Spawn />
       <Coord />
 

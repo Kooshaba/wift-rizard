@@ -114,55 +114,19 @@ export function PlayerBar() {
   const {
     networkLayer: {
       world,
-      components: { Position, Health, OptimisticStamina, Room, Attack },
-      utils: {
-        txApi: { move },
-      },
+      singletonEntity,
+      components: { Health, OptimisticStamina, Attack },
     },
     phaserLayer: {
       utils: {
-        map: { viewWorldMap, viewRoomMap },
+        map: { viewWorldMap },
       },
-      components: { Targeting },
+      components: { Targeting, ActiveRoom },
     },
   } = useMUD();
 
   const currentPlayer = useCurrentPlayer();
-  const playerPosition = useComponentValue(
-    Position,
-    currentPlayer?.player || (0 as EntityIndex)
-  ) || { x: 0, y: 0 };
-  const playerRoom = useComponentValue(
-    Room,
-    currentPlayer?.player || (0 as EntityIndex)
-  ) || { x: 0, y: 0 };
-
-  useEffect(() => {
-    if (!currentPlayer) return;
-    if (!playerPosition) return;
-    if (!playerRoom) return;
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "w") {
-        move({ ...playerPosition, y: playerPosition.y - 1 });
-      }
-      if (e.key === "s") {
-        move({ ...playerPosition, y: playerPosition.y + 1 });
-      }
-      if (e.key === "a") {
-        move({ ...playerPosition, x: playerPosition.x - 1 });
-      }
-      if (e.key === "d") {
-        move({ ...playerPosition, x: playerPosition.x + 1 });
-      }
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [currentPlayer, playerPosition, playerRoom]);
+  const activeRoom = useComponentValue(ActiveRoom, singletonEntity);
 
   const player = (currentPlayer?.player || 0) as EntityIndex;
   const playerHealth = useComponentValue(Health, player);
@@ -197,10 +161,11 @@ export function PlayerBar() {
 
   return (
     <ClickWrapper className="absolute bottom-0 left-0 h-[175px] w-screen flex flex-row items-center justify-center">
-      <div className="flex flex-col">
-        <Button onClick={() => viewWorldMap()}>World Map</Button>
-        <Button onClick={() => viewRoomMap({ x: 1, y: 1 })}>Room Map</Button>
-      </div>
+      {activeRoom && (
+        <div className="flex flex-col">
+          <Button onClick={() => viewWorldMap()}>World Map</Button>
+        </div>
+      )}
 
       <div>
         <SpriteImage spriteKey={Sprites.Avatar} scale={3.5} />

@@ -33,8 +33,6 @@ contract MoveSystem is System {
   }
 
   function moveRoom(int32 x, int32 y) public {
-    require(LibPosition.withinRoomBounds(PositionData(x, y)), "Invalid position");
-
     bytes32 player = addressToEntity(_msgSender());
     LibStamina.spend(player, 100_000);
 
@@ -43,7 +41,7 @@ contract MoveSystem is System {
 
     RoomData memory oldRoom = Room.get(player);
     require(
-      LibPosition.manhattan(PositionData(oldRoom.x, oldRoom.y), PositionData(x, y)) == 0,
+      LibPosition.manhattan(PositionData(oldRoom.x, oldRoom.y), PositionData(x, y)) == 1,
       "Must move one tile"
     );
 

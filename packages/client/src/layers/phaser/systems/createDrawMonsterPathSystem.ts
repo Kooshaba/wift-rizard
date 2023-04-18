@@ -23,9 +23,7 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
     scenes: {
       Main: { phaserScene },
     },
-    components: {
-      InActiveRoom, ActiveRoom,
-    },
+    components: { InActiveRoom, ActiveRoom },
   } = layer;
 
   type Move = [number, number];
@@ -156,7 +154,7 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
     }
 
     monsterGraphics[monster].clear(true, true);
-    if(clearOnly) return;
+    if (clearOnly) return;
 
     const monsterPosition = getComponentValue(Position, monster);
     if (!monsterPosition) return;
@@ -207,22 +205,26 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
     graphicsGroup.add(rect2);
   }
 
-  defineSystem(world, [Has(MonsterType), Has(Position), Has(MoveSpeed), Has(InActiveRoom)], ({ type, entity }) => {
-    if(type === UpdateType.Exit) {
-      drawMonsterTarget(entity, true);
-    }
+  defineSystem(
+    world,
+    [Has(MonsterType), Has(Position), Has(MoveSpeed), Has(InActiveRoom)],
+    ({ type, entity }) => {
+      if (type === UpdateType.Exit) {
+        drawMonsterTarget(entity, true);
+      }
 
-    const allMonsters = [
-      ...runQuery([Has(MonsterType), Has(Position), Has(MoveSpeed)]),
-    ];
-    for (const monster of allMonsters) {
-      drawMonsterTarget(monster);
+      const allMonsters = [
+        ...runQuery([Has(MonsterType), Has(Position), Has(MoveSpeed), Has(InActiveRoom)]),
+      ];
+      for (const monster of allMonsters) {
+        drawMonsterTarget(monster);
+      }
     }
-  });
+  );
 
   defineSystem(world, [Has(Player), Has(Position), Has(InActiveRoom)], () => {
     const allMonsters = [
-      ...runQuery([Has(MonsterType), Has(Position), Has(MoveSpeed)]),
+      ...runQuery([Has(MonsterType), Has(Position), Has(MoveSpeed), Has(InActiveRoom)]),
     ];
     for (const monster of allMonsters) {
       drawMonsterTarget(monster);
@@ -230,13 +232,11 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
   });
 
   defineSystem(world, [Has(ActiveRoom)], ({ type }) => {
-    if (type === UpdateType.Exit) {
-      const allMonsters = [
-        ...runQuery([Has(MonsterType), Has(Position), Has(MoveSpeed)]),
-      ];
-      for (const monster of allMonsters) {
-        drawMonsterTarget(monster, true);
-      }
+    const allMonsters = [
+      ...runQuery([Has(MonsterType), Has(Position), Has(MoveSpeed), Has(InActiveRoom)]),
+    ];
+    for (const monster of allMonsters) {
+      drawMonsterTarget(monster, type === UpdateType.Exit);
     }
   });
 }
