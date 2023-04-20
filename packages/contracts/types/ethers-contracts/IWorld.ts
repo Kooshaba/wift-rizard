@@ -28,31 +28,6 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export type AttackDataStruct = {
-  strength: PromiseOrValue<BigNumberish>;
-  staminaCost: PromiseOrValue<BigNumberish>;
-  minRange: PromiseOrValue<BigNumberish>;
-  maxRange: PromiseOrValue<BigNumberish>;
-  patternX: PromiseOrValue<BigNumberish>[];
-  patternY: PromiseOrValue<BigNumberish>[];
-};
-
-export type AttackDataStructOutput = [
-  number,
-  number,
-  number,
-  number,
-  number[],
-  number[]
-] & {
-  strength: number;
-  staminaCost: number;
-  minRange: number;
-  maxRange: number;
-  patternX: number[];
-  patternY: number[];
-};
-
 export interface IWorldInterface extends utils.Interface {
   functions: {
     "call(bytes16,bytes16,bytes)": FunctionFragment;
@@ -69,8 +44,9 @@ export interface IWorldInterface extends utils.Interface {
     "installRootModule(address,bytes)": FunctionFragment;
     "isStore()": FunctionFragment;
     "mud_CombatSystem_attack(bytes32,int32,int32)": FunctionFragment;
-    "mud_CombatSystem_getPlayerAttackData(bytes32,bytes32)": FunctionFragment;
     "mud_CombatSystem_heal()": FunctionFragment;
+    "mud_InventorySystem_unequip(bytes32,bytes32)": FunctionFragment;
+    "mud_ItemSystem_equipRandomItem()": FunctionFragment;
     "mud_MonsterSystem_act(bytes32)": FunctionFragment;
     "mud_MoveSystem_move(int32,int32)": FunctionFragment;
     "mud_MoveSystem_moveRoom(int32,int32)": FunctionFragment;
@@ -107,8 +83,9 @@ export interface IWorldInterface extends utils.Interface {
       | "installRootModule"
       | "isStore"
       | "mud_CombatSystem_attack"
-      | "mud_CombatSystem_getPlayerAttackData"
       | "mud_CombatSystem_heal"
+      | "mud_InventorySystem_unequip"
+      | "mud_ItemSystem_equipRandomItem"
       | "mud_MonsterSystem_act"
       | "mud_MoveSystem_move"
       | "mud_MoveSystem_moveRoom"
@@ -207,11 +184,15 @@ export interface IWorldInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "mud_CombatSystem_getPlayerAttackData",
+    functionFragment: "mud_CombatSystem_heal",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mud_InventorySystem_unequip",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "mud_CombatSystem_heal",
+    functionFragment: "mud_ItemSystem_equipRandomItem",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -397,11 +378,15 @@ export interface IWorldInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "mud_CombatSystem_getPlayerAttackData",
+    functionFragment: "mud_CombatSystem_heal",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "mud_CombatSystem_heal",
+    functionFragment: "mud_InventorySystem_unequip",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "mud_ItemSystem_equipRandomItem",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -636,15 +621,17 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    mud_CombatSystem_getPlayerAttackData(
-      player: PromiseOrValue<BytesLike>,
-      item: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<
-      [AttackDataStructOutput] & { attackData: AttackDataStructOutput }
-    >;
-
     mud_CombatSystem_heal(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    mud_InventorySystem_unequip(
+      entity: PromiseOrValue<BytesLike>,
+      item: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    mud_ItemSystem_equipRandomItem(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -865,13 +852,17 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  mud_CombatSystem_getPlayerAttackData(
-    player: PromiseOrValue<BytesLike>,
-    item: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<AttackDataStructOutput>;
-
   mud_CombatSystem_heal(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  mud_InventorySystem_unequip(
+    entity: PromiseOrValue<BytesLike>,
+    item: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  mud_ItemSystem_equipRandomItem(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1092,13 +1083,15 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    mud_CombatSystem_getPlayerAttackData(
-      player: PromiseOrValue<BytesLike>,
+    mud_CombatSystem_heal(overrides?: CallOverrides): Promise<void>;
+
+    mud_InventorySystem_unequip(
+      entity: PromiseOrValue<BytesLike>,
       item: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<AttackDataStructOutput>;
+    ): Promise<void>;
 
-    mud_CombatSystem_heal(overrides?: CallOverrides): Promise<void>;
+    mud_ItemSystem_equipRandomItem(overrides?: CallOverrides): Promise<void>;
 
     mud_MonsterSystem_act(
       monster: PromiseOrValue<BytesLike>,
@@ -1350,13 +1343,17 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    mud_CombatSystem_getPlayerAttackData(
-      player: PromiseOrValue<BytesLike>,
-      item: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
+    mud_CombatSystem_heal(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    mud_CombatSystem_heal(
+    mud_InventorySystem_unequip(
+      entity: PromiseOrValue<BytesLike>,
+      item: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    mud_ItemSystem_equipRandomItem(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1578,13 +1575,17 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    mud_CombatSystem_getPlayerAttackData(
-      player: PromiseOrValue<BytesLike>,
-      item: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
+    mud_CombatSystem_heal(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    mud_CombatSystem_heal(
+    mud_InventorySystem_unequip(
+      entity: PromiseOrValue<BytesLike>,
+      item: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    mud_ItemSystem_equipRandomItem(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

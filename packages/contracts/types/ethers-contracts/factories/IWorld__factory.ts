@@ -563,10 +563,17 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "mud_CombatSystem_heal",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "bytes32",
-        name: "player",
+        name: "entity",
         type: "bytes32",
       },
       {
@@ -575,52 +582,14 @@ const _abi = [
         type: "bytes32",
       },
     ],
-    name: "mud_CombatSystem_getPlayerAttackData",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "int32",
-            name: "strength",
-            type: "int32",
-          },
-          {
-            internalType: "int32",
-            name: "staminaCost",
-            type: "int32",
-          },
-          {
-            internalType: "int32",
-            name: "minRange",
-            type: "int32",
-          },
-          {
-            internalType: "int32",
-            name: "maxRange",
-            type: "int32",
-          },
-          {
-            internalType: "int32[]",
-            name: "patternX",
-            type: "int32[]",
-          },
-          {
-            internalType: "int32[]",
-            name: "patternY",
-            type: "int32[]",
-          },
-        ],
-        internalType: "struct AttackData",
-        name: "attackData",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "view",
+    name: "mud_InventorySystem_unequip",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "mud_CombatSystem_heal",
+    name: "mud_ItemSystem_equipRandomItem",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

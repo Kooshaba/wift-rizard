@@ -135,4 +135,32 @@ library LibItemFactory {
   function generateUniqueId(bytes32 seed) internal view returns (bytes32) {
     return keccak256(abi.encodePacked(seed, block.number, blockhash(block.number - 1)));
   }
+
+  function getRandomItem(uint256 seed) internal returns (bytes32) {
+    uint256 itemSeed = seed % 11;
+
+    if (itemSeed == 0) {
+      return createSword();
+    } else if (itemSeed == 1) {
+      return createDagger();
+    } else if (itemSeed == 2) {
+      return createSpear();
+    } else if (itemSeed == 3) {
+      return createHammer();
+    } else if (itemSeed == 4) {
+      return createAxe();
+    } else if (itemSeed == 5) {
+      return createShield();
+    } else if (itemSeed == 6) {
+      return createBow();
+    } else if (itemSeed == 7) {
+      return createBowLarge();
+    } else if (itemSeed == 8) {
+      return createStaff();
+    } else if (itemSeed == 9) {
+      return createDevilHorn();
+    } else {
+      return createDevilHornLarge();
+    }
+  }
 }

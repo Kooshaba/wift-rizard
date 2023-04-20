@@ -2,7 +2,6 @@ import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 import {
   EntityIndex,
   HasValue,
-  SchemaOf,
   getComponentValueStrict,
   removeComponent,
   setComponent,

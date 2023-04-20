@@ -11,6 +11,15 @@ import { Attack, AttackData } from "../tables/Attack.sol";
 import { OnItem } from "../tables/OnItem.sol";
 
 library LibItemGenerator {
+  function generate(uint256 seed) internal returns (bytes32) {
+    bytes32 item = LibItemFactory.getRandomItem(seed);
+
+    bytes32 attribute = LibAttributes.getRandomAttribute(seed);
+    OnItem.set(attribute, item);
+
+    return item;
+  }
+
   function generateSword() internal returns (bytes32) {
     bytes32 sword = LibItemFactory.createSword();
 

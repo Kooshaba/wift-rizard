@@ -10,7 +10,7 @@ export function DMTools() {
     networkLayer: {
       components: { Room },
       utils: {
-        txApi: { createSpawner, spawnMonster, tickRoom },
+        txApi: { createSpawner, spawnMonster, tickRoom, equipRandomItem },
       },
     },
   } = useMUD();
@@ -45,9 +45,23 @@ export function DMTools() {
     },
   });
 
-  return <ClickWrapper className="flex flex-col w-fit">
-    {spawnMonsterButton}
-    {createSpawnerButton}
-    {tickMonsterButton}
-  </ClickWrapper>;
+  const { button: equipRandomItemButton } = useActionButton({
+    label: "Equip Random Item",
+    actionName: "equipRandomItem",
+    actionFunction: () => {
+      equipRandomItem();
+    },
+  });
+
+  return (
+    <ClickWrapper className="flex flex-col w-fit">
+      {spawnMonsterButton}
+      {createSpawnerButton}
+      {tickMonsterButton}
+      
+      <br />
+      
+      {equipRandomItemButton}
+    </ClickWrapper>
+  );
 }

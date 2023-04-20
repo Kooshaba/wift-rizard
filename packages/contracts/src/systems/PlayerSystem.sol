@@ -40,12 +40,9 @@ contract PlayerSystem is System {
       player,
       StaminaData({ current: 100_000, max: 100_000, regen: 7_500, lastRefreshedAt: block.timestamp })
     );
-    Inventory.set(player, InventoryData({ 
-      equipSize: 2,
-      size: 4
-     }));
+    Inventory.set(player, InventoryData({ equipSize: 2, size: 4 }));
 
-    bytes32 item = LibItemGenerator.generateSword();
+    bytes32 item = LibItemGenerator.generate(uint256(blockhash(block.number - 1)));
     LibInventory.equip(player, item);
   }
 }

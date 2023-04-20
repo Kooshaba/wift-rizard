@@ -96,7 +96,7 @@ contract CombatSystem is System {
     Health.set(player, HealthData(newHealth, playerHealthData.max));
   }
 
-  function getPlayerAttackData(bytes32 player, bytes32 item) public view returns (AttackData memory attackData) {
+  function getPlayerAttackData(bytes32 player, bytes32 item) internal view returns (AttackData memory attackData) {
     attackData = Attack.get(item);
     BonusAttributesData memory bonusAttributes = BonusAttributes.get(player);
 

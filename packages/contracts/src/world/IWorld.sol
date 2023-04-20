@@ -9,6 +9,7 @@ import { IWorldCore } from "@latticexyz/world/src/interfaces/IWorldCore.sol";
 
 import { ICombatSystem } from "./ICombatSystem.sol";
 import { IInventorySystem } from "./IInventorySystem.sol";
+import { IItemSystem } from "./IItemSystem.sol";
 import { IMonsterSystem } from "./IMonsterSystem.sol";
 import { IMoveSystem } from "./IMoveSystem.sol";
 import { IPlayerSystem } from "./IPlayerSystem.sol";
@@ -23,6 +24,7 @@ interface IWorld is
   IWorldCore,
   ICombatSystem,
   IInventorySystem,
+  IItemSystem,
   IMonsterSystem,
   IMoveSystem,
   IPlayerSystem,

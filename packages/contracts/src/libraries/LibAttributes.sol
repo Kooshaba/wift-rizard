@@ -60,4 +60,20 @@ library LibAttributes {
 
     return id;
   }
+
+  function getRandomAttribute(uint256 seed) internal returns (bytes32) {
+    uint256 attributeSeed = seed % 5;
+
+    if (attributeSeed == 0) {
+      return createFortitude();
+    } else if (attributeSeed == 1) {
+      return createStrong();
+    } else if (attributeSeed == 2) {
+      return createLightweight();
+    } else if (attributeSeed == 3){
+      return createAlacrity();
+    } else {
+      return createSwift();
+    }
+  }
 }

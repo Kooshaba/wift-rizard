@@ -13,7 +13,7 @@ import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/ge
 
 library LibInventory {
   function equip(bytes32 entity, bytes32 item) internal {
-    require(Inventory.getEquipSize(entity) > 0, "Entity has no equip slots");
+    require(Inventory.getEquipSize(entity) > 0, "Entity has no inventory");
 
     uint32 freeSlots = getFreeEquipSlots(entity);
     require(freeSlots > 0, "Entity has no free equip slots");
@@ -41,6 +41,8 @@ library LibInventory {
   }
 
   function unequip(bytes32 entity, bytes32 item) internal {
+    require(EquippedBy.get(item) == entity, "Item is not equipped by entity");
+
     EquippedBy.deleteRecord(item);
 
     AttributeData[] memory attributeData = getItemAttributeData(item);
@@ -64,10 +66,10 @@ library LibInventory {
   }
 
   function getFreeEquipSlots(bytes32 entity) internal view returns (uint32) {
-    uint32 freeSlots = Inventory.getEquipSize(entity);
-    uint256 equippedItems = getKeysWithValue(EquippedByTableId, EquippedBy.encode(entity)).length;
+    uint32 equipSlots = Inventory.getEquipSize(entity);
+    uint256 equippedItemsLength = getKeysWithValue(EquippedByTableId, EquippedBy.encode(entity)).length;
 
-    return freeSlots - uint32(equippedItems);
+    return equipSlots - uint32(equippedItemsLength);
   }
 
   function getItemAttributeData(bytes32 item) internal view returns (AttributeData[] memory attributeData) {
