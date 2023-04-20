@@ -87,8 +87,7 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       ) + 1;
 
     const tx = await worldSend("mud_PlayerSystem_spawn", [
-      nextPlayerId,
-      { gasLimit: 2_000_000 },
+      nextPlayerId
     ]);
 
     return tx;

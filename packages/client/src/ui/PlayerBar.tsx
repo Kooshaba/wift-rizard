@@ -1,8 +1,8 @@
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 import {
-  EntityID,
   EntityIndex,
   HasValue,
+  SchemaOf,
   getComponentValueStrict,
   removeComponent,
   setComponent,
@@ -14,8 +14,52 @@ import { ItemTypeSprites } from "../layers/network/types";
 import { twMerge } from "tailwind-merge";
 import { SpriteImage } from "./theme/SpriteImage";
 import { Sprites } from "../layers/phaser/constants";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./theme/Button";
+
+function AttackDetails({
+  screenPosition,
+  attackData,
+}: {
+  screenPosition: { x: number; y: number };
+  attackData: {
+    strength: number;
+    staminaCost: number;
+    minRange: number;
+    maxRange: number;
+    patternX: number[];
+    patternY: number[];
+  };
+}) {
+  return (
+    <div
+      className={twMerge(
+        "flex flex-col items-center justify-center",
+        "bg-gray-900 rounded-lg px-4 py-2",
+        "text-white"
+      )}
+      style={{
+        position: "absolute",
+        left: screenPosition.x,
+        top: screenPosition.y - 100,
+      }}
+    >
+      <div className="flex flex-row items-center justify-center">
+        <span className="ml-2">
+          Stamina Cost: {attackData.staminaCost / 1000}
+        </span>
+      </div>
+      <div className="flex flex-row items-center justify-center">
+        <span className="ml-2">Strength: {attackData.strength}</span>
+      </div>
+      <div className="flex flex-row items-center justify-center">
+        <span className="ml-2">Range: {attackData.minRange}</span>
+        <span className="ml-2">-</span>
+        <span className="ml-2">{attackData.maxRange}</span>
+      </div>
+    </div>
+  );
+}
 
 function Inventory({
   playerData,
@@ -25,12 +69,19 @@ function Inventory({
   const {
     networkLayer: {
       world,
-      components: { EquippedBy, Position, ItemType, OptimisticStamina, Attack },
+      components: { EquippedBy, Position, ItemType, OptimisticStamina },
     },
     phaserLayer: {
       components: { Targeting },
+      utils: { getPlayerAttackData },
     },
   } = useMUD();
+
+  const [hoverAttackData, setHoverAttackData] =
+    useState<ReturnType<typeof getPlayerAttackData>>();
+  const [hoverPosition, setHoverPosition] = useState<
+    { x: number; y: number } | undefined
+  >();
 
   const ugh = "0x" + playerData.playerId.replace("0x", "").padStart(64, "0");
   const equippedItems = useEntityQuery([HasValue(EquippedBy, { value: ugh })]);
@@ -74,10 +125,19 @@ function Inventory({
 
   return (
     <div>
+      {hoverAttackData && hoverPosition && (
+        <AttackDetails
+          screenPosition={hoverPosition}
+          attackData={hoverAttackData}
+        />
+      )}
+
       <div className="flex flex-row items-center justify-center flex-wrap">
         {equippedItems.map((item, index) => {
           const itemType = getComponentValueStrict(ItemType, item).value;
-          const attackCost = getComponentValueStrict(Attack, item).staminaCost;
+          const attack = getPlayerAttackData(player, item);
+          const attackCost = attack?.staminaCost || 0;
+
           const itemId = world.entities[item];
           const currentlyTargeting = itemId === currentTarget?.item;
 
@@ -95,6 +155,17 @@ function Inventory({
                 playerStamina.current < attackCost &&
                   "bg-red-600 disabled hover:bg-red-600"
               )}
+              onMouseEnter={(e) => {
+                setHoverAttackData(attack);
+                setHoverPosition({
+                  x: (e.target as HTMLElement).offsetLeft,
+                  y: (e.target as HTMLElement).offsetTop,
+                });
+              }}
+              onMouseLeave={() => {
+                setHoverAttackData(undefined);
+                setHoverPosition(undefined);
+              }}
               onClick={() => {
                 setComponent(Targeting, playerData.player, {
                   item: world.entities[item],
@@ -116,10 +187,11 @@ export function PlayerBar() {
     networkLayer: {
       world,
       singletonEntity,
-      components: { Health, OptimisticStamina, Attack },
+      components: { Health, OptimisticStamina },
     },
     phaserLayer: {
       utils: {
+        getPlayerAttackData,
         map: { viewWorldMap },
       },
       components: { Targeting, ActiveRoom },
@@ -134,10 +206,13 @@ export function PlayerBar() {
   const playerStamina = useComponentValue(OptimisticStamina, player);
 
   const currentlyTargeting = useComponentValue(Targeting, player);
-  const currentAttack = useComponentValue(
-    Attack,
-    world.entityToIndex.get(currentlyTargeting?.item || ("" as EntityID))
-  );
+  const currentAttack =
+    currentlyTargeting &&
+    getPlayerAttackData(
+      player,
+      world.getEntityIndexStrict(currentlyTargeting.item)
+    );
+
   const pendingStaminaSpend = currentAttack?.staminaCost;
 
   if (!currentPlayer) return <></>;

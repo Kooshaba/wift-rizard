@@ -28,6 +28,31 @@ import type {
   PromiseOrValue,
 } from "./common";
 
+export type AttackDataStruct = {
+  strength: PromiseOrValue<BigNumberish>;
+  staminaCost: PromiseOrValue<BigNumberish>;
+  minRange: PromiseOrValue<BigNumberish>;
+  maxRange: PromiseOrValue<BigNumberish>;
+  patternX: PromiseOrValue<BigNumberish>[];
+  patternY: PromiseOrValue<BigNumberish>[];
+};
+
+export type AttackDataStructOutput = [
+  number,
+  number,
+  number,
+  number,
+  number[],
+  number[]
+] & {
+  strength: number;
+  staminaCost: number;
+  minRange: number;
+  maxRange: number;
+  patternX: number[];
+  patternY: number[];
+};
+
 export interface IWorldInterface extends utils.Interface {
   functions: {
     "call(bytes16,bytes16,bytes)": FunctionFragment;
@@ -44,6 +69,7 @@ export interface IWorldInterface extends utils.Interface {
     "installRootModule(address,bytes)": FunctionFragment;
     "isStore()": FunctionFragment;
     "mud_CombatSystem_attack(bytes32,int32,int32)": FunctionFragment;
+    "mud_CombatSystem_getPlayerAttackData(bytes32,bytes32)": FunctionFragment;
     "mud_CombatSystem_heal()": FunctionFragment;
     "mud_MonsterSystem_act(bytes32)": FunctionFragment;
     "mud_MoveSystem_move(int32,int32)": FunctionFragment;
@@ -81,6 +107,7 @@ export interface IWorldInterface extends utils.Interface {
       | "installRootModule"
       | "isStore"
       | "mud_CombatSystem_attack"
+      | "mud_CombatSystem_getPlayerAttackData"
       | "mud_CombatSystem_heal"
       | "mud_MonsterSystem_act"
       | "mud_MoveSystem_move"
@@ -178,6 +205,10 @@ export interface IWorldInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>
     ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mud_CombatSystem_getPlayerAttackData",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "mud_CombatSystem_heal",
@@ -363,6 +394,10 @@ export interface IWorldInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "isStore", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "mud_CombatSystem_attack",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "mud_CombatSystem_getPlayerAttackData",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -601,6 +636,14 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    mud_CombatSystem_getPlayerAttackData(
+      player: PromiseOrValue<BytesLike>,
+      item: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<
+      [AttackDataStructOutput] & { attackData: AttackDataStructOutput }
+    >;
+
     mud_CombatSystem_heal(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -822,6 +865,12 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  mud_CombatSystem_getPlayerAttackData(
+    player: PromiseOrValue<BytesLike>,
+    item: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<AttackDataStructOutput>;
+
   mud_CombatSystem_heal(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -1042,6 +1091,12 @@ export interface IWorld extends BaseContract {
       targetY: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    mud_CombatSystem_getPlayerAttackData(
+      player: PromiseOrValue<BytesLike>,
+      item: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<AttackDataStructOutput>;
 
     mud_CombatSystem_heal(overrides?: CallOverrides): Promise<void>;
 
@@ -1295,6 +1350,12 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    mud_CombatSystem_getPlayerAttackData(
+      player: PromiseOrValue<BytesLike>,
+      item: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     mud_CombatSystem_heal(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1515,6 +1576,12 @@ export interface IWorld extends BaseContract {
       targetX: PromiseOrValue<BigNumberish>,
       targetY: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    mud_CombatSystem_getPlayerAttackData(
+      player: PromiseOrValue<BytesLike>,
+      item: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     mud_CombatSystem_heal(

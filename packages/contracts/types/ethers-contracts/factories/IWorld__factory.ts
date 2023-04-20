@@ -563,6 +563,62 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "player",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes32",
+        name: "item",
+        type: "bytes32",
+      },
+    ],
+    name: "mud_CombatSystem_getPlayerAttackData",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "int32",
+            name: "strength",
+            type: "int32",
+          },
+          {
+            internalType: "int32",
+            name: "staminaCost",
+            type: "int32",
+          },
+          {
+            internalType: "int32",
+            name: "minRange",
+            type: "int32",
+          },
+          {
+            internalType: "int32",
+            name: "maxRange",
+            type: "int32",
+          },
+          {
+            internalType: "int32[]",
+            name: "patternX",
+            type: "int32[]",
+          },
+          {
+            internalType: "int32[]",
+            name: "patternY",
+            type: "int32[]",
+          },
+        ],
+        internalType: "struct AttackData",
+        name: "attackData",
+        type: "tuple",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "mud_CombatSystem_heal",
     outputs: [],

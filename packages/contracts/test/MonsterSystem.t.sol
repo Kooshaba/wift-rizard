@@ -25,7 +25,7 @@ contract MonsterTest is MudV2Test {
     uint32 playerNumber = 1;
     world.mud_PlayerSystem_spawn(playerNumber);
 
-    bytes32 skeleton = LibMonster.spawnSkeleton(RoomData(1, 1), PositionData(3, 3));
+    // bytes32 skeleton = LibMonster.spawnSkeleton(RoomData(1, 1), PositionData(3, 3));
     // Stamina.setCurrent(skeleton, 25_000);
 
     // world.mud_MonsterSystem_act(skeleton);

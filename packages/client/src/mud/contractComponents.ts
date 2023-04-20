@@ -136,12 +136,104 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
+    Inventory: (() => {
+      const tableId = new TableId("mud", "inventory");
+      return defineComponent(
+        world,
+        {
+          equipSize: RecsType.Number,
+          size: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
     EquippedBy: (() => {
       const tableId = new TableId("mud", "equippedBy");
       return defineComponent(
         world,
         {
           value: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    InInventoryOf: (() => {
+      const tableId = new TableId("mud", "inInventoryOf");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Attribute: (() => {
+      const tableId = new TableId("mud", "attribute");
+      return defineComponent(
+        world,
+        {
+          healthMax: RecsType.Number,
+          strength: RecsType.Number,
+          staminaMax: RecsType.Number,
+          staminaRegen: RecsType.Number,
+          staminaCost: RecsType.Number,
+          moveSpeed: RecsType.Number,
+          heal: RecsType.Number,
+          rangeMin: RecsType.Number,
+          rangeMax: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    OnItem: (() => {
+      const tableId = new TableId("mud", "onItem");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    BonusAttributes: (() => {
+      const tableId = new TableId("mud", "bonusAttributes");
+      return defineComponent(
+        world,
+        {
+          healthMax: RecsType.Number,
+          strength: RecsType.Number,
+          staminaMax: RecsType.Number,
+          staminaRegen: RecsType.Number,
+          staminaCost: RecsType.Number,
+          moveSpeed: RecsType.Number,
+          heal: RecsType.Number,
+          rangeMin: RecsType.Number,
+          rangeMax: RecsType.Number,
         },
         {
           metadata: {

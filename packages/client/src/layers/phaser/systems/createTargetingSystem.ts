@@ -101,7 +101,7 @@ export function createTargetingSystem(layer: PhaserLayer) {
     scenes: {
       Main: { phaserScene },
     },
-    utils: { tintObject },
+    utils: { tintObject, getPlayerAttackData },
     networkLayer: {
       components: { Attack, Position },
       utils: {
@@ -146,7 +146,7 @@ export function createTargetingSystem(layer: PhaserLayer) {
     if (!targeting) return;
 
     const item = world.getEntityIndexStrict(targeting.item);
-    const attack = getComponentValue(Attack, item);
+    const attack = getPlayerAttackData(entity, item);
     if (!attack) return;
 
     const attackPattern: Coord[] = [];

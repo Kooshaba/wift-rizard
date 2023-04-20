@@ -65,10 +65,68 @@ export default mudConfig({
         patternY: "int32[]",
       },
     },
+    Inventory: {
+      fileSelector: "inventory",
+      schema: {
+        equipSize: "uint32",
+        size: "uint32",
+      },
+    },
+    /**
+     * Attribute (OnItem) -> Item (EquippedBy) -> Player
+     */
     EquippedBy: {
       fileSelector: "equippedBy",
       schema: {
         value: "bytes32",
+      },
+    },
+    InInventoryOf: {
+      fileSelector: "inInventoryOf",
+      schema: {
+        value: "bytes32",
+      },
+    },
+    Attribute: {
+      fileSelector: "attribute",
+      schema: {
+        healthMax: "int32",
+        strength: "int32",
+        staminaMax: "int32",
+        staminaRegen: "int32",
+        staminaCost: "int32",
+        moveSpeed: "int32",
+        heal: "int32",
+        rangeMin: "int32",
+        rangeMax: "int32",
+      },
+    },
+    OnItem: {
+      fileSelector: "onItem",
+      schema: {
+        value: "bytes32"
+      },
+    },
+
+    
+    /**
+     * Calculated and stored every time a player
+     * equips / unequips and item.
+     * Used to prevent expensive queries when calculating 
+     * attributes during actions.
+     */
+    BonusAttributes: {
+      fileSelector: "bonusAttributes",
+      schema: {
+        healthMax: "int32",
+        strength: "int32",
+        staminaMax: "int32",
+        staminaRegen: "int32",
+        staminaCost: "int32",
+        moveSpeed: "int32",
+        heal: "int32",
+        rangeMin: "int32",
+        rangeMax: "int32",
       },
     },
 
@@ -112,6 +170,21 @@ export default mudConfig({
       name: "KeysWithValueModule",
       root: true,
       args: [resolveTableId("Room")],
+    },
+    {
+      name: "KeysWithValueModule",
+      root: true,
+      args: [resolveTableId("Room")],
+    },
+    {
+      name: "KeysWithValueModule",
+      root: true,
+      args: [resolveTableId("EquippedBy")],
+    },
+    {
+      name: "KeysWithValueModule",
+      root: true,
+      args: [resolveTableId("OnItem")],
     },
   ],
 });

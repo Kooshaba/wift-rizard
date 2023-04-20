@@ -6,7 +6,7 @@ import { ItemTypes } from "../Types.sol";
 import { ItemType } from "../tables/ItemType.sol";
 import { Attack, AttackData } from "../tables/Attack.sol";
 
-library LibFactory {
+library LibItemFactory {
   function createSword() internal returns (bytes32) {
     return createWeapon("sword", ItemTypes.Sword, 10, 25000, 1, 1, new int32[](1), new int32[](1));
   }

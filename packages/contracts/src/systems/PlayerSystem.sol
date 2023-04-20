@@ -3,13 +3,15 @@ pragma solidity >=0.8.0;
 import { System } from "@latticexyz/world/src/System.sol";
 import { World } from "@latticexyz/world/src/World.sol";
 
-import { LibFactory } from "../libraries/LibFactory.sol";
+import { LibItemGenerator } from "../libraries/LibItemGenerator.sol";
+import { LibInventory } from "../libraries/LibInventory.sol";
 
 import { Player, PlayerTableId } from "../tables/Player.sol";
 import { Health, HealthData } from "../tables/Health.sol";
 import { Stamina, StaminaData } from "../tables/Stamina.sol";
 import { EquippedBy } from "../tables/EquippedBy.sol";
 import { MoveSpeed } from "../tables/MoveSpeed.sol";
+import { Inventory, InventoryData } from "../tables/Inventory.sol";
 
 import { Position } from "../tables/Position.sol";
 import { Room } from "../tables/Room.sol";
@@ -38,8 +40,12 @@ contract PlayerSystem is System {
       player,
       StaminaData({ current: 100_000, max: 100_000, regen: 7_500, lastRefreshedAt: block.timestamp })
     );
+    Inventory.set(player, InventoryData({ 
+      equipSize: 2,
+      size: 4
+     }));
 
-    bytes32 item = LibFactory.createSword();
-    EquippedBy.set(item, player);
+    bytes32 item = LibItemGenerator.generateSword();
+    LibInventory.equip(player, item);
   }
 }
