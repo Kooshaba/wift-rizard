@@ -7,7 +7,7 @@ import { getUniqueEntityId } from "../Utils.sol";
 
 library LibAttributes {
   function createGodlike() internal returns (bytes32) {
-    return createAttribute(100, 25, 100, 10, -20_000, 0, 0, 0, 1);
+    return createAttribute(100, 25, 100_000, 10_000, -20_000, 1, 0, 0, 1);
   }
 
   function createFortitude() internal returns (bytes32) {
@@ -19,7 +19,7 @@ library LibAttributes {
   }
 
   function createLightweight() internal returns (bytes32) {
-    return createAttribute(0, 0, 0, 0, -5, 0, 0, 0, 0);
+    return createAttribute(0, 0, 0, 0, -5_000, 0, 0, 0, 0);
   }
 
   function createAlacrity() internal returns (bytes32) {

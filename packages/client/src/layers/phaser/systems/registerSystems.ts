@@ -13,6 +13,7 @@ import { drawMonsterBars } from "./drawMonsterBars";
 import { createDrawMonsterPathSystem } from "./createDrawMonsterPathSystem";
 import { setActiveRoom } from "./setActiveRoom";
 import { createWorldMapSystem } from "./createWorldMapSystem";
+import { playerMovement } from "./playerMovement";
 
 export const registerSystems = (layer: PhaserLayer) => {
   createCamera(layer);
@@ -28,4 +29,5 @@ export const registerSystems = (layer: PhaserLayer) => {
   setActiveRoom(layer);
   createWorldMapSystem(layer);
   createDrawMonsterPathSystem(layer);
+  playerMovement(layer);
 };

@@ -202,6 +202,16 @@ export const phaserConfig = {
           prefix: "sprites/ui/tile-highlight/",
           suffix: ".png",
         },
+        {
+          key: Animations.TileOutline,
+          assetKey: Assets.MainAtlas,
+          startFrame: 0,
+          endFrame: 0,
+          frameRate: 3,
+          repeat: -1,
+          prefix: "sprites/ui/tile-outline/",
+          suffix: ".png",
+        },
       ],
       tilesets: {
         Default: {

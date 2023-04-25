@@ -27,13 +27,15 @@ contract MonsterTest is MudV2Test {
     world.mud_PlayerSystem_spawn(playerNumber);
     world.mud_ItemSystem_equipRandomItem();
 
-    // bytes32 skeleton = LibMonster.spawnSkeleton(RoomData(1, 1), PositionData(3, 3));
-    // Stamina.setCurrent(skeleton, 25_000);
+    int32[] memory xPath = new int32[](2);
+    int32[] memory yPath = new int32[](2);
 
-    // world.mud_MonsterSystem_act(skeleton);
+    xPath[0] = 5;
+    yPath[0] = 4;
 
-    // PositionData memory position = Position.get(skeleton);
-    // assertEq(position.x, 4, "skeleton x");
-    // assertEq(position.y, 3, "skeleton y");
+    xPath[1] = 5;
+    yPath[1] = 5;
+
+    world.mud_MoveSystem_move(xPath, yPath);
   }
 }

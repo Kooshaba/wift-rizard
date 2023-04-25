@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
+import { LibStamina } from "../libraries/LibStamina.sol";
+
 import { Inventory } from "../tables/Inventory.sol";
 import { OnItem, OnItemTableId } from "../tables/OnItem.sol";
 import { EquippedBy, EquippedByTableId } from "../tables/EquippedBy.sol";
@@ -13,6 +15,8 @@ import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/ge
 
 library LibInventory {
   function equip(bytes32 entity, bytes32 item) internal {
+    LibStamina.spend(entity, 10_000);
+
     require(Inventory.getEquipSize(entity) > 0, "Entity has no inventory");
 
     uint32 freeSlots = getFreeEquipSlots(entity);
@@ -41,6 +45,8 @@ library LibInventory {
   }
 
   function unequip(bytes32 entity, bytes32 item) internal {
+    LibStamina.spend(entity, 10_000);
+
     require(EquippedBy.get(item) == entity, "Item is not equipped by entity");
 
     EquippedBy.deleteRecord(item);

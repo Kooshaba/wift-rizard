@@ -610,14 +610,14 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "int32",
-        name: "x",
-        type: "int32",
+        internalType: "int32[]",
+        name: "xPath",
+        type: "int32[]",
       },
       {
-        internalType: "int32",
-        name: "y",
-        type: "int32",
+        internalType: "int32[]",
+        name: "yPath",
+        type: "int32[]",
       },
     ],
     name: "mud_MoveSystem_move",

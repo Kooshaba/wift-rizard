@@ -10,6 +10,7 @@ import {
   getComponentValueStrict,
   HasValue,
   Not,
+  getEntitiesWithValue,
 } from "@latticexyz/recs";
 import { NetworkLayer } from "./createNetworkLayer";
 import { BigNumber, ContractTransaction } from "ethers";
@@ -29,6 +30,7 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       Spawner,
       MonsterType,
       OptimisticStamina,
+      BonusAttributes,
     },
   } = layer;
 
@@ -86,14 +88,12 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
         0
       ) + 1;
 
-    const tx = await worldSend("mud_PlayerSystem_spawn", [
-      nextPlayerId
-    ]);
+    const tx = await worldSend("mud_PlayerSystem_spawn", [nextPlayerId]);
 
     return tx;
   }
 
-  function move(coord: Coord) {
+  function move(path: Coord[]) {
     actions.add({
       id: ("move" + Math.random().toPrecision(5)) as EntityID,
       updates: () => [],
@@ -101,11 +101,8 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       requirement: () => true,
       execute: async () => {
         return await worldSend("mud_MoveSystem_move", [
-          coord.x,
-          coord.y,
-          {
-            gasLimit: 1000000,
-          },
+          path.map((coord) => coord.x),
+          path.map((coord) => coord.y),
         ]);
       },
     });
@@ -118,7 +115,7 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       components: {},
       requirement: () => true,
       execute: async () => {
-      return await worldSend("mud_MoveSystem_moveRoom", [
+        return await worldSend("mud_MoveSystem_moveRoom", [
           coord.x,
           coord.y,
           {
@@ -301,14 +298,34 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       .sub(stamina.lastRefreshedAt)
       .toNumber();
 
-    const newCurrent =
-      secondsSinceLastRefresh * stamina.regen + stamina.current;
-    return Math.min(newCurrent, stamina.max);
+    const bonusAttributes = getComponentValue(BonusAttributes, entity);
+    const regen = stamina.regen + (bonusAttributes?.staminaRegen ?? 0);
+    const max = stamina.max + (bonusAttributes?.staminaMax ?? 0);
+
+    const newCurrent = secondsSinceLastRefresh * regen + stamina.current;
+    return Math.min(newCurrent, max);
+  }
+
+  function isValidPosition(position: Coord) {
+    if (
+      position.x < 0 ||
+      position.x >= ROOM_WIDTH ||
+      position.y < 0 ||
+      position.y >= ROOM_HEIGHT
+    ) {
+      return false;
+    }
+
+    const blockingEntities = getEntitiesWithValue(Position, position);
+    if (blockingEntities.size > 0) return false;
+
+    return true;
   }
 
   return {
     onPlayerLoaded,
     getCurrentStamina,
+    isValidPosition,
 
     txApi: {
       spawnPlayer,

@@ -2,6 +2,7 @@
 pragma solidity >=0.8.0;
 
 import { Stamina, StaminaData } from "../tables/Stamina.sol";
+import { BonusAttributes, BonusAttributesData } from "../tables/BonusAttributes.sol";
 
 library LibStamina {
   function spend(bytes32 id, int32 amount) internal {
@@ -26,10 +27,14 @@ library LibStamina {
 
     if(timeSinceLastRefresh <= 0) return;
 
-    stamina.current += stamina.regen * int32(uint32(timeSinceLastRefresh));
+    BonusAttributesData memory bonusAttributes = BonusAttributes.get(id);
+    int32 regen = stamina.regen + bonusAttributes.staminaRegen;
+    int32 max = stamina.max + bonusAttributes.staminaMax;
+
+    stamina.current += regen * int32(uint32(timeSinceLastRefresh));
     stamina.lastRefreshedAt = currentTime;
 
-    if (stamina.current > stamina.max) stamina.current = stamina.max;
+    if (stamina.current > max) stamina.current = max;
 
     Stamina.set(id, stamina);
   }

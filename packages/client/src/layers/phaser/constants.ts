@@ -16,6 +16,7 @@ export enum Animations {
 
   // UI
   TileHighlight = "TileHighlight",
+  TileOutline = "TileOutline",
 }
 export enum Sprites {
   Avatar,

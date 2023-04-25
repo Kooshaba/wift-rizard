@@ -5,7 +5,7 @@
     },
     "textures": [
         {
-            "image": "atlas.png?timestamp=1681563007886",
+            "image": "atlas.png?timestamp=1682066166387",
             "format": "RGBA8888",
             "size": {
                 "w": 2048,
@@ -5847,6 +5847,27 @@
                     "frame": {
                         "x": 432,
                         "y": 72,
+                        "w": 16,
+                        "h": 24
+                    }
+                },
+                {
+                    "filename": "sprites/ui/tile-outline/0.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 16,
+                        "h": 24
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 16,
+                        "h": 24
+                    },
+                    "frame": {
+                        "x": 432,
+                        "y": 96,
                         "w": 16,
                         "h": 24
                     }

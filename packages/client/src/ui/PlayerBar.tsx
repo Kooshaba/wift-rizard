@@ -186,7 +186,7 @@ export function PlayerBar() {
     networkLayer: {
       world,
       singletonEntity,
-      components: { Health, OptimisticStamina },
+      components: { Health, OptimisticStamina, BonusAttributes },
     },
     phaserLayer: {
       utils: {
@@ -204,6 +204,8 @@ export function PlayerBar() {
   const playerHealth = useComponentValue(Health, player);
   const playerStamina = useComponentValue(OptimisticStamina, player);
 
+  const bonusAttributes = useComponentValue(BonusAttributes, player);
+
   const currentlyTargeting = useComponentValue(Targeting, player);
   const currentAttack =
     currentlyTargeting &&
@@ -217,17 +219,21 @@ export function PlayerBar() {
   if (!currentPlayer) return <></>;
   if (!playerHealth) return <></>;
   if (!playerStamina) return <></>;
+  if (!bonusAttributes) return <></>;
 
+  const maxHealth = playerHealth.max + bonusAttributes.healthMax;
   const currentHealthPercent = Math.floor(
-    (playerHealth.current / playerHealth.max) * 100
+    (playerHealth.current / maxHealth) * 100
   );
   const healthMissingPercent = 100 - currentHealthPercent;
+
+  const maxStamina = playerStamina.max + bonusAttributes.staminaMax;
   const currentStaminaPercent = Math.floor(
-    (playerStamina.current / playerStamina.max) * 100
+    (playerStamina.current / maxStamina) * 100
   );
   const staminaMissingPercent = 100 - currentStaminaPercent;
   const pendingStaminaSpendPercent = Math.floor(
-    ((pendingStaminaSpend || 0) / playerStamina.max) * 100
+    ((pendingStaminaSpend || 0) / maxStamina) * 100
   );
 
   const currentStaminaNumber = pendingStaminaSpend
@@ -251,7 +257,7 @@ export function PlayerBar() {
           <div className="mb-2 flex flex-flow justify-between">
             <SpriteImage spriteKey={Sprites.Heart} />
             <span className="text-white">
-              {playerHealth.current} / {playerHealth.max}
+              {playerHealth.current} / {maxHealth}
             </span>
           </div>
           <div className="relative w-[400px]">
@@ -282,7 +288,7 @@ export function PlayerBar() {
               >
                 {currentStaminaNumber / 1000}
               </span>{" "}
-              / {playerStamina.max / 1000}
+              / {maxStamina / 1000}
             </span>
           </div>
           <div className="relative w-[400px]">

@@ -4,6 +4,9 @@ import { System } from "@latticexyz/world/src/System.sol";
 import { Player, PlayerTableId } from "../tables/Player.sol";
 import { Room, RoomData } from "../tables/Room.sol";
 import { Position, PositionData, PositionTableId } from "../tables/Position.sol";
+import { MoveSpeed } from "../tables/MoveSpeed.sol";
+import { BonusAttributes } from "../tables/BonusAttributes.sol";
+
 import { World } from "@latticexyz/world/src/World.sol";
 
 import { LibMonster } from "../libraries/LibMonster.sol";
@@ -14,22 +17,33 @@ import { addressToEntity } from "../Utils.sol";
 import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";
 
 contract MoveSystem is System {
-  function move(int32 x, int32 y) public {
-    require(LibPosition.withinRoomBounds(PositionData(x, y)), "Invalid position");
-
+  function move(int32[] memory xPath, int32[] memory yPath) public {
     bytes32 player = addressToEntity(_msgSender());
     LibStamina.spend(player, 25_000);
+
+    int32 remainingMoveSpeed = MoveSpeed.get(player) + BonusAttributes.getMoveSpeed(player);
+    PositionData memory origin = Position.get(player);
 
     uint32 existingId = Player.get(player);
     require(existingId != 0, "Must spawn first");
 
-    bytes32[] memory conflictingPositions = getKeysWithValue(PositionTableId, Position.encode(x, y));
-    require(conflictingPositions.length == 0, "Position already occupied");
+    for (uint i = 0; i < xPath.length; i++) {
+      require(remainingMoveSpeed > 0, "Not enough move speed");
 
-    PositionData memory oldCoord = Position.get(player);
-    require(LibPosition.manhattan(oldCoord, PositionData(x, y)) == 1, "Must move one tile");
+      PositionData memory coord = PositionData(xPath[i], yPath[i]);
+      require(LibPosition.withinRoomBounds(coord), "Invalid position");
 
-    Position.set(player, x, y);
+      bytes32[] memory blockingEntities = getKeysWithValue(PositionTableId, Position.encode(coord.x, coord.y));
+      require(blockingEntities.length == 0, "Position already occupied");
+
+      require(LibPosition.manhattan(origin, coord) == 1, "Invalid path");
+
+      origin = coord;
+      remainingMoveSpeed--;
+    }
+
+    PositionData memory finalDestination = PositionData(xPath[xPath.length - 1], yPath[yPath.length - 1]);
+    Position.set(player, finalDestination.x, finalDestination.y);
   }
 
   function moveRoom(int32 x, int32 y) public {
@@ -40,10 +54,7 @@ contract MoveSystem is System {
     require(existingId != 0, "Must spawn first");
 
     RoomData memory oldRoom = Room.get(player);
-    require(
-      LibPosition.manhattan(PositionData(oldRoom.x, oldRoom.y), PositionData(x, y)) == 1,
-      "Must move one tile"
-    );
+    require(LibPosition.manhattan(PositionData(oldRoom.x, oldRoom.y), PositionData(x, y)) == 1, "Must move one tile");
 
     Room.set(player, x, y);
   }

@@ -48,7 +48,7 @@ export interface IWorldInterface extends utils.Interface {
     "mud_InventorySystem_unequip(bytes32,bytes32)": FunctionFragment;
     "mud_ItemSystem_equipRandomItem()": FunctionFragment;
     "mud_MonsterSystem_act(bytes32)": FunctionFragment;
-    "mud_MoveSystem_move(int32,int32)": FunctionFragment;
+    "mud_MoveSystem_move(int32[],int32[])": FunctionFragment;
     "mud_MoveSystem_moveRoom(int32,int32)": FunctionFragment;
     "mud_PlayerSystem_spawn(uint32)": FunctionFragment;
     "mud_SpawnerSystem_create(int32,int32,int32,int32)": FunctionFragment;
@@ -201,7 +201,7 @@ export interface IWorldInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "mud_MoveSystem_move",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<BigNumberish>[], PromiseOrValue<BigNumberish>[]]
   ): string;
   encodeFunctionData(
     functionFragment: "mud_MoveSystem_moveRoom",
@@ -641,8 +641,8 @@ export interface IWorld extends BaseContract {
     ): Promise<ContractTransaction>;
 
     mud_MoveSystem_move(
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
+      xPath: PromiseOrValue<BigNumberish>[],
+      yPath: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -872,8 +872,8 @@ export interface IWorld extends BaseContract {
   ): Promise<ContractTransaction>;
 
   mud_MoveSystem_move(
-    x: PromiseOrValue<BigNumberish>,
-    y: PromiseOrValue<BigNumberish>,
+    xPath: PromiseOrValue<BigNumberish>[],
+    yPath: PromiseOrValue<BigNumberish>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1099,8 +1099,8 @@ export interface IWorld extends BaseContract {
     ): Promise<void>;
 
     mud_MoveSystem_move(
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
+      xPath: PromiseOrValue<BigNumberish>[],
+      yPath: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1363,8 +1363,8 @@ export interface IWorld extends BaseContract {
     ): Promise<BigNumber>;
 
     mud_MoveSystem_move(
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
+      xPath: PromiseOrValue<BigNumberish>[],
+      yPath: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1595,8 +1595,8 @@ export interface IWorld extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     mud_MoveSystem_move(
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
+      xPath: PromiseOrValue<BigNumberish>[],
+      yPath: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

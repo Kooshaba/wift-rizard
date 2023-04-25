@@ -20,6 +20,9 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
     world,
     networkLayer: {
       components: { Player, Position, MonsterType, MoveSpeed, Room },
+      utils: {
+        isValidPosition,
+      },
     },
     scenes: {
       Main: { phaserScene },
@@ -47,22 +50,6 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
 
   function manhattan(pointA: Coord, pointB: Coord): number {
     return Math.abs(pointA.x - pointB.x) + Math.abs(pointA.y - pointB.y);
-  }
-
-  function isValidPosition(position: Coord) {
-    if (
-      position.x < 0 ||
-      position.x >= ROOM_WIDTH ||
-      position.y < 0 ||
-      position.y >= ROOM_HEIGHT
-    ) {
-      return false;
-    }
-
-    const blockingEntities = getEntitiesWithValue(Position, position);
-    if (blockingEntities.size > 0) return false;
-
-    return true;
   }
 
   function findClosestPositionWithinMoveLimit(

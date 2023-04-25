@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useMUD } from "../store";
 import { useCurrentPlayer } from "./hooks/useCurrentPlayer";
 import { useComponentValue } from "@latticexyz/react";
-import { EntityIndex } from "@latticexyz/recs";
+import { EntityIndex, hasComponent } from "@latticexyz/recs";
 
 export function PlayerControls() {
   const {
@@ -10,13 +10,11 @@ export function PlayerControls() {
       singletonEntity,
       components: { Position, Room },
       utils: {
-        txApi: { move, moveRoom },
+        txApi: { moveRoom },
       },
     },
     phaserLayer: {
-      components: {
-        ActiveRoom,
-      },
+      components: { ActiveRoom },
     },
   } = useMUD();
 
@@ -29,7 +27,6 @@ export function PlayerControls() {
     Room,
     currentPlayer?.player || (0 as EntityIndex)
   ) || { x: 0, y: 0 };
-  const activeRoom = useComponentValue(ActiveRoom, singletonEntity);
 
   useEffect(() => {
     if (!currentPlayer) return;
@@ -37,20 +34,20 @@ export function PlayerControls() {
     if (!playerRoom) return;
 
     const onKeyDown = (e: KeyboardEvent) => {
-      const targetPosition = activeRoom ? playerPosition : playerRoom;
-      const moveFunc = activeRoom ? move : moveRoom;
+      if (hasComponent(ActiveRoom, singletonEntity)) return;
 
+      const targetPosition = playerRoom;
       if (e.key === "w") {
-        moveFunc({ ...targetPosition, y: targetPosition.y - 1 });
+        moveRoom({ ...targetPosition, y: targetPosition.y - 1 });
       }
       if (e.key === "s") {
-        moveFunc({ ...targetPosition, y: targetPosition.y + 1 });
+        moveRoom({ ...targetPosition, y: targetPosition.y + 1 });
       }
       if (e.key === "a") {
-        moveFunc({ ...targetPosition, x: targetPosition.x - 1 });
+        moveRoom({ ...targetPosition, x: targetPosition.x - 1 });
       }
       if (e.key === "d") {
-        moveFunc({ ...targetPosition, x: targetPosition.x + 1 });
+        moveRoom({ ...targetPosition, x: targetPosition.x + 1 });
       }
     };
 
@@ -59,7 +56,7 @@ export function PlayerControls() {
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [currentPlayer, playerPosition, playerRoom, activeRoom]);
+  }, [currentPlayer, playerPosition, playerRoom]);
 
   return <></>;
 }
