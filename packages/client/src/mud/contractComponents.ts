@@ -187,6 +187,7 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
+          attributeType: RecsType.Number,
           healthMax: RecsType.Number,
           strength: RecsType.Number,
           staminaMax: RecsType.Number,

@@ -23,6 +23,7 @@ function AttackDetails({
 }: {
   screenPosition: { x: number; y: number };
   attackData: {
+    item: EntityIndex;
     strength: number;
     staminaCost: number;
     minRange: number;
@@ -31,6 +32,16 @@ function AttackDetails({
     patternY: number[];
   };
 }) {
+  const {
+    networkLayer: {
+      utils: {
+        getItemName
+      }
+    }
+  } = useMUD();
+
+  const name = getItemName(attackData.item);
+
   return (
     <div
       className={twMerge(
@@ -44,6 +55,8 @@ function AttackDetails({
         top: screenPosition.y - 100,
       }}
     >
+      <h1>{name}</h1>
+
       <div className="flex flex-row items-center justify-center">
         <span className="ml-2">
           Stamina Cost: {attackData.staminaCost / 1000}

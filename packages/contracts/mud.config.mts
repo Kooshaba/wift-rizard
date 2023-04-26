@@ -5,6 +5,24 @@ export default mudConfig({
   excludeSystems: ["System3", "System2"],
   worldContractName: "CustomWorld",
   namespace: "mud",
+  enums: {
+    AttributeTypes: ["None", "Fortitude", "Strong", "Lightweight", "Alacrity", "Swift", "Godlike"],
+    ItemTypes: [
+      "None",
+      "Sword",
+      "Dagger",
+      "Spear",
+      "Hammer",
+      "Axe",
+      "Shield",
+      "Bow",
+      "BowLarge",
+      "Staff",
+      "DevilHorn",
+      "DevilHornLarge",
+    ],
+    MonsterTypes: ["None", "Spawner", "Skeleton", "SkeletonArcher", "Spider"],
+  },
   tables: {
     Player: {
       fileSelector: "player",
@@ -90,6 +108,7 @@ export default mudConfig({
     Attribute: {
       fileSelector: "attribute",
       schema: {
+        attributeType: "AttributeTypes",
         healthMax: "int32",
         strength: "int32",
         staminaMax: "int32",
@@ -104,15 +123,14 @@ export default mudConfig({
     OnItem: {
       fileSelector: "onItem",
       schema: {
-        value: "bytes32"
+        value: "bytes32",
       },
     },
 
-    
     /**
      * Calculated and stored every time a player
      * equips / unequips and item.
-     * Used to prevent expensive queries when calculating 
+     * Used to prevent expensive queries when calculating
      * attributes during actions.
      */
     BonusAttributes: {

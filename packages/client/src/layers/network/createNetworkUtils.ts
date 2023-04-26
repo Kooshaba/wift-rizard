@@ -14,7 +14,15 @@ import {
 } from "@latticexyz/recs";
 import { NetworkLayer } from "./createNetworkLayer";
 import { BigNumber, ContractTransaction } from "ethers";
-import { ROOM_HEIGHT, ROOM_WIDTH } from "./types";
+import {
+  AttributeTypeNameData,
+  AttributeTypes,
+  ItemTypeNames,
+  ItemTypes,
+  NameTypes,
+  ROOM_HEIGHT,
+  ROOM_WIDTH,
+} from "./types";
 import { shuffle } from "lodash";
 
 export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
@@ -31,6 +39,9 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       MonsterType,
       OptimisticStamina,
       BonusAttributes,
+      ItemType,
+      Attribute,
+      OnItem,
     },
   } = layer;
 
@@ -322,10 +333,34 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     return true;
   }
 
+  function getItemName(entity: EntityIndex): string {
+    const itemType = getComponentValue(ItemType, entity)?.value;
+    if (!itemType) return "Unknown";
+
+    let name = ItemTypeNames[itemType as ItemTypes];
+
+    const attributes = [
+      ...runQuery([HasValue(OnItem, { value: world.entities[entity] })]),
+    ];
+    for (const attr of attributes) {
+      const attribute = getComponentValueStrict(Attribute, attr);
+      const nameData =
+        AttributeTypeNameData[attribute.attributeType as AttributeTypes];
+
+      name =
+        nameData.type === NameTypes.Prefix
+          ? `${nameData.value}${name}`
+          : `${name}${nameData.value}`;
+    }
+
+    return name;
+  }
+
   return {
     onPlayerLoaded,
     getCurrentStamina,
     isValidPosition,
+    getItemName,
 
     txApi: {
       spawnPlayer,

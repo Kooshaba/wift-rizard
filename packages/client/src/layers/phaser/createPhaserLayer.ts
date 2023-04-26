@@ -118,6 +118,7 @@ export const createPhaserLayer = async (
     if (!bonusAttributes) return;
 
     return {
+      item,
       ...attackData,
       strength: attackData.strength + bonusAttributes.strength,
       staminaCost: attackData.staminaCost + bonusAttributes.staminaCost,

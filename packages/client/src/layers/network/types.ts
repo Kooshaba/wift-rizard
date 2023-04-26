@@ -26,6 +26,57 @@ export enum MonsterTypes {
   Spider,
 }
 
+export enum AttributeTypes {
+  None,
+  Fortitude,
+  Strong,
+  Lightweight,
+  Alacrity,
+  Swift,
+  Godlike
+}
+
+export enum NameTypes {
+  Prefix = "Prefix",
+  Suffix = "Suffix"
+}
+
+type AttributeNameData = {
+  type: NameTypes,
+  value: string,
+}
+
+export const AttributeTypeNameData = {
+  [AttributeTypes.None]: {
+    type: NameTypes.Prefix,
+    value: "Unknown "
+  },
+  [AttributeTypes.Fortitude]: {
+    type: NameTypes.Suffix,
+    value: " of Fortitude",
+  },
+  [AttributeTypes.Strong]: {
+    type: NameTypes.Suffix,
+    value: " of Strength",
+  },
+  [AttributeTypes.Lightweight]: {
+    type: NameTypes.Prefix,
+    value: "Lightweight "
+  },
+  [AttributeTypes.Alacrity]: {
+    type: NameTypes.Suffix,
+    value: " of Alacrity",
+  },
+  [AttributeTypes.Swift]: {
+    type: NameTypes.Prefix,
+    value: "Swift "
+  },
+  [AttributeTypes.Godlike]: {
+    type: NameTypes.Prefix,
+    value: "Godlike "
+  },
+} satisfies Record<AttributeTypes, AttributeNameData>;
+
 export const ItemTypeNames = {
   [ItemTypes.Sword]: "Sword",
   [ItemTypes.Dagger]: "Dagger",
