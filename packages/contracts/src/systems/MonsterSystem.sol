@@ -10,12 +10,14 @@ import { Health } from "../tables/Health.sol";
 import { Room, RoomData, RoomTableId } from "../tables/Room.sol";
 import { RngCommit } from "../tables/RngCommit.sol";
 import { MoveSpeed } from "../tables/MoveSpeed.sol";
+import { Attack, AttackData } from "../tables/Attack.sol";
 
 import { MonsterTypes } from "../Types.sol";
 
 import { LibMonster } from "../libraries/LibMonster.sol";
 import { LibPosition, ROOM_WIDTH, ROOM_HEIGHT } from "../libraries/LibPosition.sol";
 import { LibStamina } from "../libraries/LibStamina.sol";
+import { LibRandom } from "../libraries/LibRandom.sol";
 import { PositionQueue } from "../libraries/PositionQueue.sol";
 
 import { addressToEntity, getUniqueEntityId } from "../Utils.sol";
@@ -25,9 +27,7 @@ contract MonsterSystem is System {
   function act(bytes32 monster) public {
     require(MonsterType.get(monster) != 0, "Not a monster");
 
-    uint256 commitBlock = RngCommit.get(monster);
-    uint256 randomSeed = uint256(blockhash(commitBlock)) % 10;
-    RngCommit.set(monster, block.number);
+    uint256 randomSeed = LibRandom.getSeed(monster) % 10;
 
     RoomData memory room = Room.get(monster);
     bytes32[] memory entitiesInRoom = getKeysWithValue(RoomTableId, Room.encode(room.x, room.y));
@@ -77,16 +77,16 @@ contract MonsterSystem is System {
 
       // still doesn't support ranged units
       if (closestDistance == 1) {
-        int32 damage = 10;
+        AttackData memory attack = Attack.get(monster);
         int32 currentPlayerHealth = Health.getCurrent(closestPlayer);
 
-        if (damage >= currentPlayerHealth) {
+        if (attack.strength >= currentPlayerHealth) {
           Health.deleteRecord(closestPlayer);
           Player.deleteRecord(closestPlayer);
           Position.deleteRecord(closestPlayer);
           Room.deleteRecord(closestPlayer);
         } else {
-          Health.setCurrent(closestPlayer, currentPlayerHealth - damage);
+          Health.setCurrent(closestPlayer, currentPlayerHealth - attack.strength);
         }
       }
     } else {

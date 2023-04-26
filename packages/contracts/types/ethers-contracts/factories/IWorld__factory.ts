@@ -573,11 +573,6 @@ const _abi = [
     inputs: [
       {
         internalType: "bytes32",
-        name: "entity",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32",
         name: "item",
         type: "bytes32",
       },

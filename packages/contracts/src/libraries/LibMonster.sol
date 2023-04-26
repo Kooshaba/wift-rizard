@@ -17,25 +17,6 @@ import { RngCommit } from "../tables/RngCommit.sol";
 import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";
 
 library LibMonster {
-  // function randomlySpawnMonster(bytes32 seed, int32 originX, int32 originY) internal {
-  //   bytes32 randomSeed = blockhash(block.number - 1);
-  //   uint256 random = uint256(keccak256(abi.encodePacked(randomSeed, seed, block.timestamp)));
-  //   if (random % 4 == 0) {
-  //     uint256 offsetSeed = uint256(keccak256(abi.encodePacked(randomSeed, seed, block.timestamp, random)));
-  //     uint256 offsetSeed2 = uint256(keccak256(abi.encodePacked(randomSeed, seed, block.timestamp, random, offsetSeed)));
-  //     int32 xOffset = int32(uint32(offsetSeed % 6)) - 3;
-  //     int32 yOffset = int32(uint32(offsetSeed2 % 6)) - 3;
-
-  //     PositionData memory spawnCoord = PositionData(originX + xOffset, originY + yOffset);
-  //     bytes32[] memory blockingSpawn = getKeysWithValue(PositionTableId, Position.encode(spawnCoord.x, spawnCoord.y));
-
-  //     bool invalidPosition = (spawnCoord.x == originX && spawnCoord.y == originY) || blockingSpawn.length > 0;
-  //     if (!invalidPosition) {
-  //       LibMonster.spawnSkeleton(originX + xOffset, originY + yOffset);
-  //     }
-  //   }
-  // }
-
   function spawnSpawner(RoomData memory room, PositionData memory position) internal returns (bytes32) {
     bytes32 id = getUniqueEntityId();
 
@@ -45,6 +26,7 @@ library LibMonster {
     Position.set(id, position);
     Health.set(id, 50, 50);
     Stamina.set(id, StaminaData({ current: 100_000, max: 100_000, regen: 5_000, lastRefreshedAt: block.timestamp }));
+    RngCommit.set(id, block.number - 1);
 
     return id;
   }
@@ -57,7 +39,7 @@ library LibMonster {
     Position.set(id, position);
     Health.set(id, 20, 20);
     MoveSpeed.set(id, 2);
-    Stamina.set(id, StaminaData({ current: 0, max: 25_000, regen: 2500, lastRefreshedAt: block.timestamp }));
+    Stamina.set(id, StaminaData({ current: 0, max: 25_000, regen: 2_500, lastRefreshedAt: block.timestamp }));
     RngCommit.set(id, block.number - 1);
 
     Attack.set(

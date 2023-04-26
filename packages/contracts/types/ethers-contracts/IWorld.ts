@@ -45,7 +45,7 @@ export interface IWorldInterface extends utils.Interface {
     "isStore()": FunctionFragment;
     "mud_CombatSystem_attack(bytes32,int32,int32)": FunctionFragment;
     "mud_CombatSystem_heal()": FunctionFragment;
-    "mud_InventorySystem_unequip(bytes32,bytes32)": FunctionFragment;
+    "mud_InventorySystem_unequip(bytes32)": FunctionFragment;
     "mud_ItemSystem_equipRandomItem()": FunctionFragment;
     "mud_MonsterSystem_act(bytes32)": FunctionFragment;
     "mud_MoveSystem_move(int32[],int32[])": FunctionFragment;
@@ -189,7 +189,7 @@ export interface IWorldInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "mud_InventorySystem_unequip",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
+    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "mud_ItemSystem_equipRandomItem",
@@ -626,7 +626,6 @@ export interface IWorld extends BaseContract {
     ): Promise<ContractTransaction>;
 
     mud_InventorySystem_unequip(
-      entity: PromiseOrValue<BytesLike>,
       item: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -857,7 +856,6 @@ export interface IWorld extends BaseContract {
   ): Promise<ContractTransaction>;
 
   mud_InventorySystem_unequip(
-    entity: PromiseOrValue<BytesLike>,
     item: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -1086,7 +1084,6 @@ export interface IWorld extends BaseContract {
     mud_CombatSystem_heal(overrides?: CallOverrides): Promise<void>;
 
     mud_InventorySystem_unequip(
-      entity: PromiseOrValue<BytesLike>,
       item: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -1348,7 +1345,6 @@ export interface IWorld extends BaseContract {
     ): Promise<BigNumber>;
 
     mud_InventorySystem_unequip(
-      entity: PromiseOrValue<BytesLike>,
       item: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1580,7 +1576,6 @@ export interface IWorld extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     mud_InventorySystem_unequip(
-      entity: PromiseOrValue<BytesLike>,
       item: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;

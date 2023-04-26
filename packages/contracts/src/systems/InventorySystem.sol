@@ -4,8 +4,12 @@ import { System } from "@latticexyz/world/src/System.sol";
 
 import { LibInventory } from "../libraries/LibInventory.sol";
 
+import { addressToEntity } from "../Utils.sol";
+
 contract InventorySystem is System {
-  function unequip(bytes32 entity, bytes32 item) public {
-    LibInventory.unequip(entity, item);
+  function unequip(bytes32 item) public {
+    bytes32 player = addressToEntity(_msgSender());
+
+    LibInventory.unequip(player, item);
   }
 }

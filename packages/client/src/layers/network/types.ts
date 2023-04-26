@@ -87,8 +87,8 @@ export const ItemTypeNames = {
   [ItemTypes.Bow]: "Bow",
   [ItemTypes.BowLarge]: "BowLarge",
   [ItemTypes.Staff]: "Staff",
-  [ItemTypes.DevilHorn]: "DevilHorn",
-  [ItemTypes.DevilHornLarge]: "DevilHornLarge",
+  [ItemTypes.DevilHorn]: "Devil Horn",
+  [ItemTypes.DevilHornLarge]: "Large Devil Horn",
 } as Record<number, string>;
 
 export const ItemTypeSprites = {

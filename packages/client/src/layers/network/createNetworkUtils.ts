@@ -188,6 +188,20 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     });
   }
 
+  function unequip(item: EntityIndex) {
+    actions.add({
+      id: ("unequip" + Math.random().toPrecision(5)) as EntityID,
+      updates: () => [],
+      components: {},
+      requirement: () => true,
+      execute: async () => {
+        return await worldSend("mud_InventorySystem_unequip", [
+          world.entities[item],
+        ]);
+      },
+    });
+  }
+
   function createSpawner() {
     const roomWithPlayer = [...runQuery([Has(Player), Has(Room)])][0];
     if (!roomWithPlayer) return;
@@ -369,6 +383,7 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       attack,
       heal,
       equipRandomItem,
+      unequip,
 
       createSpawner,
       spawnMonster,

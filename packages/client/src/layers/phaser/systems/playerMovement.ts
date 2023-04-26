@@ -18,7 +18,7 @@ export function playerMovement(layer: PhaserLayer) {
   const {
     world,
     networkLayer: {
-      components: { Position, Player, MoveSpeed },
+      components: { Position, Player, MoveSpeed, BonusAttributes },
       utils: {
         isValidPosition,
         txApi: { move },
@@ -30,7 +30,7 @@ export function playerMovement(layer: PhaserLayer) {
       Main: { input, phaserScene },
     },
     utils: { tintObject },
-} = layer;
+  } = layer;
 
   const tileHighlights = phaserScene.add.group();
 
@@ -81,12 +81,16 @@ export function playerMovement(layer: PhaserLayer) {
       .setInteractive();
 
     highlight.on("pointerdown", () => {
+      tileHighlights.clear(true, true);
+
       const player = [...runQuery([Has(Player), Has(Position)])][0];
       if (hasComponent(Targeting, player)) return;
 
       const start = getComponentValueStrict(Position, player);
       const end = coord;
-      const moveSpeed = getComponentValueStrict(MoveSpeed, player).value;
+      const moveSpeed =
+        getComponentValueStrict(MoveSpeed, player).value +
+        getComponentValueStrict(BonusAttributes, player).moveSpeed;
 
       const path = bfs(start, end, moveSpeed);
 
@@ -123,7 +127,9 @@ export function playerMovement(layer: PhaserLayer) {
 
     const start = getComponentValueStrict(Position, player);
     const end = tileCoord;
-    const moveSpeed = getComponentValueStrict(MoveSpeed, player).value;
+    const moveSpeed =
+      getComponentValueStrict(MoveSpeed, player).value +
+      getComponentValueStrict(BonusAttributes, player).moveSpeed;
 
     const path = bfs(start, end, moveSpeed);
 

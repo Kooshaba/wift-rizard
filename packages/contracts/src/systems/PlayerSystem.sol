@@ -38,7 +38,7 @@ contract PlayerSystem is System {
     MoveSpeed.set(player, 2);
     Stamina.set(
       player,
-      StaminaData({ current: 100_000, max: 100_000, regen: 7_500, lastRefreshedAt: block.timestamp })
+      StaminaData({ current: 100_000, max: 100_000, regen: 4_000, lastRefreshedAt: block.timestamp })
     );
     Inventory.set(player, InventoryData({ equipSize: 2, size: 4 }));
 

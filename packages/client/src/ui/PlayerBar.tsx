@@ -34,10 +34,8 @@ function AttackDetails({
 }) {
   const {
     networkLayer: {
-      utils: {
-        getItemName
-      }
-    }
+      utils: { getItemName },
+    },
   } = useMUD();
 
   const name = getItemName(attackData.item);
@@ -84,6 +82,9 @@ function Inventory({
       world,
       singletonEntity,
       components: { EquippedBy, Position, ItemType, OptimisticStamina },
+      utils: {
+        txApi: { unequip },
+      },
     },
     phaserLayer: {
       components: { Targeting, ActiveRoom },
@@ -159,38 +160,48 @@ function Inventory({
           const currentlyTargeting = itemId === currentTarget?.item;
 
           return (
-            <div
-              key={item}
-              style={{
-                border: "1px #5D6065 solid",
-                backgroundColor: `${currentlyTargeting ? "green" : ""}`,
-              }}
-              className={twMerge(
-                "flex flex-col items-center justify-around",
-                "rounded-lg ml-4 bg-gray-900 hover:bg-gray-700 hover:shadow-lg hover:border-gray-600 px-4",
-                "cursor-hover",
-                playerStamina.current < attackCost &&
-                  "bg-red-600 disabled hover:bg-red-600"
-              )}
-              onMouseEnter={(e) => {
-                setHoverAttackData(attack);
-                setHoverPosition({
-                  x: (e.target as HTMLElement).offsetLeft,
-                  y: (e.target as HTMLElement).offsetTop,
-                });
-              }}
-              onMouseLeave={() => {
-                setHoverAttackData(undefined);
-                setHoverPosition(undefined);
-              }}
-              onClick={() => {
-                setComponent(Targeting, playerData.player, {
-                  item: world.entities[item],
-                });
-              }}
-            >
-              <span className="text-white w-fit -mb-4 mt-2">{index + 1}</span>
-              <SpriteImage spriteKey={ItemTypeSprites[itemType]} scale={5} />
+            <div className="flex flex-col items-center">
+              <div
+                key={item}
+                style={{
+                  border: "1px #5D6065 solid",
+                  backgroundColor: `${currentlyTargeting ? "green" : ""}`,
+                }}
+                className={twMerge(
+                  "flex flex-col items-center justify-around",
+                  "rounded-lg ml-4 bg-gray-900 hover:bg-gray-700 hover:shadow-lg hover:border-gray-600 px-4",
+                  "cursor-hover",
+                  playerStamina.current < attackCost &&
+                    "bg-red-600 disabled hover:bg-red-600"
+                )}
+                onMouseEnter={(e) => {
+                  setHoverAttackData(attack);
+                  setHoverPosition({
+                    x: (e.target as HTMLElement).offsetLeft,
+                    y: (e.target as HTMLElement).offsetTop,
+                  });
+                }}
+                onMouseLeave={() => {
+                  setHoverAttackData(undefined);
+                  setHoverPosition(undefined);
+                }}
+                onClick={() => {
+                  setComponent(Targeting, playerData.player, {
+                    item: world.entities[item],
+                  });
+                }}
+              >
+                <span className="text-white w-fit -mb-4 mt-2">{index + 1}</span>
+                <SpriteImage spriteKey={ItemTypeSprites[itemType]} scale={5} />
+              </div>
+              <Button
+              className="mt-2"
+                onClick={() => {
+                  unequip(item);
+                }}
+              >
+                Unequip
+              </Button>
             </div>
           );
         })}
