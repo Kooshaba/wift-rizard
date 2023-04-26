@@ -8,7 +8,7 @@ type Props = {
 export const BootScreen = ({ children }: Props) => {
 
   return (
-    <Container>
+    <Container style={{backgroundImage: "url(/dungeon-portal.png)"}}>
       <div>
         <>{children || <>&nbsp;</>}</>
       </div>
@@ -31,6 +31,9 @@ const Container = styled.div`
   z-index: 100;
   pointer-events: none;
   color: white;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 
   div {
     font-family: "Lattice Pixel", sans-serif;

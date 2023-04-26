@@ -2,6 +2,7 @@ import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 import {
   EntityIndex,
   HasValue,
+  getComponentValue,
   getComponentValueStrict,
   removeComponent,
   setComponent,
@@ -68,10 +69,11 @@ function Inventory({
   const {
     networkLayer: {
       world,
+      singletonEntity,
       components: { EquippedBy, Position, ItemType, OptimisticStamina },
     },
     phaserLayer: {
-      components: { Targeting },
+      components: { Targeting, ActiveRoom },
       utils: { getPlayerAttackData },
     },
   } = useMUD();
@@ -94,6 +96,9 @@ function Inventory({
     if (equippedItems.length === 0) return;
 
     function onKeyDown(e: KeyboardEvent) {
+      const activeRoom = getComponentValue(ActiveRoom, singletonEntity);
+      if (!activeRoom) return;
+
       const numMatch = e.code.match(new RegExp("Digit(\\d)"));
       if (!numMatch) return;
 

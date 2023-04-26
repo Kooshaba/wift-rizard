@@ -30,7 +30,7 @@ export function playerMovement(layer: PhaserLayer) {
       Main: { input, phaserScene },
     },
     utils: { tintObject },
-  } = layer;
+} = layer;
 
   const tileHighlights = phaserScene.add.group();
 
