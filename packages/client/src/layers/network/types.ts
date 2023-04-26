@@ -33,23 +33,37 @@ export enum AttributeTypes {
   Lightweight,
   Alacrity,
   Swift,
-  Godlike
+  Enchanted,
+  Sentinel,
+  Heavy,
+  Featherweight,
+  Stiff,
+  Untouchable,
+  Sustainable,
+  Wellmade,
+  Long,
+  Short,
+  Spiked,
+  Sharp,
+  Mythril,
+  Battle,
+  Dualwield,
 }
 
 export enum NameTypes {
   Prefix = "Prefix",
-  Suffix = "Suffix"
+  Suffix = "Suffix",
 }
 
 type AttributeNameData = {
-  type: NameTypes,
-  value: string,
-}
+  type: NameTypes;
+  value: string;
+};
 
 export const AttributeTypeNameData = {
   [AttributeTypes.None]: {
     type: NameTypes.Prefix,
-    value: "Unknown "
+    value: "Unknown ",
   },
   [AttributeTypes.Fortitude]: {
     type: NameTypes.Suffix,
@@ -61,7 +75,7 @@ export const AttributeTypeNameData = {
   },
   [AttributeTypes.Lightweight]: {
     type: NameTypes.Prefix,
-    value: "Lightweight "
+    value: "Lightweight ",
   },
   [AttributeTypes.Alacrity]: {
     type: NameTypes.Suffix,
@@ -69,11 +83,67 @@ export const AttributeTypeNameData = {
   },
   [AttributeTypes.Swift]: {
     type: NameTypes.Prefix,
-    value: "Swift "
+    value: "Swift ",
   },
-  [AttributeTypes.Godlike]: {
+  [AttributeTypes.Enchanted]: {
+    type: NameTypes.Suffix,
+    value: " of Enchantment",
+  },
+  [AttributeTypes.Sentinel]: {
+    type: NameTypes.Suffix,
+    value: " of Sentinel",
+  },
+  [AttributeTypes.Heavy]: {
     type: NameTypes.Prefix,
-    value: "Godlike "
+    value: "Heavy ",
+  },
+  [AttributeTypes.Featherweight]: {
+    type: NameTypes.Prefix,
+    value: "Featherweight ",
+  },
+  [AttributeTypes.Stiff]: {
+    type: NameTypes.Suffix,
+    value: " of Stiffness",
+  },
+  [AttributeTypes.Untouchable]: {
+    type: NameTypes.Prefix,
+    value: "Untouchable ",
+  },
+  [AttributeTypes.Sustainable]: {
+    type: NameTypes.Suffix,
+    value: " of Sustainability",
+  },
+  [AttributeTypes.Wellmade]: {
+    type: NameTypes.Prefix,
+    value: "Well-Made ",
+  },
+  [AttributeTypes.Long]: {
+    type: NameTypes.Prefix,
+    value: "Long ",
+  },
+  [AttributeTypes.Short]: {
+    type: NameTypes.Prefix,
+    value: "Short ",
+  },
+  [AttributeTypes.Spiked]: {
+    type: NameTypes.Prefix,
+    value: "Spiked ",
+  },
+  [AttributeTypes.Sharp]: {
+    type: NameTypes.Prefix,
+    value: "Sharp ",
+  },
+  [AttributeTypes.Mythril]: {
+    type: NameTypes.Prefix,
+    value: "Mythril ",
+  },
+  [AttributeTypes.Battle]: {
+    type: NameTypes.Prefix,
+    value: "Battle ",
+  },
+  [AttributeTypes.Dualwield]: {
+    type: NameTypes.Prefix,
+    value: "Dual-Wield ",
   },
 } satisfies Record<AttributeTypes, AttributeNameData>;
 

@@ -10,7 +10,21 @@ enum AttributeTypes {
   Lightweight,
   Alacrity,
   Swift,
-  Godlike
+  Enchanted,
+  Sentinel,
+  Heavy,
+  Featherweight,
+  Stiff,
+  Untouchable,
+  Sustainable,
+  Wellmade,
+  Long,
+  Short,
+  Spiked,
+  Sharp,
+  Mythril,
+  Battle,
+  Dualwield
 }
 
 enum ItemTypes {

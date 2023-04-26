@@ -29,7 +29,7 @@ library LibStamina {
 
     BonusAttributesData memory bonusAttributes = BonusAttributes.get(id);
     int32 regen = stamina.regen + bonusAttributes.staminaRegen;
-    int32 max = stamina.max + bonusAttributes.staminaMax;
+    int32 max = stamina.max;
 
     stamina.current += regen * int32(uint32(timeSinceLastRefresh));
     stamina.lastRefreshedAt = currentTime;

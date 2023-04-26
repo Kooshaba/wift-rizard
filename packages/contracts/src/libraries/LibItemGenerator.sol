@@ -19,13 +19,4 @@ library LibItemGenerator {
 
     return item;
   }
-
-  function generateSword() internal returns (bytes32) {
-    bytes32 sword = LibItemFactory.createSword();
-
-    bytes32 attribute = LibAttributes.createGodlike();
-    OnItem.set(attribute, sword);
-
-    return sword;
-  }
 }

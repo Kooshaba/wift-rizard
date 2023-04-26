@@ -256,7 +256,7 @@ export function PlayerBar() {
   );
   const healthMissingPercent = 100 - currentHealthPercent;
 
-  const maxStamina = playerStamina.max + bonusAttributes.staminaMax;
+  const maxStamina = playerStamina.max;
   const currentStaminaPercent = Math.floor(
     (playerStamina.current / maxStamina) * 100
   );

@@ -1,0 +1,22 @@
+| name | healthMax | strength | staminaCost | staminaRegen | moveSpeed | heal | rangeMin | rangeMax | itemType | properNoun | prefix | suffix |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| fortitude | 25 |  |  |  |  |  |  |  | (all) |  |  |  |
+| strong |  | 2 |  |  |  |  |  |  | (all) |  |  |  |
+| lightweight |  |  | -5 |  |  |  |  |  | (all) |  |  |  |
+| alacrity |  |  |  | 1 |  |  |  |  | (all) |  |  |  |
+| swift |  |  |  |  | 1 |  |  |  | (all) |  |  |  |
+| enchanted |  |  |  |  |  | 10 |  |  | (all) |  |  |  |
+| sentinel | 50 |  |  | -1 |  |  |  |  | (all) |  |  |  |
+| heavy |  | 5 | 5 |  |  |  |  |  | (all) |  |  |  |
+| featherweight | -25 |  | -10 |  |  |  |  |  | (all) |  |  |  |
+| stiff |  |  |  | 1.5 | -1 |  |  |  | (all) |  |  |  |
+| untouchable |  |  |  |  | 2 | -10 |  |  | (all) |  |  |  |
+| sustainable |  | -2 |  |  |  | 20 |  |  | (all) |  |  |  |
+| well-made | 10 |  |  | 0.5 |  | 5 |  |  | (all) |  |  |  |
+| long |  | 2 | 5 |  |  |  |  | 1 | (bow, bowLarge, devilHorn, devilHornLarge, staff) |  |  |  |
+| short |  | -2 | -5 |  |  |  | -1 |  | (bow,  bowLarge) |  |  |  |
+| spiked |  | 2 | -5 |  |  |  |  |  | (shield, staff) |  |  |  |
+| sharp |  | 2 | -5 |  |  |  |  |  | (sword, spear, dagger, axe) |  |  |  |
+| mythril |  | -2 | -5 |  | 1 |  |  |  | (hammer) |  |  |  |
+| battle |  | 5 | -5 |  |  |  |  | -1 | (staff) |  |  |  |
+| dualWield |  | -1 | -10 |  |  |  |  |  | (dagger) |  |  |  |

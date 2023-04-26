@@ -32,7 +32,6 @@ library LibInventory {
 
       playerAttributes.healthMax += attribute.healthMax;
       playerAttributes.strength += attribute.strength;
-      playerAttributes.staminaMax += attribute.staminaMax;
       playerAttributes.staminaRegen += attribute.staminaRegen;
       playerAttributes.staminaCost += attribute.staminaCost;
       playerAttributes.moveSpeed += attribute.moveSpeed;
@@ -59,7 +58,6 @@ library LibInventory {
 
       playerAttributes.healthMax -= attribute.healthMax;
       playerAttributes.strength -= attribute.strength;
-      playerAttributes.staminaMax -= attribute.staminaMax;
       playerAttributes.staminaRegen -= attribute.staminaRegen;
       playerAttributes.staminaCost -= attribute.staminaCost;
       playerAttributes.moveSpeed -= attribute.moveSpeed;

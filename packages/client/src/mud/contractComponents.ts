@@ -190,7 +190,6 @@ export function defineContractComponents(world: World) {
           attributeType: RecsType.Number,
           healthMax: RecsType.Number,
           strength: RecsType.Number,
-          staminaMax: RecsType.Number,
           staminaRegen: RecsType.Number,
           staminaCost: RecsType.Number,
           moveSpeed: RecsType.Number,
@@ -228,7 +227,6 @@ export function defineContractComponents(world: World) {
         {
           healthMax: RecsType.Number,
           strength: RecsType.Number,
-          staminaMax: RecsType.Number,
           staminaRegen: RecsType.Number,
           staminaCost: RecsType.Number,
           moveSpeed: RecsType.Number,

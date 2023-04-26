@@ -23,7 +23,6 @@ uint256 constant BonusAttributesTableId = _tableId;
 struct BonusAttributesData {
   int32 healthMax;
   int32 strength;
-  int32 staminaMax;
   int32 staminaRegen;
   int32 staminaCost;
   int32 moveSpeed;
@@ -35,7 +34,7 @@ struct BonusAttributesData {
 library BonusAttributes {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](9);
+    SchemaType[] memory _schema = new SchemaType[](8);
     _schema[0] = SchemaType.INT32;
     _schema[1] = SchemaType.INT32;
     _schema[2] = SchemaType.INT32;
@@ -44,7 +43,6 @@ library BonusAttributes {
     _schema[5] = SchemaType.INT32;
     _schema[6] = SchemaType.INT32;
     _schema[7] = SchemaType.INT32;
-    _schema[8] = SchemaType.INT32;
 
     return SchemaLib.encode(_schema);
   }
@@ -58,16 +56,15 @@ library BonusAttributes {
 
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
-    string[] memory _fieldNames = new string[](9);
+    string[] memory _fieldNames = new string[](8);
     _fieldNames[0] = "healthMax";
     _fieldNames[1] = "strength";
-    _fieldNames[2] = "staminaMax";
-    _fieldNames[3] = "staminaRegen";
-    _fieldNames[4] = "staminaCost";
-    _fieldNames[5] = "moveSpeed";
-    _fieldNames[6] = "heal";
-    _fieldNames[7] = "rangeMin";
-    _fieldNames[8] = "rangeMax";
+    _fieldNames[2] = "staminaRegen";
+    _fieldNames[3] = "staminaCost";
+    _fieldNames[4] = "moveSpeed";
+    _fieldNames[5] = "heal";
+    _fieldNames[6] = "rangeMin";
+    _fieldNames[7] = "rangeMax";
     return ("BonusAttributes", _fieldNames);
   }
 
@@ -161,46 +158,12 @@ library BonusAttributes {
     _store.setField(_tableId, _primaryKeys, 1, abi.encodePacked((strength)));
   }
 
-  /** Get staminaMax */
-  function getStaminaMax(bytes32 key) internal view returns (int32 staminaMax) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 2);
-    return (int32(uint32(Bytes.slice4(_blob, 0))));
-  }
-
-  /** Get staminaMax (using the specified store) */
-  function getStaminaMax(IStore _store, bytes32 key) internal view returns (int32 staminaMax) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 2);
-    return (int32(uint32(Bytes.slice4(_blob, 0))));
-  }
-
-  /** Set staminaMax */
-  function setStaminaMax(bytes32 key, int32 staminaMax) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    StoreSwitch.setField(_tableId, _primaryKeys, 2, abi.encodePacked((staminaMax)));
-  }
-
-  /** Set staminaMax (using the specified store) */
-  function setStaminaMax(IStore _store, bytes32 key, int32 staminaMax) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    _store.setField(_tableId, _primaryKeys, 2, abi.encodePacked((staminaMax)));
-  }
-
   /** Get staminaRegen */
   function getStaminaRegen(bytes32 key) internal view returns (int32 staminaRegen) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 3);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 2);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -209,7 +172,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 3);
+    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 2);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -218,7 +181,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 3, abi.encodePacked((staminaRegen)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 2, abi.encodePacked((staminaRegen)));
   }
 
   /** Set staminaRegen (using the specified store) */
@@ -226,7 +189,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 3, abi.encodePacked((staminaRegen)));
+    _store.setField(_tableId, _primaryKeys, 2, abi.encodePacked((staminaRegen)));
   }
 
   /** Get staminaCost */
@@ -234,7 +197,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 4);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 3);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -243,7 +206,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 4);
+    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 3);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -252,7 +215,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 4, abi.encodePacked((staminaCost)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 3, abi.encodePacked((staminaCost)));
   }
 
   /** Set staminaCost (using the specified store) */
@@ -260,7 +223,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 4, abi.encodePacked((staminaCost)));
+    _store.setField(_tableId, _primaryKeys, 3, abi.encodePacked((staminaCost)));
   }
 
   /** Get moveSpeed */
@@ -268,7 +231,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 5);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 4);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -277,7 +240,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 5);
+    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 4);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -286,7 +249,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 5, abi.encodePacked((moveSpeed)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 4, abi.encodePacked((moveSpeed)));
   }
 
   /** Set moveSpeed (using the specified store) */
@@ -294,7 +257,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 5, abi.encodePacked((moveSpeed)));
+    _store.setField(_tableId, _primaryKeys, 4, abi.encodePacked((moveSpeed)));
   }
 
   /** Get heal */
@@ -302,7 +265,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 6);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 5);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -311,7 +274,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 6);
+    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 5);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -320,7 +283,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 6, abi.encodePacked((heal)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 5, abi.encodePacked((heal)));
   }
 
   /** Set heal (using the specified store) */
@@ -328,7 +291,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 6, abi.encodePacked((heal)));
+    _store.setField(_tableId, _primaryKeys, 5, abi.encodePacked((heal)));
   }
 
   /** Get rangeMin */
@@ -336,7 +299,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 7);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 6);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -345,7 +308,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 7);
+    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 6);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -354,7 +317,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 7, abi.encodePacked((rangeMin)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 6, abi.encodePacked((rangeMin)));
   }
 
   /** Set rangeMin (using the specified store) */
@@ -362,7 +325,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 7, abi.encodePacked((rangeMin)));
+    _store.setField(_tableId, _primaryKeys, 6, abi.encodePacked((rangeMin)));
   }
 
   /** Get rangeMax */
@@ -370,7 +333,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 8);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 7);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -379,7 +342,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 8);
+    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 7);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -388,7 +351,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 8, abi.encodePacked((rangeMax)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 7, abi.encodePacked((rangeMax)));
   }
 
   /** Set rangeMax (using the specified store) */
@@ -396,7 +359,7 @@ library BonusAttributes {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 8, abi.encodePacked((rangeMax)));
+    _store.setField(_tableId, _primaryKeys, 7, abi.encodePacked((rangeMax)));
   }
 
   /** Get the full data */
@@ -422,7 +385,6 @@ library BonusAttributes {
     bytes32 key,
     int32 healthMax,
     int32 strength,
-    int32 staminaMax,
     int32 staminaRegen,
     int32 staminaCost,
     int32 moveSpeed,
@@ -430,17 +392,7 @@ library BonusAttributes {
     int32 rangeMin,
     int32 rangeMax
   ) internal {
-    bytes memory _data = encode(
-      healthMax,
-      strength,
-      staminaMax,
-      staminaRegen,
-      staminaCost,
-      moveSpeed,
-      heal,
-      rangeMin,
-      rangeMax
-    );
+    bytes memory _data = encode(healthMax, strength, staminaRegen, staminaCost, moveSpeed, heal, rangeMin, rangeMax);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -454,7 +406,6 @@ library BonusAttributes {
     bytes32 key,
     int32 healthMax,
     int32 strength,
-    int32 staminaMax,
     int32 staminaRegen,
     int32 staminaCost,
     int32 moveSpeed,
@@ -462,17 +413,7 @@ library BonusAttributes {
     int32 rangeMin,
     int32 rangeMax
   ) internal {
-    bytes memory _data = encode(
-      healthMax,
-      strength,
-      staminaMax,
-      staminaRegen,
-      staminaCost,
-      moveSpeed,
-      heal,
-      rangeMin,
-      rangeMax
-    );
+    bytes memory _data = encode(healthMax, strength, staminaRegen, staminaCost, moveSpeed, heal, rangeMin, rangeMax);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -486,7 +427,6 @@ library BonusAttributes {
       key,
       _table.healthMax,
       _table.strength,
-      _table.staminaMax,
       _table.staminaRegen,
       _table.staminaCost,
       _table.moveSpeed,
@@ -503,7 +443,6 @@ library BonusAttributes {
       key,
       _table.healthMax,
       _table.strength,
-      _table.staminaMax,
       _table.staminaRegen,
       _table.staminaCost,
       _table.moveSpeed,
@@ -519,26 +458,23 @@ library BonusAttributes {
 
     _table.strength = (int32(uint32(Bytes.slice4(_blob, 4))));
 
-    _table.staminaMax = (int32(uint32(Bytes.slice4(_blob, 8))));
+    _table.staminaRegen = (int32(uint32(Bytes.slice4(_blob, 8))));
 
-    _table.staminaRegen = (int32(uint32(Bytes.slice4(_blob, 12))));
+    _table.staminaCost = (int32(uint32(Bytes.slice4(_blob, 12))));
 
-    _table.staminaCost = (int32(uint32(Bytes.slice4(_blob, 16))));
+    _table.moveSpeed = (int32(uint32(Bytes.slice4(_blob, 16))));
 
-    _table.moveSpeed = (int32(uint32(Bytes.slice4(_blob, 20))));
+    _table.heal = (int32(uint32(Bytes.slice4(_blob, 20))));
 
-    _table.heal = (int32(uint32(Bytes.slice4(_blob, 24))));
+    _table.rangeMin = (int32(uint32(Bytes.slice4(_blob, 24))));
 
-    _table.rangeMin = (int32(uint32(Bytes.slice4(_blob, 28))));
-
-    _table.rangeMax = (int32(uint32(Bytes.slice4(_blob, 32))));
+    _table.rangeMax = (int32(uint32(Bytes.slice4(_blob, 28))));
   }
 
   /** Tightly pack full data using this table's schema */
   function encode(
     int32 healthMax,
     int32 strength,
-    int32 staminaMax,
     int32 staminaRegen,
     int32 staminaCost,
     int32 moveSpeed,
@@ -546,8 +482,7 @@ library BonusAttributes {
     int32 rangeMin,
     int32 rangeMax
   ) internal view returns (bytes memory) {
-    return
-      abi.encodePacked(healthMax, strength, staminaMax, staminaRegen, staminaCost, moveSpeed, heal, rangeMin, rangeMax);
+    return abi.encodePacked(healthMax, strength, staminaRegen, staminaCost, moveSpeed, heal, rangeMin, rangeMax);
   }
 
   /* Delete all data for given keys */

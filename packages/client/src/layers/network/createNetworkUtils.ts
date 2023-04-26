@@ -325,7 +325,7 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
 
     const bonusAttributes = getComponentValue(BonusAttributes, entity);
     const regen = stamina.regen + (bonusAttributes?.staminaRegen ?? 0);
-    const max = stamina.max + (bonusAttributes?.staminaMax ?? 0);
+    const max = stamina.max;
 
     const newCurrent = secondsSinceLastRefresh * regen + stamina.current;
     return Math.min(newCurrent, max);
