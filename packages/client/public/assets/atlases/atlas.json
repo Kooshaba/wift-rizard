@@ -5,7 +5,7 @@
     },
     "textures": [
         {
-            "image": "atlas.png?timestamp=1682066166387",
+            "image": "atlas.png?timestamp=1682504307085",
             "format": "RGBA8888",
             "size": {
                 "w": 2048,
@@ -5768,28 +5768,28 @@
                     }
                 },
                 {
-                    "filename": "sprites/ui/stamina-dot/0.png",
+                    "filename": "sprites/monsters/spider/0.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
-                        "w": 23,
+                        "w": 16,
                         "h": 24
                     },
                     "spriteSourceSize": {
                         "x": 0,
                         "y": 0,
-                        "w": 23,
+                        "w": 16,
                         "h": 24
                     },
                     "frame": {
                         "x": 432,
                         "y": 0,
-                        "w": 23,
+                        "w": 16,
                         "h": 24
                     }
                 },
                 {
-                    "filename": "sprites/ui/tile-highlight/0.png",
+                    "filename": "sprites/monsters/spider/1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -5810,7 +5810,28 @@
                     }
                 },
                 {
-                    "filename": "sprites/ui/tile-highlight/1.png",
+                    "filename": "sprites/ui/stamina-dot/0.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 23,
+                        "h": 24
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 23,
+                        "h": 24
+                    },
+                    "frame": {
+                        "x": 0,
+                        "y": 440,
+                        "w": 23,
+                        "h": 24
+                    }
+                },
+                {
+                    "filename": "sprites/ui/tile-highlight/0.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -5826,6 +5847,27 @@
                     "frame": {
                         "x": 432,
                         "y": 48,
+                        "w": 16,
+                        "h": 24
+                    }
+                },
+                {
+                    "filename": "sprites/ui/tile-highlight/1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 16,
+                        "h": 24
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 16,
+                        "h": 24
+                    },
+                    "frame": {
+                        "x": 23,
+                        "y": 440,
                         "w": 16,
                         "h": 24
                     }
@@ -5866,8 +5908,8 @@
                         "h": 24
                     },
                     "frame": {
-                        "x": 432,
-                        "y": 96,
+                        "x": 39,
+                        "y": 440,
                         "w": 16,
                         "h": 24
                     }

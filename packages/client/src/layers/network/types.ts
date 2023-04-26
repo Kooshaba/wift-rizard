@@ -191,5 +191,6 @@ export const MonsterTypeColors = {
 export const MonsterTypeAnimations = {
   [MonsterTypes.Skeleton]: Animations.SkeletonSword,
   [MonsterTypes.SkeletonArcher]: Animations.SkeletonBow,
+  [MonsterTypes.Spider]: Animations.Spider,
   [MonsterTypes.Spawner]: Animations.Spawner,
 } as Record<number, string>;

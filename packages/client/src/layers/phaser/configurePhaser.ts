@@ -181,6 +181,16 @@ export const phaserConfig = {
           suffix: ".png",
         },
         {
+          key: Animations.Spider,
+          assetKey: Assets.MainAtlas,
+          startFrame: 0,
+          endFrame: 1,
+          frameRate: 2,
+          repeat: -1,
+          prefix: "sprites/monsters/spider/",
+          suffix: ".png",
+        },
+        {
           key: Animations.Spawner,
           assetKey: Assets.MainAtlas,
           startFrame: 0,

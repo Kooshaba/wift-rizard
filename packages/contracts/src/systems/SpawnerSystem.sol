@@ -14,6 +14,7 @@ import { MonsterTypes } from "../Types.sol";
 import { LibMonster } from "../libraries/LibMonster.sol";
 import { LibPosition } from "../libraries/LibPosition.sol";
 import { LibStamina } from "../libraries/LibStamina.sol";
+import { LibRandom } from "../libraries/LibRandom.sol";
 
 import { addressToEntity, getUniqueEntityId } from "../Utils.sol";
 import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";
@@ -42,7 +43,15 @@ contract SpawnerSystem is System {
     PositionData memory spawnerPosition = Position.get(spawnerId);
     require(LibPosition.manhattan(spawnerPosition, targetPosition) == 1, "Invalid position");
 
-    bytes32 monster = LibMonster.spawnSkeleton(Room.get(spawnerId), targetPosition);
+    uint256 seed = LibRandom.getSeed(spawnerId) % 2;
+    bytes32 monster;
+
+    if(seed == 0) {
+      monster = LibMonster.spawnSkeleton(Room.get(spawnerId), targetPosition);
+    } else {
+      monster = LibMonster.spawnSpider(Room.get(spawnerId), targetPosition);
+    }
+    
     return monster;
   }
 }

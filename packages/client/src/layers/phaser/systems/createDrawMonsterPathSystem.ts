@@ -5,7 +5,6 @@ import {
   UpdateType,
   defineSystem,
   getComponentValue,
-  getEntitiesWithValue,
   runQuery,
 } from "@latticexyz/recs";
 import { PhaserLayer } from "../createPhaserLayer";
@@ -20,9 +19,7 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
     world,
     networkLayer: {
       components: { Player, Position, MonsterType, MoveSpeed, Room },
-      utils: {
-        isValidPosition,
-      },
+      utils: { isValidPosition },
     },
     scenes: {
       Main: { phaserScene },
@@ -147,6 +144,9 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
     const monsterPosition = getComponentValue(Position, monster);
     if (!monsterPosition) return;
 
+    const monsterSpeed = getComponentValue(MoveSpeed, monster)?.value;
+    if (monsterSpeed == undefined) return;
+
     const monsterRoom = getComponentValue(Room, monster);
     if (!monsterRoom) return;
 
@@ -159,7 +159,7 @@ export function createDrawMonsterPathSystem(layer: PhaserLayer) {
     const { closestPosition } = findClosestPositionWithinMoveLimit(
       monsterPosition,
       playerPosition,
-      2
+      monsterSpeed
     );
 
     const monsterColor = getStringColor(monster.toString());

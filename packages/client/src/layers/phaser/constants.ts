@@ -12,6 +12,7 @@ export enum Animations {
   Hero = "Hero",
   SkeletonSword = "SkeletonSword",
   SkeletonBow = "SkeletonBow",
+  Spider = "Spider",
   Spawner = "Spawner",
 
   // UI

@@ -39,13 +39,39 @@ library LibMonster {
     Position.set(id, position);
     Health.set(id, 20, 20);
     MoveSpeed.set(id, 2);
-    Stamina.set(id, StaminaData({ current: 0, max: 25_000, regen: 2_500, lastRefreshedAt: block.timestamp }));
+    Stamina.set(id, StaminaData({ current: 0, max: 25_000, regen: 2_000, lastRefreshedAt: block.timestamp }));
     RngCommit.set(id, block.number - 1);
 
     Attack.set(
       id,
       AttackData({
         strength: 10,
+        staminaCost: 25_000,
+        minRange: 1,
+        maxRange: 1,
+        patternX: new int32[](1),
+        patternY: new int32[](1)
+      })
+    );
+
+    return id;
+  }
+
+  function spawnSpider(RoomData memory room, PositionData memory position) internal returns (bytes32) {
+    bytes32 id = getUniqueEntityId();
+
+    MonsterType.set(id, uint32(MonsterTypes.Spider));
+    Room.set(id, room);
+    Position.set(id, position);
+    Health.set(id, 5, 5);
+    MoveSpeed.set(id, 3);
+    Stamina.set(id, StaminaData({ current: 0, max: 25_000, regen: 3_000, lastRefreshedAt: block.timestamp }));
+    RngCommit.set(id, block.number - 1);
+
+    Attack.set(
+      id,
+      AttackData({
+        strength: 5,
         staminaCost: 25_000,
         minRange: 1,
         maxRange: 1,
