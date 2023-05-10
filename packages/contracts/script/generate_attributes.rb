@@ -23,7 +23,7 @@ puts <<-SOLIDITY
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { Attribute, AttributeData } from "../tables/Attribute.sol";
+import { Attribute, AttributeData } from "../codegen/tables/Attribute.sol";
 import { AttributeTypes } from "../Types.sol";
 
 import { getUniqueEntityId } from "../Utils.sol";

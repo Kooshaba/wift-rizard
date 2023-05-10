@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { Position, PositionData } from "../tables/Position.sol";
+import { Position, PositionData } from "../codegen/tables/Position.sol";
 import { ROOM_WIDTH, ROOM_HEIGHT } from "../libraries/LibPosition.sol";
 
 uint256 constant MAX_QUEUE_SIZE = uint256(uint32(ROOM_WIDTH * ROOM_HEIGHT));

@@ -2,12 +2,12 @@
 pragma solidity >=0.8.0;
 import { System } from "@latticexyz/world/src/System.sol";
 
-import { Player, PlayerTableId } from "../tables/Player.sol";
-import { Position, PositionData, PositionTableId } from "../tables/Position.sol";
-import { Spawner } from "../tables/Spawner.sol";
-import { MonsterType } from "../tables/MonsterType.sol";
-import { Health } from "../tables/Health.sol";
-import { Room, RoomData } from "../tables/Room.sol";
+import { Player, PlayerTableId } from "../codegen/tables/Player.sol";
+import { Position, PositionData, PositionTableId } from "../codegen/tables/Position.sol";
+import { Spawner } from "../codegen/tables/Spawner.sol";
+import { MonsterType } from "../codegen/tables/MonsterType.sol";
+import { Health } from "../codegen/tables/Health.sol";
+import { Room, RoomData } from "../codegen/tables/Room.sol";
 
 import { MonsterTypes } from "../Types.sol";
 

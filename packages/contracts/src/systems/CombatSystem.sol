@@ -7,15 +7,15 @@ import { LibStamina } from "../libraries/LibStamina.sol";
 import { LibPosition, Direction } from "../libraries/LibPosition.sol";
 import { LibCombat } from "../libraries/LibCombat.sol";
 
-import { Player } from "../tables/Player.sol";
-import { Health, HealthData } from "../tables/Health.sol";
-import { MonsterType } from "../tables/MonsterType.sol";
-import { Attack, AttackData } from "../tables/Attack.sol";
-import { EquippedBy } from "../tables/EquippedBy.sol";
-import { BonusAttributes, BonusAttributesData } from "../tables/BonusAttributes.sol";
+import { Player } from "../codegen/tables/Player.sol";
+import { Health, HealthData } from "../codegen/tables/Health.sol";
+import { MonsterType } from "../codegen/tables/MonsterType.sol";
+import { Attack, AttackData } from "../codegen/tables/Attack.sol";
+import { EquippedBy } from "../codegen/tables/EquippedBy.sol";
+import { BonusAttributes, BonusAttributesData } from "../codegen/tables/BonusAttributes.sol";
 
-import { Position, PositionData, PositionTableId } from "../tables/Position.sol";
-import { Room, RoomData, RoomTableId } from "../tables/Room.sol";
+import { Position, PositionData, PositionTableId } from "../codegen/tables/Position.sol";
+import { Room, RoomData, RoomTableId } from "../codegen/tables/Room.sol";
 
 import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";
 import { addressToEntity } from "../Utils.sol";

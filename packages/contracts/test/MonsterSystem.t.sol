@@ -7,11 +7,11 @@ import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/ge
 
 import { LibMonster } from "../src/libraries/LibMonster.sol";
 
-import { RoomData } from "../src/tables/Room.sol";
-import { Position, PositionData } from "../src/tables/Position.sol";
-import { Stamina, StaminaData } from "../src/tables/Stamina.sol";
+import { RoomData } from "../src/codegen/tables/Room.sol";
+import { Position, PositionData } from "../src/codegen/tables/Position.sol";
+import { Stamina, StaminaData } from "../src/codegen/tables/Stamina.sol";
 
-import { IWorld } from "../src/world/IWorld.sol";
+import { IWorld } from "../src/codegen/world/IWorld.sol";
 
 contract MonsterTest is MudV2Test {
   IWorld world;

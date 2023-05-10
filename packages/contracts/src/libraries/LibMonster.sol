@@ -4,15 +4,15 @@ pragma solidity >=0.8.0;
 import { MonsterTypes } from "../Types.sol";
 import { getUniqueEntityId } from "../Utils.sol";
 
-import { MonsterType } from "../tables/MonsterType.sol";
-import { Position, PositionData, PositionTableId } from "../tables/Position.sol";
-import { Health } from "../tables/Health.sol";
-import { MoveSpeed } from "../tables/MoveSpeed.sol";
-import { Stamina, StaminaData } from "../tables/Stamina.sol";
-import { Attack, AttackData } from "../tables/Attack.sol";
-import { Room, RoomData } from "../tables/Room.sol";
-import { Spawner } from "../tables/Spawner.sol";
-import { RngCommit } from "../tables/RngCommit.sol";
+import { MonsterType } from "../codegen/tables/MonsterType.sol";
+import { Position, PositionData, PositionTableId } from "../codegen/tables/Position.sol";
+import { Health } from "../codegen/tables/Health.sol";
+import { MoveSpeed } from "../codegen/tables/MoveSpeed.sol";
+import { Stamina, StaminaData } from "../codegen/tables/Stamina.sol";
+import { Attack, AttackData } from "../codegen/tables/Attack.sol";
+import { Room, RoomData } from "../codegen/tables/Room.sol";
+import { Spawner } from "../codegen/tables/Spawner.sol";
+import { RngCommit } from "../codegen/tables/RngCommit.sol";
 
 import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";
 

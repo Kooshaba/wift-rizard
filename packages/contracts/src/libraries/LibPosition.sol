@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { PositionData } from "../tables/Position.sol";
+import { PositionData } from "../codegen/tables/Position.sol";
 
 int32 constant ROOM_WIDTH = 12;
 int32 constant ROOM_HEIGHT = 6;

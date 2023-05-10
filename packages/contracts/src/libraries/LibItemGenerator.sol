@@ -6,9 +6,9 @@ import { LibAttributes } from "./LibAttributes.sol";
 
 import { ItemTypes } from "../Types.sol";
 
-import { ItemType } from "../tables/ItemType.sol";
-import { Attack, AttackData } from "../tables/Attack.sol";
-import { OnItem } from "../tables/OnItem.sol";
+import { ItemType } from "../codegen/tables/ItemType.sol";
+import { Attack, AttackData } from "../codegen/tables/Attack.sol";
+import { OnItem } from "../codegen/tables/OnItem.sol";
 
 library LibItemGenerator {
   function generate(uint256 seed) internal returns (bytes32) {

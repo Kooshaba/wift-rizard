@@ -17,14 +17,14 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16("mud"), bytes16("nonce"))));
-uint256 constant NonceTableId = _tableId;
+bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16("mud"), bytes16("Spawner")));
+bytes32 constant SpawnerTableId = _tableId;
 
-library Nonce {
+library Spawner {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](1);
-    _schema[0] = SchemaType.UINT256;
+    _schema[0] = SchemaType.BOOL;
 
     return SchemaLib.encode(_schema);
   }
@@ -40,7 +40,7 @@ library Nonce {
   function getMetadata() internal pure returns (string memory, string[] memory) {
     string[] memory _fieldNames = new string[](1);
     _fieldNames[0] = "value";
-    return ("Nonce", _fieldNames);
+    return ("Spawner", _fieldNames);
   }
 
   /** Register the table's schema */
@@ -66,25 +66,25 @@ library Nonce {
   }
 
   /** Get value */
-  function get(bytes32 key) internal view returns (uint256 value) {
+  function get(bytes32 key) internal view returns (bool value) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 0);
-    return (uint256(Bytes.slice32(_blob, 0)));
+    return (_toBool(uint8(Bytes.slice1(_blob, 0))));
   }
 
   /** Get value (using the specified store) */
-  function get(IStore _store, bytes32 key) internal view returns (uint256 value) {
+  function get(IStore _store, bytes32 key) internal view returns (bool value) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = _store.getField(_tableId, _primaryKeys, 0);
-    return (uint256(Bytes.slice32(_blob, 0)));
+    return (_toBool(uint8(Bytes.slice1(_blob, 0))));
   }
 
   /** Set value */
-  function set(bytes32 key, uint256 value) internal {
+  function set(bytes32 key, bool value) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -92,7 +92,7 @@ library Nonce {
   }
 
   /** Set value (using the specified store) */
-  function set(IStore _store, bytes32 key, uint256 value) internal {
+  function set(IStore _store, bytes32 key, bool value) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -100,7 +100,7 @@ library Nonce {
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(uint256 value) internal view returns (bytes memory) {
+  function encode(bool value) internal view returns (bytes memory) {
     return abi.encodePacked(value);
   }
 
@@ -118,5 +118,11 @@ library Nonce {
     _primaryKeys[0] = bytes32((key));
 
     _store.deleteRecord(_tableId, _primaryKeys);
+  }
+}
+
+function _toBool(uint8 value) pure returns (bool result) {
+  assembly {
+    result := value
   }
 }

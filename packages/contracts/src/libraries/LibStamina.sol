@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { Stamina, StaminaData } from "../tables/Stamina.sol";
-import { BonusAttributes, BonusAttributesData } from "../tables/BonusAttributes.sol";
+import { Stamina, StaminaData } from "../codegen/tables/Stamina.sol";
+import { BonusAttributes, BonusAttributesData } from "../codegen/tables/BonusAttributes.sol";
 
 library LibStamina {
   function spend(bytes32 id, int32 amount) internal {

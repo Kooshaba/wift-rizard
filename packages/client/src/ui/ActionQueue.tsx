@@ -1,3 +1,4 @@
+import React from "react";
 import { useEntityQuery } from "@latticexyz/react";
 import { Has, getComponentValueStrict } from "@latticexyz/recs";
 import { useMUD } from "../store";
@@ -6,7 +7,6 @@ import { ActionState, ActionStateString } from "@latticexyz/std-client";
 export function ActionQueue() {
   const {
     networkLayer: {
-      world,
       actions: { Action },
     },
   } = useMUD();

@@ -8,9 +8,9 @@ import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/ge
 import { Direction } from "../src/libraries/LibPosition.sol";
 import { LibCombat } from "../src/libraries/LibCombat.sol";
 
-import { Position, PositionData, PositionTableId } from "../src/tables/Position.sol";
+import { Position, PositionData, PositionTableId } from "../src/codegen/tables/Position.sol";
 
-import { IWorld } from "../src/world/IWorld.sol";
+import { IWorld } from "../src/codegen/world/IWorld.sol";
 
 contract CombatTest is MudV2Test {
   IWorld world;

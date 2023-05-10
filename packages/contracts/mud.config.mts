@@ -1,8 +1,7 @@
-import { mudConfig, resolveTableId } from "@latticexyz/cli";
+import { mudConfig, resolveTableId } from "@latticexyz/config";
 
 export default mudConfig({
   deploysDirectory: "./deploys",
-  excludeSystems: ["System3", "System2"],
   worldContractName: "CustomWorld",
   namespace: "mud",
   enums: {
@@ -47,40 +46,34 @@ export default mudConfig({
   },
   tables: {
     Player: {
-      fileSelector: "player",
       schema: {
         value: "uint32",
       },
     },
     Room: {
-      fileSelector: "room",
       schema: {
         x: "int32",
         y: "int32",
       },
     },
     Position: {
-      fileSelector: "position",
       schema: {
         x: "int32",
         y: "int32",
       },
     },
     Health: {
-      fileSelector: "health",
       schema: {
         current: "int32",
         max: "int32",
       },
     },
     MoveSpeed: {
-      fileSelector: "moveSpeed",
       schema: {
         value: "int32",
       },
     },
     Stamina: {
-      fileSelector: "stamina",
       schema: {
         current: "int32",
         max: "int32",
@@ -89,13 +82,11 @@ export default mudConfig({
       },
     },
     ItemType: {
-      fileSelector: "itemType",
       schema: {
         value: "uint32",
       },
     },
     Attack: {
-      fileSelector: "attack",
       schema: {
         strength: "int32",
         staminaCost: "int32",
@@ -106,7 +97,6 @@ export default mudConfig({
       },
     },
     Inventory: {
-      fileSelector: "inventory",
       schema: {
         equipSize: "uint32",
         size: "uint32",
@@ -116,19 +106,16 @@ export default mudConfig({
      * Attribute (OnItem) -> Item (EquippedBy) -> Player
      */
     EquippedBy: {
-      fileSelector: "equippedBy",
       schema: {
         value: "bytes32",
       },
     },
     InInventoryOf: {
-      fileSelector: "inInventoryOf",
       schema: {
         value: "bytes32",
       },
     },
     Attribute: {
-      fileSelector: "attribute",
       schema: {
         attributeType: "AttributeTypes",
         healthMax: "int32",
@@ -142,7 +129,6 @@ export default mudConfig({
       },
     },
     OnItem: {
-      fileSelector: "onItem",
       schema: {
         value: "bytes32",
       },
@@ -155,7 +141,6 @@ export default mudConfig({
      * attributes during actions.
      */
     BonusAttributes: {
-      fileSelector: "bonusAttributes",
       schema: {
         healthMax: "int32",
         strength: "int32",
@@ -169,29 +154,34 @@ export default mudConfig({
     },
 
     MonsterType: {
-      fileSelector: "monster",
       schema: {
         value: "uint32",
       },
     },
     Spawner: {
-      fileSelector: "spawner",
       schema: {
         value: "bool",
       },
     },
     Nonce: {
-      fileSelector: "nonce",
       schema: {
         value: "uint256",
       },
     },
     RngCommit: {
-      fileSelector: "rngCommit",
       schema: {
         blockNumber: "uint256",
       },
     },
+
+    // CombatResult: {
+    //   schema: {
+    //     attacker: "bytes32",
+    //     defender: "bytes32",
+    //     damage: "int32",
+    //   },
+    //   ephemeral: true,
+    // }
   },
   modules: [
     {
@@ -203,11 +193,6 @@ export default mudConfig({
       name: "KeysWithValueModule",
       root: true,
       args: [resolveTableId("Position")],
-    },
-    {
-      name: "KeysWithValueModule",
-      root: true,
-      args: [resolveTableId("Room")],
     },
     {
       name: "KeysWithValueModule",

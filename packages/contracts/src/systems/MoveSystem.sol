@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Player, PlayerTableId } from "../tables/Player.sol";
-import { Room, RoomData } from "../tables/Room.sol";
-import { Position, PositionData, PositionTableId } from "../tables/Position.sol";
-import { MoveSpeed } from "../tables/MoveSpeed.sol";
-import { BonusAttributes } from "../tables/BonusAttributes.sol";
+import { Player, PlayerTableId } from "../codegen/tables/Player.sol";
+import { Room, RoomData } from "../codegen/tables/Room.sol";
+import { Position, PositionData, PositionTableId } from "../codegen/tables/Position.sol";
+import { MoveSpeed } from "../codegen/tables/MoveSpeed.sol";
+import { BonusAttributes } from "../codegen/tables/BonusAttributes.sol";
 
 import { World } from "@latticexyz/world/src/World.sol";
 

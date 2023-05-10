@@ -17,8 +17,8 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16("mud"), bytes16("onItem"))));
-uint256 constant OnItemTableId = _tableId;
+bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16("mud"), bytes16("OnItem")));
+bytes32 constant OnItemTableId = _tableId;
 
 library OnItem {
   /** Get the table's schema */

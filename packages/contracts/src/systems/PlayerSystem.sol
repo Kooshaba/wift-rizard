@@ -6,15 +6,15 @@ import { World } from "@latticexyz/world/src/World.sol";
 import { LibItemGenerator } from "../libraries/LibItemGenerator.sol";
 import { LibInventory } from "../libraries/LibInventory.sol";
 
-import { Player, PlayerTableId } from "../tables/Player.sol";
-import { Health, HealthData } from "../tables/Health.sol";
-import { Stamina, StaminaData } from "../tables/Stamina.sol";
-import { EquippedBy } from "../tables/EquippedBy.sol";
-import { MoveSpeed } from "../tables/MoveSpeed.sol";
-import { Inventory, InventoryData } from "../tables/Inventory.sol";
+import { Player, PlayerTableId } from "../codegen/tables/Player.sol";
+import { Health, HealthData } from "../codegen/tables/Health.sol";
+import { Stamina, StaminaData } from "../codegen/tables/Stamina.sol";
+import { EquippedBy } from "../codegen/tables/EquippedBy.sol";
+import { MoveSpeed } from "../codegen/tables/MoveSpeed.sol";
+import { Inventory, InventoryData } from "../codegen/tables/Inventory.sol";
 
-import { Position } from "../tables/Position.sol";
-import { Room } from "../tables/Room.sol";
+import { Position } from "../codegen/tables/Position.sol";
+import { Room } from "../codegen/tables/Room.sol";
 
 import { addressToEntity } from "../Utils.sol";
 import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";

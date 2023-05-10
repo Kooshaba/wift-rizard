@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { RngCommit } from "../tables/RngCommit.sol";
+import { RngCommit } from "../codegen/tables/RngCommit.sol";
 
 library LibRandom {
   function getSeed(bytes32 entity) internal returns(uint256) {

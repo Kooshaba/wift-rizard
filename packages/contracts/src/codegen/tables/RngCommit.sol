@@ -17,14 +17,14 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16("mud"), bytes16("inInventoryOf"))));
-uint256 constant InInventoryOfTableId = _tableId;
+bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16("mud"), bytes16("RngCommit")));
+bytes32 constant RngCommitTableId = _tableId;
 
-library InInventoryOf {
+library RngCommit {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](1);
-    _schema[0] = SchemaType.BYTES32;
+    _schema[0] = SchemaType.UINT256;
 
     return SchemaLib.encode(_schema);
   }
@@ -39,8 +39,8 @@ library InInventoryOf {
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
     string[] memory _fieldNames = new string[](1);
-    _fieldNames[0] = "value";
-    return ("InInventoryOf", _fieldNames);
+    _fieldNames[0] = "blockNumber";
+    return ("RngCommit", _fieldNames);
   }
 
   /** Register the table's schema */
@@ -65,43 +65,43 @@ library InInventoryOf {
     _store.setMetadata(_tableId, _tableName, _fieldNames);
   }
 
-  /** Get value */
-  function get(bytes32 key) internal view returns (bytes32 value) {
+  /** Get blockNumber */
+  function get(bytes32 key) internal view returns (uint256 blockNumber) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 0);
-    return (Bytes.slice32(_blob, 0));
+    return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Get value (using the specified store) */
-  function get(IStore _store, bytes32 key) internal view returns (bytes32 value) {
+  /** Get blockNumber (using the specified store) */
+  function get(IStore _store, bytes32 key) internal view returns (uint256 blockNumber) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = _store.getField(_tableId, _primaryKeys, 0);
-    return (Bytes.slice32(_blob, 0));
+    return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Set value */
-  function set(bytes32 key, bytes32 value) internal {
+  /** Set blockNumber */
+  function set(bytes32 key, uint256 blockNumber) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((value)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((blockNumber)));
   }
 
-  /** Set value (using the specified store) */
-  function set(IStore _store, bytes32 key, bytes32 value) internal {
+  /** Set blockNumber (using the specified store) */
+  function set(IStore _store, bytes32 key, uint256 blockNumber) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((value)));
+    _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((blockNumber)));
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(bytes32 value) internal view returns (bytes memory) {
-    return abi.encodePacked(value);
+  function encode(uint256 blockNumber) internal view returns (bytes memory) {
+    return abi.encodePacked(blockNumber);
   }
 
   /* Delete all data for given keys */

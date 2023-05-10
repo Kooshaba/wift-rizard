@@ -17,15 +17,15 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16("mud"), bytes16("position"))));
-uint256 constant PositionTableId = _tableId;
+bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16("mud"), bytes16("Room")));
+bytes32 constant RoomTableId = _tableId;
 
-struct PositionData {
+struct RoomData {
   int32 x;
   int32 y;
 }
 
-library Position {
+library Room {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](2);
@@ -47,7 +47,7 @@ library Position {
     string[] memory _fieldNames = new string[](2);
     _fieldNames[0] = "x";
     _fieldNames[1] = "y";
-    return ("Position", _fieldNames);
+    return ("Room", _fieldNames);
   }
 
   /** Register the table's schema */
@@ -141,7 +141,7 @@ library Position {
   }
 
   /** Get the full data */
-  function get(bytes32 key) internal view returns (PositionData memory _table) {
+  function get(bytes32 key) internal view returns (RoomData memory _table) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -150,7 +150,7 @@ library Position {
   }
 
   /** Get the full data (using the specified store) */
-  function get(IStore _store, bytes32 key) internal view returns (PositionData memory _table) {
+  function get(IStore _store, bytes32 key) internal view returns (RoomData memory _table) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -179,17 +179,17 @@ library Position {
   }
 
   /** Set the full data using the data struct */
-  function set(bytes32 key, PositionData memory _table) internal {
+  function set(bytes32 key, RoomData memory _table) internal {
     set(key, _table.x, _table.y);
   }
 
   /** Set the full data using the data struct (using the specified store) */
-  function set(IStore _store, bytes32 key, PositionData memory _table) internal {
+  function set(IStore _store, bytes32 key, RoomData memory _table) internal {
     set(_store, key, _table.x, _table.y);
   }
 
   /** Decode the tightly packed blob using this table's schema */
-  function decode(bytes memory _blob) internal pure returns (PositionData memory _table) {
+  function decode(bytes memory _blob) internal pure returns (RoomData memory _table) {
     _table.x = (int32(uint32(Bytes.slice4(_blob, 0))));
 
     _table.y = (int32(uint32(Bytes.slice4(_blob, 4))));

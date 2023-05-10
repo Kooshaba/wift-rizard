@@ -3,12 +3,12 @@ pragma solidity >=0.8.0;
 
 import { LibStamina } from "../libraries/LibStamina.sol";
 
-import { Inventory } from "../tables/Inventory.sol";
-import { OnItem, OnItemTableId } from "../tables/OnItem.sol";
-import { EquippedBy, EquippedByTableId } from "../tables/EquippedBy.sol";
+import { Inventory } from "../codegen/tables/Inventory.sol";
+import { OnItem, OnItemTableId } from "../codegen/tables/OnItem.sol";
+import { EquippedBy, EquippedByTableId } from "../codegen/tables/EquippedBy.sol";
 
-import { Attribute, AttributeData, AttributeTableId } from "../tables/Attribute.sol";
-import { BonusAttributes, BonusAttributesData } from "../tables/BonusAttributes.sol";
+import { Attribute, AttributeData, AttributeTableId } from "../codegen/tables/Attribute.sol";
+import { BonusAttributes, BonusAttributesData } from "../codegen/tables/BonusAttributes.sol";
 
 import { getUniqueEntityId } from "../Utils.sol";
 import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";

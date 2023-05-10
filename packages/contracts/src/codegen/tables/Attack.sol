@@ -17,8 +17,8 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16("mud"), bytes16("attack"))));
-uint256 constant AttackTableId = _tableId;
+bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16("mud"), bytes16("Attack")));
+bytes32 constant AttackTableId = _tableId;
 
 struct AttackData {
   int32 strength;
@@ -270,6 +270,22 @@ library Attack {
     _store.pushToField(_tableId, _primaryKeys, 4, abi.encodePacked((_element)));
   }
 
+  /** Pop an element from patternX */
+  function popPatternX(bytes32 key) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    StoreSwitch.popFromField(_tableId, _primaryKeys, 4, 4);
+  }
+
+  /** Pop an element from patternX (using the specified store) */
+  function popPatternX(IStore _store, bytes32 key) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    _store.popFromField(_tableId, _primaryKeys, 4, 4);
+  }
+
   /** Update an element of patternX at `_index` */
   function updatePatternX(bytes32 key, uint256 _index, int32 _element) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
@@ -334,6 +350,22 @@ library Attack {
     _primaryKeys[0] = bytes32((key));
 
     _store.pushToField(_tableId, _primaryKeys, 5, abi.encodePacked((_element)));
+  }
+
+  /** Pop an element from patternY */
+  function popPatternY(bytes32 key) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    StoreSwitch.popFromField(_tableId, _primaryKeys, 5, 4);
+  }
+
+  /** Pop an element from patternY (using the specified store) */
+  function popPatternY(IStore _store, bytes32 key) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    _store.popFromField(_tableId, _primaryKeys, 5, 4);
   }
 
   /** Update an element of patternY at `_index` */

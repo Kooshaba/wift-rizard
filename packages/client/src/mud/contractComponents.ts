@@ -6,7 +6,7 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 export function defineContractComponents(world: World) {
   return {
     Player: (() => {
-      const tableId = new TableId("mud", "player");
+      const tableId = new TableId("mud", "Player");
       return defineComponent(
         world,
         {
@@ -21,7 +21,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     Room: (() => {
-      const tableId = new TableId("mud", "room");
+      const tableId = new TableId("mud", "Room");
       return defineComponent(
         world,
         {
@@ -37,7 +37,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     Position: (() => {
-      const tableId = new TableId("mud", "position");
+      const tableId = new TableId("mud", "Position");
       return defineComponent(
         world,
         {
@@ -53,7 +53,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     Health: (() => {
-      const tableId = new TableId("mud", "health");
+      const tableId = new TableId("mud", "Health");
       return defineComponent(
         world,
         {
@@ -69,7 +69,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     MoveSpeed: (() => {
-      const tableId = new TableId("mud", "moveSpeed");
+      const tableId = new TableId("mud", "MoveSpeed");
       return defineComponent(
         world,
         {
@@ -84,7 +84,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     Stamina: (() => {
-      const tableId = new TableId("mud", "stamina");
+      const tableId = new TableId("mud", "Stamina");
       return defineComponent(
         world,
         {
@@ -102,7 +102,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     ItemType: (() => {
-      const tableId = new TableId("mud", "itemType");
+      const tableId = new TableId("mud", "ItemType");
       return defineComponent(
         world,
         {
@@ -117,7 +117,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     Attack: (() => {
-      const tableId = new TableId("mud", "attack");
+      const tableId = new TableId("mud", "Attack");
       return defineComponent(
         world,
         {
@@ -137,7 +137,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     Inventory: (() => {
-      const tableId = new TableId("mud", "inventory");
+      const tableId = new TableId("mud", "Inventory");
       return defineComponent(
         world,
         {
@@ -153,7 +153,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     EquippedBy: (() => {
-      const tableId = new TableId("mud", "equippedBy");
+      const tableId = new TableId("mud", "EquippedBy");
       return defineComponent(
         world,
         {
@@ -168,7 +168,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     InInventoryOf: (() => {
-      const tableId = new TableId("mud", "inInventoryOf");
+      const tableId = new TableId("mud", "InInventoryOf");
       return defineComponent(
         world,
         {
@@ -183,7 +183,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     Attribute: (() => {
-      const tableId = new TableId("mud", "attribute");
+      const tableId = new TableId("mud", "Attribute");
       return defineComponent(
         world,
         {
@@ -206,7 +206,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     OnItem: (() => {
-      const tableId = new TableId("mud", "onItem");
+      const tableId = new TableId("mud", "OnItem");
       return defineComponent(
         world,
         {
@@ -221,7 +221,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     BonusAttributes: (() => {
-      const tableId = new TableId("mud", "bonusAttributes");
+      const tableId = new TableId("mud", "BonusAttributes");
       return defineComponent(
         world,
         {
@@ -243,7 +243,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     MonsterType: (() => {
-      const tableId = new TableId("mud", "monster");
+      const tableId = new TableId("mud", "MonsterType");
       return defineComponent(
         world,
         {
@@ -258,7 +258,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     Spawner: (() => {
-      const tableId = new TableId("mud", "spawner");
+      const tableId = new TableId("mud", "Spawner");
       return defineComponent(
         world,
         {
@@ -273,7 +273,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     Nonce: (() => {
-      const tableId = new TableId("mud", "nonce");
+      const tableId = new TableId("mud", "Nonce");
       return defineComponent(
         world,
         {
@@ -288,7 +288,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     RngCommit: (() => {
-      const tableId = new TableId("mud", "rngCommit");
+      const tableId = new TableId("mud", "RngCommit");
       return defineComponent(
         world,
         {

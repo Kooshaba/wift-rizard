@@ -3,8 +3,8 @@ pragma solidity >=0.8.0;
 
 import { ItemTypes } from "../Types.sol";
 
-import { ItemType } from "../tables/ItemType.sol";
-import { Attack, AttackData } from "../tables/Attack.sol";
+import { ItemType } from "../codegen/tables/ItemType.sol";
+import { Attack, AttackData } from "../codegen/tables/Attack.sol";
 
 library LibItemFactory {
   function createSword() internal returns (bytes32) {
