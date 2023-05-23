@@ -4,7 +4,7 @@ import {
   createPhaserEngine,
 } from "@latticexyz/phaserx";
 import {
-  EntityIndex,
+  Entity,
   Type,
   defineComponent,
   getComponentValue,
@@ -108,7 +108,7 @@ export const createPhaserLayer = async (
     setComponent(components.ActiveRoom, networkLayer.singletonEntity, room);
   }
 
-  function getPlayerAttackData(player: EntityIndex, item: EntityIndex) {
+  function getPlayerAttackData(player: Entity, item: Entity) {
     const { Attack, BonusAttributes } = networkLayer.components;
 
     const attackData = getComponentValue(Attack, item);

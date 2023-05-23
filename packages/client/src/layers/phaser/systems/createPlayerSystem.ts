@@ -25,7 +25,7 @@ export function createPlayerSystem(layer: PhaserLayer) {
       once: (sprite) => {
         sprite.play(Animations.Hero);
         sprite.setPipeline(HueTintAndOutlineFXPipeline.KEY);
-        sprite.setPipelineData("hueTint", getStringColor(world.entities[entity]));
+        sprite.setPipelineData("hueTint", getStringColor(entity));
       }
     });
   });

@@ -8,7 +8,9 @@
     "dev:contracts": "pnpm --filter 'contracts' dev",
     "dev:node": "pnpm --filter 'contracts' devnode",
     "initialize": "pnpm recursive run initialize",
-    "test": "pnpm recursive run test"
+    "test": "pnpm recursive run test",
+    "mud:up": "pnpm recursive exec mud set-version -v canary && pnpm install",
+    "mud:link": "pnpm recursive exec mud set-version -l ../../../mud && pnpm install"
   },
   "devDependencies": {
     "run-pty": "^4.0.3"

@@ -1,5 +1,5 @@
 import {
-  EntityIndex,
+  Entity,
   Has,
   defineSystem,
   getComponentValue,
@@ -103,7 +103,7 @@ export function createTargetingSystem(layer: PhaserLayer) {
     },
     utils: { tintObject, getPlayerAttackData },
     networkLayer: {
-      components: { Attack, Position },
+      components: { Position },
       utils: {
         txApi: { attack: txAttack },
       },
@@ -111,7 +111,7 @@ export function createTargetingSystem(layer: PhaserLayer) {
   } = layer;
 
   const objectPool = new Map<
-    EntityIndex,
+    Entity,
     {
       group: Phaser.GameObjects.Group;
       patternGroup: Phaser.GameObjects.Group;
@@ -130,7 +130,7 @@ export function createTargetingSystem(layer: PhaserLayer) {
     return rect;
   }
 
-  defineSystem(world, [Has(Position), Has(Targeting)], ({ entity, type }) => {
+  defineSystem(world, [Has(Position), Has(Targeting)], ({ entity }) => {
     if (!objectPool.has(entity)) {
       objectPool.set(entity, {
         group: phaserScene.add.group(),
@@ -145,7 +145,7 @@ export function createTargetingSystem(layer: PhaserLayer) {
     const targeting = getComponentValue(Targeting, entity);
     if (!targeting) return;
 
-    const item = world.getEntityIndexStrict(targeting.item);
+    const { item } = targeting;
     const attack = getPlayerAttackData(entity, item);
     if (!attack) return;
 

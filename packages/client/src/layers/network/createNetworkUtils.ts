@@ -1,7 +1,5 @@
 import { Coord } from "@latticexyz/phaserx";
 import {
-  EntityID,
-  EntityIndex,
   defineSystem,
   runQuery,
   Has,
@@ -11,6 +9,7 @@ import {
   HasValue,
   Not,
   getEntitiesWithValue,
+  Entity,
 } from "@latticexyz/recs";
 import { NetworkLayer } from "./createNetworkLayer";
 import { BigNumber, ContractTransaction } from "ethers";
@@ -27,8 +26,6 @@ import { shuffle } from "lodash";
 
 export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
   const {
-    world,
-    actions,
     worldSend,
     components: {
       Player,
@@ -45,14 +42,17 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     },
   } = layer;
 
+  const entityToBytes32 = (entity: Entity) => {
+    return "0x" + entity.replace("0x", "").padStart(64, "0");
+  };
+
   /**
    * @param callback Called once a Player and all of their Components are loaded into the game.
    */
   function onPlayerLoaded(
     callback: (
       data: {
-        player: EntityIndex;
-        playerId: EntityID;
+        player: Entity;
         playerNumber: number;
       } | null
     ) => void
@@ -61,7 +61,6 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       world,
       components: { Player },
       playerEntity,
-      playerEntityId,
     } = layer;
 
     let playerLoaded = false;
@@ -69,7 +68,7 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     defineSystem(world, [Has(Player)], ({ type, entity }) => {
       if (playerLoaded) return;
       if (entity !== playerEntity) return;
-      if (!playerEntity || !playerEntityId) return;
+      if (!playerEntity) return;
 
       if (type === UpdateType.Exit) {
         playerLoaded = false;
@@ -83,7 +82,6 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
       playerLoaded = true;
       callback({
         player: playerEntity,
-        playerId: playerEntityId,
         playerNumber: playerNumber.value,
       });
     });
@@ -105,101 +103,47 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
   }
 
   function move(path: Coord[]) {
-    actions.add({
-      id: ("move" + Math.random().toPrecision(5)) as EntityID,
-      updates: () => [],
-      components: {},
-      requirement: () => true,
-      execute: async () => {
-        return await worldSend("mud_MoveSystem_move", [
-          path.map((coord) => coord.x),
-          path.map((coord) => coord.y),
-        ]);
-      },
-    });
+    worldSend("mud_MoveSystem_move", [
+      path.map((coord) => coord.x),
+      path.map((coord) => coord.y),
+    ]);
   }
 
   function moveRoom(coord: Coord) {
-    actions.add({
-      id: ("moveRoom" + Math.random().toPrecision(5)) as EntityID,
-      updates: () => [],
-      components: {},
-      requirement: () => true,
-      execute: async () => {
-        return await worldSend("mud_MoveSystem_moveRoom", [
-          coord.x,
-          coord.y,
-          {
-            gasLimit: 1000000,
-          },
-        ]);
+    worldSend("mud_MoveSystem_moveRoom", [
+      coord.x,
+      coord.y,
+      {
+        gasLimit: 1000000,
       },
-    });
+    ]);
   }
 
-  function attack(item: EntityIndex, target: Coord) {
-    const itemId = world.entities[item];
-
-    actions.add({
-      id: ("attack" + Math.random().toPrecision(5)) as EntityID,
-      updates: () => [],
-      components: {},
-      requirement: () => true,
-      execute: async () => {
-        const tx = await worldSend("mud_CombatSystem_attack", [
-          itemId,
-          target.x,
-          target.y,
-          {
-            gasLimit: 1_000_000,
-          },
-        ]);
-
-        return tx;
+  function attack(item: Entity, target: Coord) {
+    worldSend("mud_CombatSystem_attack", [
+      entityToBytes32(item),
+      target.x,
+      target.y,
+      {
+        gasLimit: 1_000_000,
       },
-    });
+    ]);
   }
 
   function heal() {
-    actions.add({
-      id: ("heal" + Math.random().toPrecision(5)) as EntityID,
-      updates: () => [],
-      components: {},
-      requirement: () => true,
-      execute: async () => {
-        return worldSend("mud_CombatSystem_heal", [
-          {
-            gasLimit: 1000000,
-          },
-        ]);
+    worldSend("mud_CombatSystem_heal", [
+      {
+        gasLimit: 1000000,
       },
-    });
+    ]);
   }
 
   function equipRandomItem() {
-    actions.add({
-      id: ("equipRandomItem" + Math.random().toPrecision(5)) as EntityID,
-      updates: () => [],
-      components: {},
-      requirement: () => true,
-      execute: async () => {
-        return await worldSend("mud_ItemSystem_equipRandomItem", []);
-      },
-    });
+    worldSend("mud_ItemSystem_equipRandomItem", []);
   }
 
-  function unequip(item: EntityIndex) {
-    actions.add({
-      id: ("unequip" + Math.random().toPrecision(5)) as EntityID,
-      updates: () => [],
-      components: {},
-      requirement: () => true,
-      execute: async () => {
-        return await worldSend("mud_InventorySystem_unequip", [
-          world.entities[item],
-        ]);
-      },
-    });
+  function unequip(item: Entity) {
+    worldSend("mud_InventorySystem_unequip", [entityToBytes32(item)]);
   }
 
   function createSpawner() {
@@ -210,23 +154,15 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     const x = Phaser.Math.RND.integerInRange(0, ROOM_WIDTH - 1);
     const y = Phaser.Math.RND.integerInRange(0, ROOM_HEIGHT - 1);
 
-    actions.add({
-      id: ("createSpawner" + Math.random().toPrecision(5)) as EntityID,
-      updates: () => [],
-      components: {},
-      requirement: () => true,
-      execute: async () => {
-        return await worldSend("mud_SpawnerSystem_create", [
-          room.x,
-          room.y,
-          x,
-          y,
-          {
-            gasLimit: 1_000_000,
-          },
-        ]);
+    worldSend("mud_SpawnerSystem_create", [
+      room.x,
+      room.y,
+      x,
+      y,
+      {
+        gasLimit: 1_000_000,
       },
-    });
+    ]);
   }
 
   function spawnMonster() {
@@ -257,22 +193,14 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
 
     if (!freePositionAroundSpawner) return;
 
-    actions.add({
-      id: ("spawnMonster" + Math.random().toPrecision(5)) as EntityID,
-      updates: () => [],
-      components: {},
-      requirement: () => true,
-      execute: async () => {
-        return worldSend("mud_SpawnerSystem_spawn", [
-          world.entities[spawner],
-          freePositionAroundSpawner.x,
-          freePositionAroundSpawner.y,
-          {
-            gasLimit: 2_000_000,
-          },
-        ]);
+    worldSend("mud_SpawnerSystem_spawn", [
+      entityToBytes32(spawner),
+      freePositionAroundSpawner.x,
+      freePositionAroundSpawner.y,
+      {
+        gasLimit: 2_000_000,
       },
-    });
+    ]);
   }
 
   function tickRoom(roomCoord: Coord) {
@@ -297,24 +225,16 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     tickMonster(monster);
   }
 
-  function tickMonster(monster: EntityIndex) {
-    actions.add({
-      id: ("tickMonster" + Math.random().toPrecision(5)) as EntityID,
-      updates: () => [],
-      components: {},
-      requirement: () => true,
-      execute: async () => {
-        return await worldSend("mud_MonsterSystem_act", [
-          world.entities[monster],
-          {
-            gasLimit: 5_000_000,
-          },
-        ]);
+  function tickMonster(monster: Entity) {
+    worldSend("mud_MonsterSystem_act", [
+      entityToBytes32(monster),
+      {
+        gasLimit: 5_000_000,
       },
-    });
+    ]);
   }
 
-  function getCurrentStamina(entity: EntityIndex): number {
+  function getCurrentStamina(entity: Entity): number {
     const stamina = getComponentValue(Stamina, entity);
     if (!stamina) return 0;
 
@@ -347,15 +267,13 @@ export function createNetworkUtils(layer: Omit<NetworkLayer, "utils">) {
     return true;
   }
 
-  function getItemName(entity: EntityIndex): string {
+  function getItemName(entity: Entity): string {
     const itemType = getComponentValue(ItemType, entity)?.value;
     if (!itemType) return "Unknown";
 
     let name = ItemTypeNames[itemType as ItemTypes];
 
-    const attributes = [
-      ...runQuery([HasValue(OnItem, { value: world.entities[entity] })]),
-    ];
+    const attributes = [...runQuery([HasValue(OnItem, { value: entity })])];
     for (const attr of attributes) {
       const attribute = getComponentValueStrict(Attribute, attr);
       const nameData =

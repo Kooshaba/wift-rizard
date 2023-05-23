@@ -92,291 +92,291 @@ library BonusAttributes {
 
   /** Get healthMax */
   function getHealthMax(bytes32 key) internal view returns (int32 healthMax) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 0);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Get healthMax (using the specified store) */
   function getHealthMax(IStore _store, bytes32 key) internal view returns (int32 healthMax) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 0);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Set healthMax */
   function setHealthMax(bytes32 key, int32 healthMax) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((healthMax)));
+    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((healthMax)));
   }
 
   /** Set healthMax (using the specified store) */
   function setHealthMax(IStore _store, bytes32 key, int32 healthMax) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((healthMax)));
+    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((healthMax)));
   }
 
   /** Get strength */
   function getStrength(bytes32 key) internal view returns (int32 strength) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 1);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Get strength (using the specified store) */
   function getStrength(IStore _store, bytes32 key) internal view returns (int32 strength) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 1);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Set strength */
   function setStrength(bytes32 key, int32 strength) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 1, abi.encodePacked((strength)));
+    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((strength)));
   }
 
   /** Set strength (using the specified store) */
   function setStrength(IStore _store, bytes32 key, int32 strength) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 1, abi.encodePacked((strength)));
+    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((strength)));
   }
 
   /** Get staminaRegen */
   function getStaminaRegen(bytes32 key) internal view returns (int32 staminaRegen) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 2);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Get staminaRegen (using the specified store) */
   function getStaminaRegen(IStore _store, bytes32 key) internal view returns (int32 staminaRegen) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 2);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Set staminaRegen */
   function setStaminaRegen(bytes32 key, int32 staminaRegen) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 2, abi.encodePacked((staminaRegen)));
+    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((staminaRegen)));
   }
 
   /** Set staminaRegen (using the specified store) */
   function setStaminaRegen(IStore _store, bytes32 key, int32 staminaRegen) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 2, abi.encodePacked((staminaRegen)));
+    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((staminaRegen)));
   }
 
   /** Get staminaCost */
   function getStaminaCost(bytes32 key) internal view returns (int32 staminaCost) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 3);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Get staminaCost (using the specified store) */
   function getStaminaCost(IStore _store, bytes32 key) internal view returns (int32 staminaCost) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 3);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Set staminaCost */
   function setStaminaCost(bytes32 key, int32 staminaCost) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 3, abi.encodePacked((staminaCost)));
+    StoreSwitch.setField(_tableId, _keyTuple, 3, abi.encodePacked((staminaCost)));
   }
 
   /** Set staminaCost (using the specified store) */
   function setStaminaCost(IStore _store, bytes32 key, int32 staminaCost) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 3, abi.encodePacked((staminaCost)));
+    _store.setField(_tableId, _keyTuple, 3, abi.encodePacked((staminaCost)));
   }
 
   /** Get moveSpeed */
   function getMoveSpeed(bytes32 key) internal view returns (int32 moveSpeed) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 4);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 4);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Get moveSpeed (using the specified store) */
   function getMoveSpeed(IStore _store, bytes32 key) internal view returns (int32 moveSpeed) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 4);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 4);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Set moveSpeed */
   function setMoveSpeed(bytes32 key, int32 moveSpeed) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 4, abi.encodePacked((moveSpeed)));
+    StoreSwitch.setField(_tableId, _keyTuple, 4, abi.encodePacked((moveSpeed)));
   }
 
   /** Set moveSpeed (using the specified store) */
   function setMoveSpeed(IStore _store, bytes32 key, int32 moveSpeed) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 4, abi.encodePacked((moveSpeed)));
+    _store.setField(_tableId, _keyTuple, 4, abi.encodePacked((moveSpeed)));
   }
 
   /** Get heal */
   function getHeal(bytes32 key) internal view returns (int32 heal) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 5);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 5);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Get heal (using the specified store) */
   function getHeal(IStore _store, bytes32 key) internal view returns (int32 heal) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 5);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 5);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Set heal */
   function setHeal(bytes32 key, int32 heal) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 5, abi.encodePacked((heal)));
+    StoreSwitch.setField(_tableId, _keyTuple, 5, abi.encodePacked((heal)));
   }
 
   /** Set heal (using the specified store) */
   function setHeal(IStore _store, bytes32 key, int32 heal) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 5, abi.encodePacked((heal)));
+    _store.setField(_tableId, _keyTuple, 5, abi.encodePacked((heal)));
   }
 
   /** Get rangeMin */
   function getRangeMin(bytes32 key) internal view returns (int32 rangeMin) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 6);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 6);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Get rangeMin (using the specified store) */
   function getRangeMin(IStore _store, bytes32 key) internal view returns (int32 rangeMin) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 6);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 6);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Set rangeMin */
   function setRangeMin(bytes32 key, int32 rangeMin) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 6, abi.encodePacked((rangeMin)));
+    StoreSwitch.setField(_tableId, _keyTuple, 6, abi.encodePacked((rangeMin)));
   }
 
   /** Set rangeMin (using the specified store) */
   function setRangeMin(IStore _store, bytes32 key, int32 rangeMin) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 6, abi.encodePacked((rangeMin)));
+    _store.setField(_tableId, _keyTuple, 6, abi.encodePacked((rangeMin)));
   }
 
   /** Get rangeMax */
   function getRangeMax(bytes32 key) internal view returns (int32 rangeMax) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 7);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 7);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Get rangeMax (using the specified store) */
   function getRangeMax(IStore _store, bytes32 key) internal view returns (int32 rangeMax) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 7);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 7);
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
   /** Set rangeMax */
   function setRangeMax(bytes32 key, int32 rangeMax) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 7, abi.encodePacked((rangeMax)));
+    StoreSwitch.setField(_tableId, _keyTuple, 7, abi.encodePacked((rangeMax)));
   }
 
   /** Set rangeMax (using the specified store) */
   function setRangeMax(IStore _store, bytes32 key, int32 rangeMax) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 7, abi.encodePacked((rangeMax)));
+    _store.setField(_tableId, _keyTuple, 7, abi.encodePacked((rangeMax)));
   }
 
   /** Get the full data */
   function get(bytes32 key) internal view returns (BonusAttributesData memory _table) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getRecord(_tableId, _primaryKeys, getSchema());
+    bytes memory _blob = StoreSwitch.getRecord(_tableId, _keyTuple, getSchema());
     return decode(_blob);
   }
 
   /** Get the full data (using the specified store) */
   function get(IStore _store, bytes32 key) internal view returns (BonusAttributesData memory _table) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getRecord(_tableId, _primaryKeys, getSchema());
+    bytes memory _blob = _store.getRecord(_tableId, _keyTuple, getSchema());
     return decode(_blob);
   }
 
@@ -394,10 +394,10 @@ library BonusAttributes {
   ) internal {
     bytes memory _data = encode(healthMax, strength, staminaRegen, staminaCost, moveSpeed, heal, rangeMin, rangeMax);
 
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setRecord(_tableId, _primaryKeys, _data);
+    StoreSwitch.setRecord(_tableId, _keyTuple, _data);
   }
 
   /** Set the full data using individual values (using the specified store) */
@@ -415,10 +415,10 @@ library BonusAttributes {
   ) internal {
     bytes memory _data = encode(healthMax, strength, staminaRegen, staminaCost, moveSpeed, heal, rangeMin, rangeMax);
 
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    _store.setRecord(_tableId, _primaryKeys, _data);
+    _store.setRecord(_tableId, _keyTuple, _data);
   }
 
   /** Set the full data using the data struct */
@@ -485,19 +485,25 @@ library BonusAttributes {
     return abi.encodePacked(healthMax, strength, staminaRegen, staminaCost, moveSpeed, heal, rangeMin, rangeMax);
   }
 
+  /** Encode keys as a bytes32 array using this table's schema */
+  function encodeKeyTuple(bytes32 key) internal pure returns (bytes32[] memory _keyTuple) {
+    _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+  }
+
   /* Delete all data for given keys */
   function deleteRecord(bytes32 key) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.deleteRecord(_tableId, _primaryKeys);
+    StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
 
   /* Delete all data for given keys (using the specified store) */
   function deleteRecord(IStore _store, bytes32 key) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
 
-    _store.deleteRecord(_tableId, _primaryKeys);
+    _store.deleteRecord(_tableId, _keyTuple);
   }
 }

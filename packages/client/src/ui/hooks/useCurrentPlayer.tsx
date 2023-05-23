@@ -1,6 +1,6 @@
-import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
 import { useMUD } from "../../store";
+import { Entity } from "@latticexyz/recs";
 
 export const useCurrentPlayer = () => {
   const {
@@ -10,8 +10,7 @@ export const useCurrentPlayer = () => {
   } = useMUD();
 
   const [playerData, setPlayerData] = useState<{
-    player: EntityIndex;
-    playerId: EntityID;
+    player: Entity;
   } | null>(null);
 
   useEffect(() => {

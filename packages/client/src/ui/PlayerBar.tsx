@@ -1,6 +1,6 @@
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 import {
-  EntityIndex,
+  Entity,
   HasValue,
   getComponentValue,
   getComponentValueStrict,
@@ -23,7 +23,7 @@ function AttackDetails({
 }: {
   screenPosition: { x: number; y: number };
   attackData: {
-    item: EntityIndex;
+    item: Entity;
     strength: number;
     staminaCost: number;
     minRange: number;
@@ -98,7 +98,7 @@ function Inventory({
     { x: number; y: number } | undefined
   >();
 
-  const ugh = "0x" + playerData.playerId.replace("0x", "").padStart(64, "0");
+  const ugh = "0x" + playerData.player.replace("0x", "").padStart(64, "0");
   const equippedItems = useEntityQuery([HasValue(EquippedBy, { value: ugh })]);
 
   const { player } = playerData;
@@ -122,12 +122,11 @@ function Inventory({
       const item = equippedItems[num];
       if (!item) return;
 
-      const itemId = world.entities[item];
-      if (currentTarget?.item === itemId) {
+      if (currentTarget?.item === item) {
         removeComponent(Targeting, playerData.player);
       } else {
         setComponent(Targeting, playerData.player, {
-          item: itemId,
+          item: item,
         });
       }
     }
@@ -156,13 +155,14 @@ function Inventory({
           const attack = getPlayerAttackData(player, item);
           const attackCost = attack?.staminaCost || 0;
 
-          const itemId = world.entities[item];
-          const currentlyTargeting = itemId === currentTarget?.item;
+          const currentlyTargeting = item === currentTarget?.item;
 
           return (
-            <div className="flex flex-col items-center">
+            <div
+              key={`item-${item}-${index}`}
+              className="flex flex-col items-center"
+            >
               <div
-                key={item}
                 style={{
                   border: "1px #5D6065 solid",
                   backgroundColor: `${currentlyTargeting ? "green" : ""}`,
@@ -187,7 +187,7 @@ function Inventory({
                 }}
                 onClick={() => {
                   setComponent(Targeting, playerData.player, {
-                    item: world.entities[item],
+                    item,
                   });
                 }}
               >
@@ -195,7 +195,7 @@ function Inventory({
                 <SpriteImage spriteKey={ItemTypeSprites[itemType]} scale={5} />
               </div>
               <Button
-              className="mt-2"
+                className="mt-2"
                 onClick={() => {
                   unequip(item);
                 }}
@@ -229,7 +229,7 @@ export function PlayerBar() {
   const currentPlayer = useCurrentPlayer();
   const activeRoom = useComponentValue(ActiveRoom, singletonEntity);
 
-  const player = (currentPlayer?.player || 0) as EntityIndex;
+  const player = (currentPlayer?.player || 0) as Entity;
   const playerHealth = useComponentValue(Health, player);
   const playerStamina = useComponentValue(OptimisticStamina, player);
 
@@ -237,11 +237,7 @@ export function PlayerBar() {
 
   const currentlyTargeting = useComponentValue(Targeting, player);
   const currentAttack =
-    currentlyTargeting &&
-    getPlayerAttackData(
-      player,
-      world.getEntityIndexStrict(currentlyTargeting.item)
-    );
+    currentlyTargeting && getPlayerAttackData(player, currentlyTargeting.item);
 
   const pendingStaminaSpend = currentAttack?.staminaCost;
 

@@ -2,8 +2,8 @@ import { useComponentValue } from "@latticexyz/react";
 import { useMUD } from "../store";
 import { useCurrentPlayer } from "./hooks/useCurrentPlayer";
 import { useActionButton } from "./hooks/useActionButton";
-import { EntityIndex } from "@latticexyz/recs";
 import { ClickWrapper } from "./theme/ClickWrapper";
+import { Entity } from "@latticexyz/recs";
 
 export function DMTools() {
   const {
@@ -18,7 +18,7 @@ export function DMTools() {
   const currentPlayer = useCurrentPlayer();
   const playerRoom = useComponentValue(
     Room,
-    currentPlayer?.player || (0 as EntityIndex)
+    currentPlayer?.player || ("0" as Entity)
   ) || { x: 0, y: 0 };
 
   const { button: spawnMonsterButton } = useActionButton({

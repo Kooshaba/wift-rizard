@@ -8,7 +8,13 @@ import { createActionSystem } from "@latticexyz/std-client";
 export type NetworkLayer = Awaited<ReturnType<typeof createNetworkLayer>>;
 
 export const createNetworkLayer = async () => {
-  const { singletonEntity, components, network, worldSend, txReduced$, playerEntity, playerEntityId } = await setup();
+  const { components, network: {
+    singletonEntity,
+    network,
+    txReduced$,
+    worldSend,
+    playerEntity,
+  } } = await setup();
 
   const config = await getNetworkConfig();
 
@@ -36,7 +42,6 @@ export const createNetworkLayer = async () => {
     },
     actions,
     playerEntity,
-    playerEntityId,
   };
 
   const utils = createNetworkUtils(layer);
